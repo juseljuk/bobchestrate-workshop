@@ -140,6 +140,290 @@ For on-premises deployments with Docker:
 - Implement proper input validation and schema definitions
 - Use async/await patterns for I/O-bound operations in flows
 
+### Agentic Workflows (Deterministic Tool Flows)
+
+**IMPORTANT**: Agentic workflows are deterministic, predefined sequences of tool executions - NOT agents that use LLM reasoning at each step. Use workflows when you need predictable, repeatable processes.
+
+#### When to Use Workflows vs Agents
+
+**Use Agentic Workflows When:**
+- Process is deterministic and follows a fixed sequence
+- Steps are well-defined with clear inputs/outputs
+- You need guaranteed execution order
+- Performance and cost optimization are critical (60% faster, 80% lower cost)
+- No LLM reasoning needed between steps
+- Examples: loan approval, order processing, data validation pipelines
+
+**Use Agents When:**
+- Process requires dynamic decision-making
+- Steps depend on LLM reasoning and context
+- Flexibility and adaptability are more important than speed
+- User interaction and conversation are needed
+- Examples: customer support, complex problem-solving, creative tasks
+
+#### Building Agentic Workflows
+
+**CRITICAL Import Paths:**
+```python
+from ibm_watsonx_orchestrate.flow_builder.flows import (
+    Flow, flow, START, END, Branch
+)
+from pydantic import BaseModel, Field
+from typing import Dict, List, Any, Optional
+```
+
+**Workflow Structure:**
+```python
+# 1. Define input/output schemas with Pydantic
+class WorkflowInput(BaseModel):
+    """Input schema for the workflow"""
+    customer_id: str = Field(description="Customer identifier")
+    amount: float = Field(description="Transaction amount")
+
+class WorkflowOutput(BaseModel):
+    """Output schema for the workflow"""
+    status: str = Field(description="Processing status")
+    result: Dict[str, Any] = Field(description="Processing result")
+
+# 2. Create workflow with @flow decorator
+@flow(
+    name="my_workflow",
+    description="Clear description of what the workflow does",
+    input_schema=WorkflowInput,
+    output_schema=WorkflowOutput
+)
+def build_my_workflow(aflow: Flow) -> Flow:
+    """
+    Build the workflow graph.
+    
+    Args:
+        aflow (Flow): The flow builder instance
+        
+    Returns:
+        Flow: The configured flow
+    """
+    # 3. Define tool nodes (reference imported MCP tools)
+    check_node = aflow.tool("toolkit-name:tool_name")
+    
+    # CRITICAL: Map workflow inputs to tool parameters
+    # Without this, tools will receive empty/missing parameters
+    check_node.map_input(input_variable="customer_id", expression="flow.input.customer_id")
+    check_node.map_input(input_variable="amount", expression="flow.input.amount")
+    
+    process_node = aflow.tool("toolkit-name:another_tool")
+    process_node.map_input(input_variable="customer_id", expression="flow.input.customer_id")
+    # Can also reference previous node outputs
+    process_node.map_input(input_variable="status", expression="check_node.output.status")
+    
+    # 4. Create conditional branches
+    decision_branch: Branch = aflow.branch(
+        evaluator="check_node.output.status == 'approved'"
+    )
+    
+    # 5. Build the graph with edges
+    aflow.edge(START, check_node)
+    aflow.edge(check_node, decision_branch)
+    
+    # Branch cases
+    decision_branch.case(True, process_node)
+    aflow.edge(process_node, END)
+    decision_branch.case(False, END)
+    
+    return aflow
+```
+
+**Parameter Mapping Rules:**
+- **CRITICAL**: Always use `map_input()` to pass data to tool nodes
+- **Syntax**: `node.map_input(input_variable="param_name", expression="source")`
+- **Sources**:
+  - Workflow input: `"flow.input.parameter_name"`
+  - Previous node output: `"node_name.output.field_name"`
+  - Default values: Add `default_value="value"` parameter
+- **Common Error**: Forgetting `map_input()` causes "required property" errors
+
+#### Workflow Patterns
+
+**Sequential Execution:**
+```python
+# Connect tools in sequence
+aflow.edge(START, tool1)
+aflow.edge(tool1, tool2)
+aflow.edge(tool2, tool3)
+aflow.edge(tool3, END)
+
+# Or use sequence helper
+aflow.sequence(START, tool1, tool2, tool3, END)
+```
+
+**Conditional Branching:**
+```python
+# Create branch with evaluator expression
+branch: Branch = aflow.branch(
+    evaluator="previous_node.output.score > 700"
+)
+
+# Define cases
+branch.case(True, approved_path)
+branch.case(False, rejected_path)
+
+# Connect to END
+aflow.edge(approved_path, END)
+aflow.edge(rejected_path, END)
+```
+
+**Parallel Execution (Foreach):**
+```python
+# Process items in parallel
+foreach_node = aflow.foreach(
+    items="input.items",
+    body=process_item_tool
+)
+
+aflow.edge(START, foreach_node)
+aflow.edge(foreach_node, END)
+```
+
+#### Referencing Tools in Workflows
+
+**CRITICAL**: Tools must be referenced by their full name including toolkit prefix:
+
+```python
+# Correct - with toolkit prefix
+check_credit = aflow.tool("loan-processing:check_credit_score")
+calculate_dti = aflow.tool("loan-processing:calculate_debt_to_income")
+
+# Wrong - without toolkit prefix (will fail)
+check_credit = aflow.tool("check_credit_score")
+```
+
+**Verify tool names:**
+```bash
+orchestrate tools list | grep toolkit-name
+```
+
+#### Importing Workflows
+
+**CRITICAL**: Workflows are imported as flow-type tools:
+
+```bash
+# Import workflow
+orchestrate tools import -k flow -f tools/my_workflow.py
+
+# Verify import
+orchestrate tools list | grep my_workflow
+```
+
+**In import-all.sh:**
+```bash
+echo "🔄 Importing Agentic Workflows..."
+orchestrate tools import -k flow -f tools/loan_approval_workflow.py
+orchestrate tools import -k flow -f tools/order_processing_workflow.py
+```
+
+#### Testing Workflows
+
+**IMPORTANT**: Workflows can only be tested programmatically in Developer Edition local environment. For other environments, test through agents.
+
+**Option 1: Test via Agent (Recommended)**
+```yaml
+# agents/test-agent.yaml
+tools:
+  - my_workflow
+
+guidelines:
+  - condition: "User requests workflow execution"
+    action: "Use my_workflow tool with required parameters"
+    tool: "my_workflow"
+```
+
+**Option 2: Simulation Test (Local)**
+```python
+# tests/test_my_workflow.py
+def test_workflow_logic():
+    """Test workflow business logic without platform"""
+    # Simulate workflow steps
+    result = simulate_workflow_execution(test_input)
+    assert result['status'] == 'success'
+```
+
+**Option 3: Integration Test (Developer Edition Only)**
+```python
+# tests/run_my_workflow.py
+import asyncio
+from my_workflow import build_my_workflow
+from ibm_watsonx_orchestrate.flow_builder.flows import FlowEventType
+
+async def test_workflow():
+    # Build and compile
+    flow_def = build_my_workflow()
+    compiled_flow = await flow_def.compile_deploy()
+    
+    # Run with events
+    async for event, run in compiled_flow.invoke_events(input_data):
+        if event.kind == FlowEventType.ON_FLOW_END:
+            print(f"Success: {run.output}")
+            break
+        elif event.kind == FlowEventType.ON_FLOW_ERROR:
+            print(f"Error: {run.error}")
+            break
+
+asyncio.run(test_workflow())
+```
+
+#### Workflow Best Practices
+
+1. **Clear Naming**: Use descriptive workflow names (e.g., `loan_approval_workflow`, not `process_loan`)
+2. **Schema Validation**: Always define Pydantic input/output schemas
+3. **Error Handling**: Design workflows to handle failures gracefully
+4. **Documentation**: Include comprehensive docstrings and comments
+5. **Tool Dependencies**: Ensure all referenced tools are imported before workflow
+6. **Branch Logic**: Keep evaluator expressions simple and testable
+7. **Performance**: Workflows are 60% faster than agent-based approaches for deterministic tasks
+
+#### Common Workflow Mistakes
+
+❌ **Wrong - Missing toolkit prefix:**
+```python
+tool_node = aflow.tool("check_credit")  # Will fail
+```
+
+✅ **Correct - With toolkit prefix:**
+```python
+tool_node = aflow.tool("loan-processing:check_credit_score")
+```
+
+❌ **Wrong - Incorrect import path:**
+```python
+from ibm_watsonx_orchestrate.agent_builder.tools import flow  # Wrong module
+```
+
+✅ **Correct - Flow builder import:**
+```python
+from ibm_watsonx_orchestrate.flow_builder.flows import flow
+```
+
+❌ **Wrong - Testing without Developer Edition:**
+```python
+# This will fail: "Flow tools are only supported in local environment"
+compiled_flow = await flow_def.compile_deploy()
+```
+
+✅ **Correct - Test via agent or simulation:**
+```python
+# Test through agent that uses the workflow as a tool
+# OR create simulation test that validates business logic
+```
+
+#### Workflow vs Agent Performance
+
+| Metric | Agentic Workflow | Agent-Based |
+|--------|-----------------|-------------|
+| Execution Time | ~2-3 seconds | ~5-8 seconds |
+| Token Usage | Minimal (no LLM calls between steps) | High (LLM reasoning at each step) |
+| Cost | 80% lower | Baseline |
+| Predictability | 100% (deterministic) | Variable (LLM-dependent) |
+| Use Case | Fixed processes | Dynamic reasoning |
+
 ### Type Hints Best Practices
 
 **IMPORTANT**: The watsonx Orchestrate platform relies on type hints to generate proper tool schemas. Incorrect or missing type hints will cause warnings like:
