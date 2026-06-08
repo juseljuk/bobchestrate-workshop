@@ -1,0 +1,11 @@
+spec_version: v1
+kind: mcp
+name: loan-processing
+description: Loan processing toolkit with credit checks, income verification, and decision tools
+command: python3 loan_processing_server.py
+env: []
+tools:
+  - "*"
+package_root: .
+
+# Made with Bob

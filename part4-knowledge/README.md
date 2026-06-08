@@ -28,93 +28,150 @@ Knowledge bases allow agents to:
 
 ## Step 1: Create a Knowledge Base
 
-Let's create a simple FAQ knowledge base for our customer support agent. Choose one of the following options:
+Let's create a simple FAQ knowledge base for our customer support agent, but first, we will have a look at the information that is required to create a knowledge base.
 
-### Option A: Manual YAML Creation
-
-Create FAQ content using the example provided below or create your own using Bob! Bob prompt provided after the example.
+You need to crate a knowledge base configuration file that references document files you want to use as the knowledge. Here's a complete example:
 
 ```yaml
-# customer-suport-faq.yaml
+# customer-support-faq.yaml
+spec_version: v1
 kind: knowledge_base
 name: customer-support-faq
-description: Frequently asked questions for customer support
+description: Frequently asked questions for customer support including shipping, returns, payments, account management, and order management
 
+# List of document files to ingest (relative to this YAML file)
 documents:
-  - title: "Shipping Policy"
-    content: |
-      # Shipping Policy
-      
-      ## Domestic Shipping
-      - Standard shipping: 5-7 business days ($5.99)
-      - Express shipping: 2-3 business days ($12.99)
-      - Overnight shipping: 1 business day ($24.99)
-      
-      ## International Shipping
-      - International standard: 10-15 business days ($19.99)
-      - International express: 5-7 business days ($39.99)
-      
-      ## Free Shipping
-      Orders over $50 qualify for free standard shipping within the US.
-      
-  - title: "Return Policy"
-    content: |
-      # Return Policy
-      
-      ## Return Window
-      You can return most items within 30 days of delivery for a full refund.
-      
-      ## Return Process
-      1. Contact customer support to initiate a return
-      2. Receive a return authorization number
-      3. Ship the item back using the provided label
-      4. Refund processed within 5-7 business days after receipt
-      
-      ## Non-Returnable Items
-      - Opened software or digital products
-      - Personalized items
-      - Gift cards
-      
-  - title: "Payment Methods"
-    content: |
-      # Payment Methods
-      
-      We accept:
-      - Credit cards (Visa, MasterCard, American Express, Discover)
-      - Debit cards
-      - PayPal
-      - Apple Pay
-      - Google Pay
-      
-      ## Payment Security
-      All transactions are encrypted and secure. We never store your full
-      credit card information.
-      
-  - title: "Account Management"
-    content: |
-      # Account Management
-      
-      ## Creating an Account
-      Click "Sign Up" and provide your email and password.
-      
-      ## Resetting Password
-      Click "Forgot Password" on the login page and follow the email instructions.
-      
-      ## Updating Profile
-      Go to Account Settings to update your name, email, address, and preferences.
-      
-      ## Deleting Account
-      Contact customer support to request account deletion. This process takes
-      3-5 business days.
+  - FAQ.pdf
 
+# Vector index configuration for built-in Milvus
+vector_index:
+  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
+  chunk_size: 500
+  chunk_overlap: 50
+  limit: 10
+  extraction_strategy: standard
 ```
 
-#### Ask Bob to Help:
-```
-Bob, create a knowledge base YAML file with FAQs about shipping, returns, payments, and account management
+#### 📋 Knowledge Base YAML Field Reference
+
+##### **Required Fields**
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| `spec_version` | API version (always use `v1`) | `v1` |
+| `kind` | Resource type (must be `knowledge_base`) | `knowledge_base` |
+| `name` | Unique identifier (lowercase, hyphens only) | `customer-support-faq` |
+| `description` | Clear description of knowledge base content | `Frequently asked questions...` |
+| `documents` | List of document file paths (relative to YAML) | `- FAQ.pdf` |
+
+##### **Optional Fields (vector_index section)**
+
+| Field | Description | Default | Options/Range |
+|-------|-------------|---------|---------------|
+| `embeddings_model_name` | Embedding model for vector search | `ibm/slate-125m-english-rtrvr-v2` | See embedding models below |
+| `chunk_size` | Characters per text chunk | `400` | `100-1000` |
+| `chunk_overlap` | Overlap between chunks (for context) | `50` | `0-200` |
+| `limit` | Max documents to retrieve per query | `10` | `1-100` |
+| `extraction_strategy` | Document processing quality | `standard` | `express`, `standard`, `high_quality` |
+
+##### **Extraction Strategy Options**
+
+- **`express`** - Fastest processing, basic text extraction (good for simple documents)
+- **`standard`** - Balanced speed and quality (recommended for most use cases)
+- **`high_quality`** - Slowest but most accurate (best for complex documents with tables, images)
+
+#### 🤖 Available Embedding Models
+
+##### **IBM watsonx.ai Models (Recommended)**
+
+| Model | Description | Best For |
+|-------|-------------|----------|
+| `ibm/slate-125m-english-rtrvr-v2` | **Default** - Optimized for English retrieval | General FAQ, documentation |
+| `ibm/slate-125m-english-rtrvr` | Previous version | Legacy compatibility |
+| `ibm/slate-30m-english-rtrvr` | Smaller, faster model | Simple queries, faster retrieval |
+
+##### **OpenAI Models (via Virtual Models)**
+
+| Model | Description | Best For |
+|-------|-------------|----------|
+| `openai/text-embedding-3-small` | Cost-effective, good performance | General purpose |
+| `openai/text-embedding-3-large` | Higher accuracy, larger dimensions | Complex semantic search |
+| `openai/text-embedding-ada-002` | Previous generation | Legacy compatibility |
+
+**Note:** OpenAI models require setting up a virtual model connection first.
+
+##### **Custom Models**
+
+You can also register custom embedding models from other providers using the AI Gateway as virtual models.
+
+**To list available models in your environment:**
+```bash
+orchestrate models list --type embedding
 ```
 
-### Option B: Import PDF with Bob's Help
+#### 📄 Supported Document Formats
+
+| Format | Max File Size | Notes |
+|--------|--------------|-------|
+| PDF | 25 MB | Most common format |
+| DOCX | 25 MB | Microsoft Word documents |
+| PPTX | 25 MB | PowerPoint presentations |
+| XLSX | 1 MB | Excel spreadsheets |
+| TXT | 5 MB | Plain text files |
+| CSV | 5 MB | Comma-separated values |
+| HTML | 5 MB | Web pages |
+
+**Limits:**
+- Maximum 100 files per knowledge base
+- Each file must have a unique name
+
+#### 💡 Example Configurations
+
+**Minimal Configuration (uses all defaults):**
+```yaml
+spec_version: v1
+kind: knowledge_base
+name: simple-faq
+description: Simple FAQ knowledge base
+documents:
+  - faq.pdf
+```
+
+**Optimized for Large Documents:**
+```yaml
+spec_version: v1
+kind: knowledge_base
+name: technical-docs
+description: Technical documentation
+documents:
+  - manual.pdf
+  - guide.pdf
+vector_index:
+  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
+  chunk_size: 800           # Larger chunks for technical content
+  chunk_overlap: 100        # More overlap for context
+  limit: 15                 # Retrieve more documents
+  extraction_strategy: high_quality  # Better for complex layouts
+```
+
+**Fast Retrieval Configuration:**
+```yaml
+spec_version: v1
+kind: knowledge_base
+name: quick-faq
+description: Quick FAQ responses
+documents:
+  - faq.txt
+vector_index:
+  embeddings_model_name: ibm/slate-30m-english-rtrvr  # Faster model
+  chunk_size: 300           # Smaller chunks
+  chunk_overlap: 30         # Less overlap
+  limit: 5                  # Fewer results
+  extraction_strategy: express  # Fastest processing
+```
+
+
+### Import PDF with Bob's Help
 
 Use Bob to create a knowledge base YAML file to import the FAQ PDF.
 
@@ -142,8 +199,6 @@ Use Bob to create a knowledge base YAML file to import the FAQ PDF.
    - Structure it for optimal retrieval in watsonx Orchestrate
 
 5. **Expected output**: Bob will create a `customer-support-faq.yaml` file with the PDF content ready for import into watsonx Orchestrate.
-
-**💡 Pro Tip:** Option B is ideal when you have existing documentation in PDF format. Bob can help you quickly convert it into a knowledge base without manual copying and formatting!
 
 #### Knowledge Base Naming Guidelines
 

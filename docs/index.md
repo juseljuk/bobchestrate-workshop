@@ -130,6 +130,14 @@ Each system builds on concepts from previous parts, teaching you to create incre
 - Use MCP server tools in your agents
 - Learn MCP best practices and patterns
 
+### [Part 6b: Agentic Workflows - Deterministic Tool Orchestration](part6b-agentic-workflows/README.md) (25-30 min)
+- Understand what agentic workflows are and when to use them
+- Learn the difference between workflows and agent-based approaches
+- Build deterministic workflows using the Flow Builder
+- Implement parameter mapping and conditional branching
+- Create workflows that are 60% faster and 80% cheaper than agents
+- Test and deploy workflows for fixed business processes
+
 ### [Part 7: Agent Evaluations & Red-Teaming](part7-agent-evaluation/README.md) (30-35 min)
 - Create comprehensive evaluation datasets
 - Run automated evaluations with watsonx Orchestrate CLI

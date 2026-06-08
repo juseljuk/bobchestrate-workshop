@@ -86,6 +86,9 @@ nav:
       - Overview: part5-guidelines-guardrails/README.md
   - Part 6 - MCP Servers:
       - Overview: part6-mcp-servers/README.md
+  - Part 6b - Agentic Workflows:
+      - Overview: part6b-agentic-workflows/README.md
+      - Exercises: part6b-agentic-workflows/exercises.md
   - Part 7 - Agent Evaluations:
       - Overview: part7-agent-evaluation/README.md
       - Exercises: part7-agent-evaluation/exercises.md
