@@ -26,11 +26,9 @@ Knowledge bases allow agents to:
 - 📝 Answer questions from documents, FAQs, and knowledge articles
 - 🎯 Provide accurate, sourced responses
 
-## Step 1: Create a Knowledge Base
+In this part we will create a simple FAQ knowledge base for our customer support agent, but first, let's have a look at the information that is required to create a knowledge base.
 
-Let's create a simple FAQ knowledge base for our customer support agent, but first, we will have a look at the information that is required to create a knowledge base.
-
-You need to crate a knowledge base configuration file that references document files you want to use as the knowledge. Here's a complete example:
+To define your knowledge base you need to create a configuration file that references document files you want to use as the knowledge. Here's a complete example:
 
 ```yaml
 # customer-support-faq.yaml
@@ -170,8 +168,11 @@ vector_index:
   extraction_strategy: express  # Fastest processing
 ```
 
+## Step 1: Create a Knowledge Base
 
-### Import PDF with Bob's Help
+Now, let's create a simple FAQ knowledge base for our customer support agent. Bob can help you with this.
+
+### Create PDF-based knowledge base configuration with Bob's Help
 
 Use Bob to create a knowledge base YAML file to import the FAQ PDF.
 
