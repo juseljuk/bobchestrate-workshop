@@ -102,10 +102,12 @@ vector_index:
 
 You can also register custom embedding models from other providers using the AI Gateway as virtual models.
 
-**To list available models in your environment:**
+**To see all available models in your environment:**
 ```bash
-orchestrate models list --type embedding
+orchestrate models list
 ```
+
+**Note:** The default embedding model `ibm/slate-125m-english-rtrvr-v2` is available in all watsonx Orchestrate environments. For custom embedding models, consult your platform administrator or refer to the [Model Management documentation](https://developer.watson-orchestrate.ibm.com/llm/managing_llm).
 
 #### 📄 Supported Document Formats
 
@@ -480,34 +482,68 @@ The agent should recognize this needs escalation and delegate to the escalation-
 
 ### Multiple Knowledge Bases
 
-You can create specialized knowledge bases:
+You can create specialized knowledge bases for different domains. Each knowledge base requires actual document files.
+
+**Example: Technical Support Knowledge Base**
+
+1. **Create document files:**
+   - `device-setup-guide.pdf` - Device setup instructions
+   - `troubleshooting-guide.pdf` - Common troubleshooting steps
+
+2. **Create the knowledge base YAML:**
 
 ```yaml
-# technical-kb.yaml
+# technical-support-kb.yaml
+spec_version: v1
 kind: knowledge_base
 name: technical-support-kb
-description: Technical troubleshooting guides
+description: Technical troubleshooting guides and device setup instructions
 
 documents:
-  - title: "Device Setup"
-    content: |
-      # Device Setup Guide
-      [Technical content here]
-      
-  - title: "Troubleshooting"
-    content: |
-      # Common Issues
-      [Troubleshooting steps here]
+  - device-setup-guide.pdf
+  - troubleshooting-guide.pdf
+
+vector_index:
+  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
+  chunk_size: 600           # Larger chunks for technical content
+  chunk_overlap: 75
+  limit: 10
+  extraction_strategy: standard
 ```
 
-Then assign different knowledge bases to different agents. _**Multiple agents can access the same knowledge base or each can have their own.**_
+3. **Import the knowledge base:**
+```bash
+orchestrate knowledge-bases import -f knowledge_bases/technical-support-kb.yaml
+```
+
+### Assigning Multiple Knowledge Bases to Agents
+
+Agents can access multiple knowledge bases. This is useful when an agent needs information from different domains.
 
 ```yaml
 # technical-support-agent.yaml
+spec_version: v1
+kind: native
+name: technical_support_agent
+description: Technical support agent with access to multiple knowledge bases
+
+llm: groq/openai/gpt-oss-120b
+
+tools:
+  - diagnostic_tool
+  - reset_device_tool
+
+# Agent can access multiple knowledge bases
 knowledge_base:
-  - technical-support-kb
-  - customer-support-faq  # Can access multiple KBs
+  - technical-support-kb        # Technical documentation
+  - customer-support-faq        # General FAQs
 ```
+
+**Benefits of Multiple Knowledge Bases:**
+- ✅ Organize information by domain or topic
+- ✅ Share common knowledge bases across multiple agents
+- ✅ Update specific knowledge bases independently
+- ✅ Optimize retrieval settings per knowledge base type
 
 ## Best Practices
 
