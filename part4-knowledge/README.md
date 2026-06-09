@@ -487,6 +487,7 @@ You can create specialized knowledge bases for different domains. Each knowledge
 **Example: Technical Support Knowledge Base**
 
 1. **Create document files:**
+
    - `device-setup-guide.pdf` - Device setup instructions
    - `troubleshooting-guide.pdf` - Common troubleshooting steps
 
@@ -512,6 +513,7 @@ vector_index:
 ```
 
 3. **Import the knowledge base:**
+
 ```bash
 orchestrate knowledge-bases import -f knowledge_bases/technical-support-kb.yaml
 ```
