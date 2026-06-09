@@ -488,8 +488,8 @@ You can create specialized knowledge bases for different domains. Each knowledge
 
 1. **Create document files:**
 
-   - `device-setup-guide.pdf` - Device setup instructions
-   - `troubleshooting-guide.pdf` - Common troubleshooting steps
+ - `device-setup-guide.pdf` - Device setup instructions
+ - `troubleshooting-guide.pdf` - Common troubleshooting steps
 
 2. **Create the knowledge base YAML:**
 
