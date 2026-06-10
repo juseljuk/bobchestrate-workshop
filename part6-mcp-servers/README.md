@@ -149,14 +149,14 @@ if __name__ == "__main__":
     - Use `if name == "tool_name"` to route to the correct tool logic
 
 5. **Server Execution**
-   ```python
-   if __name__ == "__main__":
-       import asyncio
-       asyncio.run(stdio_server(app))
-   ```
-   - Starts the MCP server using stdio (standard input/output) transport
-   - This allows watsonx Orchestrate to communicate with your server
-   - The server runs as a subprocess and exchanges JSON-RPC messages
+    ```python
+    if __name__ == "__main__":
+        import asyncio
+        asyncio.run(stdio_server(app))
+    ```
+    - Starts the MCP server using stdio (standard input/output) transport
+    - This allows watsonx Orchestrate to communicate with your server
+    - The server runs as a subprocess and exchanges JSON-RPC messages
 
 **Key Concepts:**
 
