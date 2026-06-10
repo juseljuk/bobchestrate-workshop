@@ -487,8 +487,8 @@ You can create specialized knowledge bases for different domains. Each knowledge
 **Example: Technical Support Knowledge Base**
 
 1. **Obtain / create document files:**
- - `device-setup-guide.pdf` - Device setup instructions
- - `troubleshooting-guide.pdf` - Common troubleshooting steps
+   - `device-setup-guide.pdf` - Device setup instructions
+   - `troubleshooting-guide.pdf` - Common troubleshooting steps
 
 2. **Create the knowledge base YAML:**
 
@@ -552,6 +552,7 @@ knowledge_base:
 ### Knowledge Base Best Practices
 
 ✅ **DO:**
+
 - Organize content into clear, focused documents
 - Use descriptive titles
 - Include relevant keywords
@@ -559,6 +560,7 @@ knowledge_base:
 - Test retrieval with common queries
 
 ❌ **DON'T:**
+
 - Create overly large documents
 - Mix unrelated topics in one document
 - Use vague titles
@@ -568,6 +570,7 @@ knowledge_base:
 ### Collaboration Best Practices
 
 ✅ **DO:**
+
 - Define clear escalation criteria
 - Provide context when delegating
 - Create specialized agents for specific domains
@@ -575,6 +578,7 @@ knowledge_base:
 - Document agent responsibilities
 
 ❌ **DON'T:**
+
 - Create circular delegation loops
 - Make escalation criteria too vague
 - Give all agents the same capabilities
@@ -584,17 +588,19 @@ knowledge_base:
 ## Common Issues
 
 ### Issue: Knowledge base not returning relevant results
-**Solution:**<br>
-- Check document titles and content<br>
-- Verify knowledge base is indexed (status: "ready")<br>
-- Try rephrasing the query<br>
+**Solution:**
+
+- Check document titles and content
+- Verify knowledge base is indexed (status: "ready")
+- Try rephrasing the query
 - Adjust chunk_size and chunk_overlap
 
 ### Issue: Agent not delegating to collaborator
-**Solution:**<br>
-- Check collaborator is listed in agent YAML<br>
-- Review escalation criteria in instructions<br>
-- Verify collaborator agent exists<br>
+**Solution:**
+
+- Check collaborator is listed in agent YAML
+- Review escalation criteria in instructions
+- Verify collaborator agent exists
 - Test with clear escalation scenarios
 
 ### Issue: Collaborator agent not accessible
