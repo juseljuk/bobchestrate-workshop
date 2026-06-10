@@ -763,6 +763,35 @@ test_paths:
 - The `tenant_name` must match the environment name from `orchestrate env add`
 - Test cases must be in JSON format (not JSONL) with official ground truth structure
 
+**About `wxo_lite_version` Parameter:**
+
+The `wxo_lite_version` parameter specifies the watsonx Orchestrate evaluation framework version:
+
+- **Required for SaaS and on-premises environments**
+- **NOT needed for Developer Edition (local)**
+- Should match your tenant's watsonx Orchestrate version
+- Common versions: 1.12.0, 1.13.0, 1.14.0, 1.15.0
+- Default: 1.12.0 (widely compatible)
+- Can be auto-detected from `orchestrate --version`
+- Starting from version 1.12.0, evaluations work with SaaS/on-prem (not just Developer Edition)
+
+**Why it exists:**
+- Ensures compatibility between your tenant and evaluation tools
+- Different versions may have different features or metrics
+- SaaS and on-premises need explicit version specification
+
+**How to determine the correct version:**
+1. Check your tenant version in the watsonx Orchestrate UI
+2. Run `orchestrate --version` to see your CLI version
+3. Consult with your admin if unsure
+4. Use 1.12.0 as a safe default (widely compatible)
+
+**Example usage in config:**
+```yaml
+# SaaS/On-prem only - NOT for local Developer Edition
+wxo_lite_version: 1.12.0
+```
+
 
 ### Evaluation Datasets
 
