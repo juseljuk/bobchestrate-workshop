@@ -488,10 +488,24 @@ Check the results directory:
 ls -la evaluation/results/
 ```
 
-You'll see:
-- `results.json` - Detailed results for each test case
-- `summary.json` - Overall metrics and statistics
-- `failures.json` - Failed test cases with details
+You'll see separate folders for each evaluation run. The structure typically looks like:
+```
+evaluation/results/
+├── <dataset-name>_<timestamp>/
+│   ├── run_0/
+│   │   ├── conversation_history.json
+│   │   ├── metrics.json
+│   │   └── test_results.json
+│   └── run_1/  (if n_runs > 1)
+│       ├── conversation_history.json
+│       ├── metrics.json
+│       └── test_results.json
+```
+
+Each run folder contains:
+- `conversation_history.json` - Full conversation logs
+- `metrics.json` - Computed metrics for the run
+- `test_results.json` - Detailed test case results
 
 ### Step 3: Analyze Results
 
