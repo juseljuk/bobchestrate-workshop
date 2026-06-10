@@ -459,7 +459,7 @@ def content_safety_guardrail(plugin_context: PluginContext, agent_pre_invoke_pay
     return result
 ```
 
-### Output Guardrail Example - Agent post-invoke
+### Output Guardrail **Example** - Agent post-invoke
 
 ```python
 # response_filter_plugin.py
@@ -540,7 +540,7 @@ def response_filter_guardrail(plugin_context: PluginContext, agent_post_invoke_p
 
 Guardrails are implemented as special kind of tools and therefore are also imported as tools:
 
->**NOTE**: Do NOT import / attach these guardrails, they are just for your future reference. Next, you will ask Bob to create a new guardrail for you.
+>❗️**NOTE**❗️ Do NOT import / attach these example guardrails, they are just for your future reference. Next, you will ask Bob to create a new guardrail for you.
 
 ```bash
 # Import the guardrail plugins
