@@ -306,20 +306,20 @@ While both Guidelines and Guardrails help control agent behavior, they work in f
 **Key Differences:**
 
 1. **Processing Layer**
-   - **Guidelines**: Work *within* the LLM's reasoning process. The LLM reads the guideline, understands the condition, and decides to follow the action.
-   - **Guardrails**: Work *outside* the LLM as automated filters. They intercept inputs/outputs before the LLM even sees them.
+    - **Guidelines**: Work *within* the LLM's reasoning process. The LLM reads the guideline, understands the condition, and decides to follow the action.
+    - **Guardrails**: Work *outside* the LLM as automated filters. They intercept inputs/outputs before the LLM even sees them.
 
 2. **Control Type**
-   - **Guidelines**: Provide *guidance* - the LLM interprets conditions and actions contextually
-   - **Guardrails**: Provide *enforcement* - deterministic rules that always execute the same way
+    - **Guidelines**: Provide *guidance* - the LLM interprets conditions and actions contextually
+    - **Guardrails**: Provide *enforcement* - deterministic rules that always execute the same way
 
 3. **Use Cases**
-   - **Guidelines**: Business rules, escalation logic, conditional workflows, policy-based routing
-   - **Guardrails**: Security filtering, data protection, compliance enforcement, content moderation
+    - **Guidelines**: Business rules, escalation logic, conditional workflows, policy-based routing
+    - **Guardrails**: Security filtering, data protection, compliance enforcement, content moderation
 
 4. **Complementary Nature**
-   - Guidelines handle "what should the agent do when X happens?"
-   - Guardrails handle "what should never reach/leave the agent?"
+    - Guidelines handle "what should the agent do when X happens?"
+    - Guardrails handle "what should never reach/leave the agent?"
 
 **Example Scenario:**
 
