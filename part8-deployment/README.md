@@ -219,64 +219,77 @@ Bob, create comprehensive test scenarios for my customer support agent including
 
 ### Step 1: Create Evaluation Dataset
 
-Create a dataset of test cases with expected outcomes:
+**IMPORTANT:** Evaluation datasets in watsonx Orchestrate use **JSON format** (not YAML or Python) with a specific ground truth structure. Each test case must be a separate JSON file.
 
-```python
-# create_eval_dataset.py
-from ibm_watsonx_orchestrate import EvaluationDataset
+Create test case files in the `evaluation/datasets/` directory:
 
-# Define test cases
-test_cases = [
-    {
-        "input": "What's your return policy?",
-        "expected_output": "30 days return policy",
-        "expected_tools": [],
-        "category": "knowledge_base"
+```json
+// evaluation/datasets/test-case-1.json
+{
+    "agent": "customer-support-agent",
+    "goals": {
+        "tool_call-1": ["summarize"]
     },
-    {
-        "input": "Check status of order ORD-12345",
-        "expected_output": "order status information",
-        "expected_tools": ["check_order_status"],
-        "category": "tool_usage"
-    },
-    {
-        "input": "I need a refund for order ORD-12345, item damaged, $99.99",
-        "expected_output": "refund processed",
-        "expected_tools": ["process_refund"],
-        "category": "tool_usage"
-    },
-    {
-        "input": "What's the weather today?",
-        "expected_output": "out of scope",
-        "expected_tools": [],
-        "category": "boundary_testing"
-    }
-]
-
-# Create evaluation dataset
-dataset = EvaluationDataset.create(
-    name="customer-support-eval",
-    test_cases=test_cases
-)
-
-print(f"✅ Created evaluation dataset with {len(test_cases)} test cases")
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "tool_call-1",
+            "tool_name": "check_order_status",
+            "args": {
+                "order_id": "ORD-12345"
+            }
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "Your order ORD-12345 is currently being shipped and will arrive in 2-3 business days.",
+            "keywords": ["shipped", "2-3 days", "ORD-12345"]
+        }
+    ],
+    "story": "Customer wants to check their order status",
+    "starting_sentence": "Can you check the status of order ORD-12345?"
+}
 ```
 
-You can also create datasets using YAML:
+```json
+// evaluation/datasets/test-case-2.json
+{
+    "agent": "customer-support-agent",
+    "goals": {
+        "tool_call-1": ["summarize"]
+    },
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "tool_call-1",
+            "tool_name": "process_refund",
+            "args": {
+                "order_id": "ORD-12345",
+                "reason": "Product was damaged",
+                "amount": 99.99
+            }
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "Your refund has been processed successfully. Refund ID: REF-",
+            "keywords": ["refund", "processed", "REF-"]
+        }
+    ],
+    "story": "Customer requests a refund for a damaged item",
+    "starting_sentence": "I need a refund for order ORD-12345. The item was damaged. Amount is $99.99"
+}
+```
 
-```yaml
-# eval-dataset.yaml
-name: customer-support-eval
-test_cases:
-  - input: "What's your return policy?"
-    expected_output: "30 days return policy"
-    expected_tools: []
-    category: knowledge_base
-  
-  - input: "Check status of order ORD-12345"
-    expected_output: "order status information"
-    expected_tools: ["check_order_status"]
-    category: tool_usage
+You can also use the CLI to generate datasets:
+
+```bash
+# Generate dataset from user stories
+orchestrate evaluations generate \
+  -s evaluation/user-stories.txt \
+  -g . \
+  -t customer-support-agent \
+  -o evaluation/datasets/
 ```
 
 ### Ask Bob to Help:
@@ -284,71 +297,102 @@ test_cases:
 Bob, create a comprehensive evaluation dataset for my customer support agent with at least 20 test cases covering knowledge base queries, tool usage, edge cases, and boundary testing
 ```
 
-### Step 2: Run Evaluation
+### Step 2: Create Evaluation Config File
 
-Evaluate your agent against the dataset:
+Create a configuration file for the evaluation:
+
+```yaml
+# evaluation/config.yaml
+# Test dataset paths (directories or files containing JSON test cases)
+test_paths:
+  - evaluation/datasets/
+
+# Authentication configuration
+auth_config:
+  url: http://localhost:4321  # For Developer Edition
+  tenant_name: local           # Must match your environment name
+
+# Output directory for results
+output_dir: evaluation/results/
+
+# Enable detailed logging
+enable_verbose_logging: true
+
+# Optional: Number of evaluation runs (default: 1)
+n_runs: 1
+
+# Optional: LLM user configuration
+llm_user_config:
+  user_response_style:
+    - "Be concise in messages and confirmations"
+```
+
+**For SaaS or On-Premises environments**, use this format:
+
+```yaml
+# evaluation/config.yaml
+test_paths:
+  - evaluation/datasets/
+
+auth_config:
+  url: https://api.<region>.watson-orchestrate.ibm.com/instances/<instance-id>
+  tenant_name: saas  # Or your environment name from 'orchestrate env add'
+
+output_dir: evaluation/results/
+enable_verbose_logging: true
+wxo_lite_version: 1.12.0  # Required for SaaS/on-prem
+n_runs: 1
+```
+
+### Step 3: Run Quick Evaluation
+
+Run a quick evaluation (reference-less) of your agent:
 
 ```bash
-# Run evaluation
-orchestrate agents evaluate customer-support-agent \
-  --dataset customer-support-eval \
-  --output eval-results.json
+# Quick evaluation with config file (recommended)
+orchestrate evaluations quick-eval -c evaluation/config.yaml
+
+# Or specify paths directly
+orchestrate evaluations quick-eval \
+  -p evaluation/datasets/ \
+  -o evaluation/results/ \
+  -t tools/
 ```
 
-Or using Python:
+**Quick Evaluation Metrics** (automatically computed):
+- **Tool Calls** - Total number of tool invocations
+- **Successful Tool Calls** - Tool calls that completed successfully
+- **Schema Mismatch** - Tool calls with incorrect parameter schemas
+- **Hallucination** - Responses containing fabricated information
 
-```python
-# evaluate_agent.py
-from ibm_watsonx_orchestrate import AgentBuilder
-
-builder = AgentBuilder()
-
-# Run evaluation
-results = builder.evaluate_agent(
-    agent_name="customer-support-agent",
-    dataset_name="customer-support-eval",
-    metrics=[
-        "accuracy",
-        "relevance",
-        "tool_usage_correctness",
-        "response_quality"
-    ]
-)
-
-# Display results
-print(f"\n📊 Evaluation Results:")
-print(f"   Overall Accuracy: {results['accuracy']:.2%}")
-print(f"   Relevance Score: {results['relevance']:.2%}")
-print(f"   Tool Usage: {results['tool_usage_correctness']:.2%}")
-print(f"   Response Quality: {results['response_quality']:.2%}")
-
-# Identify failing test cases
-if results['failed_cases']:
-    print(f"\n⚠️  Failed Test Cases:")
-    for case in results['failed_cases']:
-        print(f"   • {case['input']}")
-        print(f"     Expected: {case['expected']}")
-        print(f"     Got: {case['actual']}")
-```
+**Note:** Metrics are automatically computed by the framework and cannot be configured in the YAML file.
 
 ### Ask Bob to Help:
 ```
 Bob, run an evaluation of my customer-support-agent using the evaluation dataset and show me the results
 ```
 
-### Step 3: Analyze Results
+### Step 4: Analyze Results
 
-Review detailed evaluation metrics:
+Review the evaluation results in the output directory:
 
 ```bash
-# View evaluation report
-orchestrate agents analyze customer-support-agent \
-  --evaluation-id <eval-id>
+# View results
+ls -la evaluation/results/
 
-# Export detailed report
-orchestrate agents analyze customer-support-agent \
-  --evaluation-id <eval-id> \
-  --output detailed-report.html
+# Results include:
+# - Summary metrics (tool calls, success rate, schema mismatches)
+# - Detailed test case results
+# - Hallucination detection results
+```
+
+**Example output structure:**
+```
+evaluation/results/
+├── summary.json          # Overall metrics
+├── test-case-1-result.json
+├── test-case-2-result.json
+└── detailed-report.html  # Human-readable report
 ```
 
 ### Ask Bob to Help:
@@ -356,7 +400,7 @@ orchestrate agents analyze customer-support-agent \
 Bob, analyze the evaluation results for my agent and identify the top 3 areas that need improvement
 ```
 
-### Step 4: Red Teaming & Vulnerability Testing
+### Step 5: Red Teaming & Vulnerability Testing
 
 Red teaming tests your agent against adversarial inputs and potential security vulnerabilities. This is crucial for production agents.
 
@@ -370,48 +414,50 @@ Red teaming involves testing your agent with:
 - **Malicious Inputs**: Testing with harmful or inappropriate content
 - **Edge Cases**: Unusual or unexpected input patterns
 
-#### Run Vulnerability Testing
+#### Red Teaming Process (3 Steps)
+
+**Step 1: List Available Attacks**
 
 ```bash
-# Run LLM vulnerability testing
-orchestrate agents test-vulnerabilities customer-support-agent \
-  --output vulnerability-report.json
+# List all supported attack types
+orchestrate evaluations red-teaming list
 ```
 
-Using Python:
+This shows all available attacks including:
+- **On-Policy**: instruction_override, crescendo_attack, emotional_appeal, imperative_emphasis, role_playing, random_prefix, random_postfix, encoded_input, foreign_languages
+- **Off-Policy**: crescendo_prompt_leakage, functionality_based_attacks, undermine_model, unsafe_topics, jailbreaking, topic_derailment
 
-```python
-# vulnerability_test.py
-from ibm_watsonx_orchestrate import AgentBuilder
+**Step 2: Plan Attack Scenarios**
 
-builder = AgentBuilder()
-
-# Run vulnerability testing
-vuln_results = builder.test_vulnerabilities(
-    agent_name="customer-support-agent",
-    test_categories=[
-        "prompt_injection",
-        "jailbreaking",
-        "data_extraction",
-        "harmful_content",
-        "boundary_testing"
-    ]
-)
-
-# Review results
-print(f"\n🔒 Vulnerability Test Results:")
-print(f"   Prompt Injection: {vuln_results['prompt_injection']['passed']}/{vuln_results['prompt_injection']['total']}")
-print(f"   Jailbreaking: {vuln_results['jailbreaking']['passed']}/{vuln_results['jailbreaking']['total']}")
-print(f"   Data Extraction: {vuln_results['data_extraction']['passed']}/{vuln_results['data_extraction']['total']}")
-
-# Identify vulnerabilities
-if vuln_results['vulnerabilities_found']:
-    print(f"\n⚠️  Vulnerabilities Found:")
-    for vuln in vuln_results['vulnerabilities_found']:
-        print(f"   • {vuln['type']}: {vuln['description']}")
-        print(f"     Severity: {vuln['severity']}")
-        print(f"     Recommendation: {vuln['recommendation']}")
+```bash
+# Generate attack scenarios
+orchestrate evaluations red-teaming plan \
+  -a "instruction_override,crescendo_attack,jailbreaking" \
+  -d evaluation/test-cases.jsonl \
+  -g . \
+  -t customer-support-agent \
+  -o evaluation/red-team-attacks/ \
+  -n 3
 ```
+
+**Parameters:**
+- `-a` - Comma-separated list of attack types
+- `-d` - Path to test case datasets (JSONL format)
+- `-g` - Directory containing agent YAML files
+- `-t` - Target agent name
+- `-o` - Output directory for generated attacks
+- `-n` - Number of variants per attack type
+
+**Step 3: Run Attacks**
+
+```bash
+# Execute the attacks
+orchestrate evaluations red-teaming run \
+  -a evaluation/red-team-attacks/ \
+  -o evaluation/red-team-results/
+```
+
+This will test your agent against all generated attack scenarios and produce a detailed report.
 
 #### Example Red Team Test Cases
 
@@ -464,37 +510,34 @@ Bob, create red team test cases for my customer support agent to test for prompt
 Bob, run vulnerability testing on my customer-support-agent and report any security issues found
 ```
 
-### Step 5: Iterative Improvement
+### Step 6: Iterative Improvement
 
 Based on evaluation results:
 
 1. **Fix Failing Cases**: Update agent instructions or tools
 2. **Address Vulnerabilities**: Add guardrails and validation
 3. **Re-evaluate**: Run evaluation again to verify improvements
-4. **Track Progress**: Compare evaluation scores across iterations
+4. **Track Progress**: Compare evaluation results across iterations
 
-```python
-# track_improvements.py
-from ibm_watsonx_orchestrate import AgentBuilder
+```bash
+# Re-run evaluation after improvements
+orchestrate evaluations quick-eval -c evaluation/config.yaml
 
-builder = AgentBuilder()
-
-# Compare evaluations
-comparison = builder.compare_evaluations(
-    agent_name="customer-support-agent",
-    evaluation_ids=["eval-v1", "eval-v2", "eval-v3"]
-)
-
-print(f"\n📈 Improvement Tracking:")
-for version, metrics in comparison.items():
-    print(f"\n{version}:")
-    print(f"   Accuracy: {metrics['accuracy']:.2%}")
-    print(f"   Vulnerabilities: {metrics['vulnerabilities_found']}")
+# Compare results manually by reviewing output directories
+diff evaluation/results-v1/ evaluation/results-v2/
 ```
+
+**Improvement Workflow:**
+1. Review evaluation results and identify issues
+2. Update agent YAML, tools, or knowledge bases
+3. Re-import updated components
+4. Run evaluation again
+5. Compare metrics to verify improvements
+6. Repeat until quality targets are met
 
 ### Ask Bob to Help:
 ```
-Bob, compare my last three evaluation runs and show me how the agent has improved over time
+Bob, analyze my evaluation results and suggest specific improvements to my agent
 ```
 
 ### Evaluation Best Practices
@@ -586,14 +629,14 @@ First, deploy to the draft environment for testing:
 
 ```bash
 # Ensure you're in draft environment
-orchestrate environment set draft
+orchestrate env set draft
 
 # Import all components
-orchestrate tools import -k python order_status_tool.py
-orchestrate tools import -k python refund_tool.py
-orchestrate knowledge-bases import faq-knowledge-base.yaml
-orchestrate agents import escalation-agent.yaml
-orchestrate agents import customer-support-agent.yaml
+orchestrate tools import -k python -f order_status_tool.py
+orchestrate tools import -k python -f refund_tool.py
+orchestrate knowledge-bases import -f faq-knowledge-base.yaml
+orchestrate agents import -f escalation-agent.yaml
+orchestrate agents import -f customer-support-agent.yaml
 
 # Verify deployment
 orchestrate agents list
@@ -601,48 +644,78 @@ orchestrate tools list
 orchestrate knowledge-bases list
 ```
 
-### Step 3: Deploy to Live Environment
+**Note:** In Developer Edition, only the draft environment is available. The `orchestrate agents deploy` command is NOT supported in Developer Edition.
 
-Once testing is complete, deploy to production:
+### Step 3: Deploy to Live Environment (SaaS/On-Premises Only)
+
+Once testing is complete in draft, deploy to production:
 
 ```bash
 # Switch to live environment
-orchestrate environment set live
+orchestrate env set live
 
 # Import all components
-orchestrate tools import -k python order_status_tool.py
-orchestrate tools import -k python refund_tool.py
-orchestrate knowledge-bases import faq-knowledge-base.yaml
-orchestrate agents import escalation-agent.yaml
-orchestrate agents import customer-support-agent.yaml
+orchestrate tools import -k python -f order_status_tool.py
+orchestrate tools import -k python -f refund_tool.py
+orchestrate knowledge-bases import -f faq-knowledge-base.yaml
+orchestrate agents import -f escalation-agent.yaml
+orchestrate agents import -f customer-support-agent.yaml
+
+# Deploy agent to live (makes it available to end users)
+orchestrate agents deploy --name customer-support-agent
 
 # Verify live deployment
-orchestrate agents list --environment live
+orchestrate agents list
 ```
+
+**Important Notes:**
+- `orchestrate agents deploy` promotes the draft agent to live
+- This command is NOT available in Developer Edition
+- In Developer Edition, agents are always in draft state
 
 ### Step 4: Generate Webchat Embed Code
 
 Generate the webchat embed code for your website:
 
 ```bash
-orchestrate channels webchat generate-embed --agent customer-support-agent --environment live
+# For live environment (production)
+orchestrate channels webchat embed \
+  --agent-name customer-support-agent \
+  --env live
+
+# For draft environment (testing)
+orchestrate channels webchat embed \
+  --agent-name customer-support-agent \
+  --env draft
 ```
 
 This will output HTML/JavaScript code like:
 
 ```html
 <script>
-  window.watsonxOrchestrate = {
-    integrationID: "your-integration-id",
-    region: "us-south",
-    serviceInstanceID: "your-instance-id",
-    onLoad: function(instance) {
-      instance.render();
+  window.wxOConfiguration = {
+    orchestrationID: "your-orchestration-id",
+    hostURL: "https://us-south.watson-orchestrate.cloud.ibm.com",
+    rootElementID: "root",
+    deploymentPlatform: "ibmcloud",
+    crn: "your-crn",
+    chatOptions: {
+      agentId: "your-agent-id",
+      agentEnvironmentId: "your-agent-environment-id"
     }
   };
 </script>
-<script src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/latest/WatsonxOrchestrate.js"></script>
+<script src="https://us-south.watson-orchestrate.cloud.ibm.com/wxochat/wxoLoader.js?embed=true"></script>
+<script>
+  wxoLoader.init();
+</script>
 ```
+
+**Requirements for embedding:**
+1. Your HTML page must include `<!DOCTYPE html>` (strict mode)
+2. Must have an element with `id="root"` for the chat widget
+3. Place the script inside the `<body>` tag
+4. Configure security (JWT tokens) for production use
 
 Add this to your website's HTML.
 
@@ -653,60 +726,43 @@ Bob, help me generate and customize the webchat embed code for my agent
 
 ## Monitoring and Observability
 
-### Step 1: Enable Tracing
+### Step 1: Monitor Agent Performance
 
-Monitor your agent's performance:
+**Note:** Detailed tracing and monitoring commands are available through the watsonx Orchestrate UI and APIs, but are not currently exposed through the CLI in the same way as other commands.
 
-```bash
-# View recent traces
-orchestrate traces list --agent customer-support-agent --limit 10
+**Monitoring Approaches:**
 
-# View specific trace details
-orchestrate traces get <trace-id>
+1. **Use the watsonx Orchestrate UI:**
+   - Navigate to your agent in the UI
+   - View conversation history and logs
+   - Monitor tool usage and success rates
+   - Review error messages and failures
 
-# Export traces for analysis
-orchestrate traces export --agent customer-support-agent --output traces.json
-```
+2. **Use Evaluation Framework:**
+   ```bash
+   # Run regular evaluations to track quality
+   orchestrate evaluations quick-eval -c evaluation/config.yaml
+   
+   # Compare results over time
+   diff evaluation/results-week1/ evaluation/results-week2/
+   ```
 
-### Step 2: Analyze Performance
+3. **Monitor via Logs:**
+   - Check application logs for errors
+   - Monitor tool execution times
+   - Track API response times
+   - Review knowledge base query performance
 
-Create a monitoring script:
+### Step 2: Key Metrics to Track
 
-```python
-# monitor_agent.py
-from ibm_watsonx_orchestrate import AgentBuilder
-from datetime import datetime, timedelta
+Monitor these important metrics:
 
-def analyze_agent_performance(agent_name, days=7):
-    """Analyze agent performance over the last N days"""
-    builder = AgentBuilder()
-    
-    # Get traces (this is a simplified example)
-    print(f"📊 Performance Analysis for {agent_name}")
-    print(f"   Period: Last {days} days")
-    print(f"   Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("\n" + "="*60)
-    
-    # In a real implementation, you would:
-    # 1. Fetch traces from the observability API
-    # 2. Calculate metrics (response time, success rate, etc.)
-    # 3. Identify common issues
-    # 4. Generate recommendations
-    
-    print("\n📈 Key Metrics:")
-    print("   • Total conversations: [from traces]")
-    print("   • Average response time: [from traces]")
-    print("   • Tool usage: [from traces]")
-    print("   • Error rate: [from traces]")
-    
-    print("\n🎯 Recommendations:")
-    print("   • Review slow responses")
-    print("   • Optimize frequently used tools")
-    print("   • Update knowledge base based on common questions")
-
-if __name__ == "__main__":
-    analyze_agent_performance("customer-support-agent")
-```
+- **Response Time**: How quickly the agent responds
+- **Tool Success Rate**: Percentage of successful tool calls
+- **Schema Mismatches**: Tool calls with incorrect parameters
+- **Hallucinations**: Fabricated or incorrect information
+- **User Satisfaction**: Feedback from end users
+- **Escalation Rate**: How often issues are escalated
 
 ### Ask Bob to Help:
 ```
@@ -746,45 +802,45 @@ Bob, create a monitoring script that analyzes my agent's performance and identif
 
 ### Issue: Agent is slow
 **Diagnosis:**
-```bash
-orchestrate traces list --agent customer-support-agent --limit 20
-# Look for slow tool calls or knowledge base queries
-```
+- Review evaluation results for response times
+- Check tool execution logs
+- Monitor knowledge base query performance
+- Test with different LLM models
 
 **Solutions:**
-
-- Optimize tool code
+- Optimize tool code (reduce API calls, add caching)
 - Reduce knowledge base chunk size
-- Use faster LLM model
-- Add caching
+- Use faster LLM model (e.g., smaller model for simple tasks)
+- Implement response caching for common queries
+- Optimize knowledge base indexing
 
 ### Issue: Agent gives wrong answers
 **Diagnosis:**
-
-- Review recent conversations
-- Check knowledge base content
-- Verify tool outputs
+- Run evaluation to identify failing test cases
+- Review agent instructions for clarity
+- Check knowledge base content accuracy
+- Verify tool outputs are correct
 
 **Solutions:**
-
-- Update agent instructions
-- Improve knowledge base documents
-- Fix tool logic
-- Add more test scenarios
+- Update agent instructions with more specific guidance
+- Improve knowledge base documents (add missing info, fix errors)
+- Fix tool logic and validation
+- Add more test scenarios to evaluation dataset
+- Use guidelines to enforce specific behaviors
 
 ### Issue: Tools failing
 **Diagnosis:**
-```bash
-orchestrate traces get <trace-id>
-# Check tool error messages
-```
+- Check tool error messages in logs
+- Verify tool parameters match schema
+- Test tools independently (unit tests)
+- Check API credentials and connectivity
 
 **Solutions:**
-
-- Check API credentials
-- Verify network connectivity
-- Review tool error handling
-- Check rate limits
+- Verify API credentials are configured correctly
+- Check network connectivity to external services
+- Review tool error handling and add try-catch blocks
+- Check rate limits on external APIs
+- Validate tool input parameters before execution
 
 ## Continuous Improvement
 
