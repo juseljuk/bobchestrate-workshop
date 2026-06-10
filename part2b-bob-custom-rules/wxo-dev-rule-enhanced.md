@@ -1364,6 +1364,262 @@ orchestrate tools list
 - Stay updated with latest ADK best practices
 
 ---
+## 6.5. Knowledge Base Development
+
+### Knowledge Base YAML Format
+
+**CRITICAL**: Knowledge bases in watsonx Orchestrate MUST reference external document files. Inline document content is NOT supported.
+
+#### Required YAML Structure
+```yaml
+spec_version: v1
+kind: knowledge_base
+name: knowledge_base_name
+description: |
+  Clear description of what information this knowledge base contains
+documents:
+  - path: document1.pdf
+  - path: document2.txt
+  - path: document3.docx
+vector_index:
+  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2  # Optional, this is the default
+  chunk_size: 400                                          # Optional
+  chunk_overlap: 50                                        # Optional
+  extraction_strategy: standard                            # Optional
+conversational_search_tool:                                # Optional
+  generation:
+    prompt_instruction: "Instructions for how to answer questions"
+    max_docs_passed_to_llm: 10
+    generated_response_length: Moderate
+    idk_message: "Message when answer not found"
+  confidence_thresholds:
+    retrieval_confidence_threshold: Low
+    response_confidence_threshold: Low
+  query_rewrite:
+    enabled: true
+  citations:
+    citations_shown: -1
+```
+
+#### Supported Document Formats and Size Limits
+
+Knowledge bases support the following document types:
+- **Text files (.txt)** - Up to 5 MB
+- **PDF files (.pdf)** - Up to 25 MB
+- **Word documents (.docx)** - Up to 25 MB
+- **PowerPoint (.pptx)** - Up to 25 MB
+- **Excel (.xlsx)** - Up to 1 MB
+- **CSV (.csv)** - Up to 5 MB
+- **HTML (.html)** - Up to 5 MB
+
+**Limits:**
+- Each file must have a unique name
+- Up to 100 files per knowledge base YAML
+- Document paths are relative to the YAML file location
+
+#### Example: Product Catalog Knowledge Base
+
+**Directory Structure:**
+```
+knowledge_bases/
+├── product-catalog-kb.yaml
+└── product_catalog.txt
+```
+
+**Knowledge Base YAML:**
+```yaml
+# knowledge_bases/product-catalog-kb.yaml
+spec_version: v1
+kind: knowledge_base
+name: product_catalog_kb
+description: |
+  Product catalog containing detailed information about premium technology products
+  including specifications, pricing, availability, and shipping information.
+
+documents:
+  - path: product_catalog.txt
+
+vector_index:
+  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
+  chunk_size: 400
+  chunk_overlap: 50
+  extraction_strategy: standard
+
+conversational_search_tool:
+  generation:
+    prompt_instruction: "Answer customer questions about products based on the catalog. Provide detailed information about specifications, pricing, and features."
+    max_docs_passed_to_llm: 10
+    generated_response_length: Moderate
+    idk_message: "I don't have information about that product in our current catalog."
+  confidence_thresholds:
+    retrieval_confidence_threshold: Low
+    response_confidence_threshold: Low
+  query_rewrite:
+    enabled: true
+  citations:
+    citations_shown: -1
+```
+
+**Document File (product_catalog.txt):**
+```
+PRODUCT CATALOG
+===============
+
+PRODUCT 1: UltraBook Pro 15
+---------------------------
+Product Name: UltraBook Pro 15
+SKU: UBP-15-2024
+Category: Laptops
+Price: $1,899.99
+
+Description:
+Premium laptop designed for professionals...
+
+Key Features:
+- Processor: Intel Core i7-13700H
+- RAM: 32GB DDR5
+- Storage: 1TB NVMe SSD
+...
+```
+
+#### Common Mistakes to Avoid
+
+❌ **Wrong - Inline document content:**
+```yaml
+# This format is NOT supported
+documents:
+  - title: "Product 1"
+    content: |
+      Product information here...
+  - title: "Product 2"
+    content: |
+      More product information...
+```
+
+✅ **Correct - External document files:**
+```yaml
+# This is the correct format
+documents:
+  - path: product_catalog.txt
+  - path: faq_document.pdf
+  - path: policies.docx
+```
+
+❌ **Wrong - Absolute paths:**
+```yaml
+documents:
+  - path: /Users/username/Documents/product_catalog.txt
+```
+
+✅ **Correct - Relative paths:**
+```yaml
+documents:
+  - path: product_catalog.txt           # Same directory as YAML
+  - path: docs/faq.pdf                  # Subdirectory
+  - path: ../shared/policies.docx       # Parent directory
+```
+
+### Importing Knowledge Bases
+
+```bash
+# Import knowledge base (uploads and indexes documents)
+orchestrate knowledge-bases import -f knowledge_bases/product-catalog-kb.yaml
+
+# Check import status
+orchestrate knowledge-bases list
+
+# Get detailed status (wait for "ready" status)
+orchestrate knowledge-bases get -n product_catalog_kb
+```
+
+**Important:** After importing, the knowledge base needs time to index documents. Check the status before using it in agents.
+
+### Using Knowledge Bases in Agents
+
+Reference knowledge bases in agent YAML:
+
+```yaml
+spec_version: v1
+kind: native
+name: sales_agent
+llm: groq/openai/gpt-oss-120b
+
+instructions: |
+  You are a helpful sales agent. Use the product catalog to answer questions.
+
+knowledge_base:
+  - product_catalog_kb  # Must match the knowledge base name exactly
+
+tools: []
+```
+
+### Knowledge Base Best Practices
+
+1. **Document Organization**
+   - Use clear section headers in documents
+   - Maintain consistent formatting
+   - Include all relevant information (specs, pricing, policies)
+   - Keep documents focused on specific topics
+
+2. **File Management**
+   - Store documents in the same directory as the YAML file
+   - Use descriptive filenames
+   - Keep file sizes within limits
+   - Use appropriate file formats for content type
+
+3. **Chunking Strategy**
+   - Default chunk size (400) works well for most content
+   - Increase chunk_overlap for better context continuity
+   - Adjust chunk_size based on document structure
+
+4. **Embedding Models**
+   - Default model (ibm/slate-125m-english-rtrvr-v2) is optimized for retrieval
+   - Can use custom embedding models if needed
+   - Consider model capabilities for your language/domain
+
+5. **Testing**
+   - Wait for indexing to complete before testing
+   - Test with various query types
+   - Verify citation accuracy
+   - Monitor retrieval quality
+
+6. **Updates**
+   - Re-import knowledge base after document changes
+   - Documents are re-indexed on each import
+   - Old versions are replaced
+
+### Troubleshooting Knowledge Bases
+
+**Problem: Knowledge base not found**
+```bash
+# Verify import
+orchestrate knowledge-bases list
+
+# Check specific knowledge base
+orchestrate knowledge-bases get -n product_catalog_kb
+```
+
+**Problem: Documents not indexed**
+- Check knowledge base status (should be "ready")
+- Verify document files exist at specified paths
+- Ensure file sizes are within limits
+- Check for file format compatibility
+
+**Problem: Poor retrieval quality**
+- Adjust chunk_size and chunk_overlap
+- Improve document structure and formatting
+- Add more context to documents
+- Enable query rewriting
+- Lower confidence thresholds
+
+**Problem: Agent can't access knowledge base**
+- Verify knowledge base name matches exactly
+- Check knowledge base is in "ready" state
+- Ensure agent YAML references correct name
+- Re-import agent if needed
+
+---
+
 
 ## 7. Documentation Standards
 
