@@ -300,6 +300,7 @@ n_runs: 1
 ```
 
 **Important Notes for SaaS:**
+
 - Replace `<region>` with your region (e.g., `us-south`, `eu-de`)
 - Replace `<instance-id>` with your actual instance ID
 - The `tenant_name` must match the environment name you configured with `orchestrate env add`
@@ -332,6 +333,7 @@ n_runs: 1
 ```
 
 **Important Notes for Developer Edition:**
+
 - The `wxo_lite_version` parameter is **NOT needed** for local Developer Edition
 - Ensure your Developer Edition is running (`orchestrate dev start`)
 - The default URL is `http://localhost:4321`
@@ -356,21 +358,56 @@ orchestrate --version
 
 Output example:
 ```
-watsonx Orchestrate CLI version 1.15.0
+ADK Version: 2.10.1
+Langflow Version: 1.7.1
+Developer Edition Image Tags (if not overridden in env file)
+  SERVER_TAG: 07-05-2026-53a1a06
+  WORKER_TAG: 07-05-2026-53a1a06
+  KNOWLEDGE_MCP_SERVER_TAG: 22-04-2026-2ed60a5
+  AI_GATEWAY_TAG: 30-04-2026-a1c2a37
+  MCP_GATEWAY_TAG: 20260326-develop-156-d2b9120
+  AGENT_GATEWAY_TAG: 16-04-2026-4ebf99f
+  DBTAG: 01-05-2026-620a234
+  UITAG: 09-05-2026-f933e6
+  CM_TAG: 17-04-2026-c458fbe
+  CONNECTIONS_UI_TAG: 09-04-2026-135fa5d
+  TRM_TAG: 22-04-2026-14344f7
+  TR_TAG: 22-04-2026-14344f7
+  AR_TAG: 22-04-2026-14344f7
+  BUILDER_TAG: 11-05-2026-fc65b33
+  FLOW_RUNTIME_TAG: 12-05-2026-e5bfe8a
+  AGENT_ANALYTICS_TAG: 10-10-2025
+  JAEGER_PROXY_TAG: 09-10-2025
+  SOCKET_HANDLER_TAG: 06-02-2025-1bddb56
+  CPE_TAG: 26-11-2025-b6cb912
+  AGENT_ARCHITECT_TAG: 20251125-develop-68-a8ff9f8
+  VOICE_CONTROLLER_TAG: 11-03-2026-be8f633
+  LANGFLOW_TAG: 1.7.1
+  WDU_TAG: 2.14.1
+  DOCPROC_DPS_TAG: 20260430-master-432-06929b2
+  DOCPROC_LLMSERVICE_TAG: 20260430-main-255-60fc4a9
+  DOCPROC_CACHE_TAG: 20260424-master-212-282a5ef
+  DOCPROC_DPI_TAG: 20260428-master-480-8ded201e
+  ETCD_TAG: 
+  ELASTICSEARCH_TAG: 
+  OPENSEARCH_TAG: 
+  AGENTIC_MEMORY_TAG: 20260330-418e231
 ```
 
-Use the version number shown in your config file:
+Use the version number shown in your config file for ADK:
 ```yaml
-wxo_lite_version: 1.15.0
+wxo_lite_version: 2.10.1
 ```
 
 **Important Notes:**
+
 - The `wxo_lite_version` refers to your **ADK version**, not your SaaS tenant version
 - Use the exact version from `orchestrate --version`
 - If you're using ADK 1.12.0 or higher, that version supports SaaS evaluations
 - The ADK version and tenant version don't need to match exactly, but using your installed ADK version ensures compatibility
 
 **Safe Default:**
+
 If you encounter issues, you can try the minimum supported version:
 ```yaml
 wxo_lite_version: 1.12.0
@@ -384,7 +421,7 @@ However, it's best practice to use your actual ADK version from `orchestrate --v
 ```
 Bob, create an evaluation configuration file called config.yaml in the
 evaluation/ directory for the product assistant agent. Use the SaaS environment
-configuration format with wxo_lite_version 1.12.0.
+configuration format with wxo_lite_version 2.10.1.
 ```
 
 ---
