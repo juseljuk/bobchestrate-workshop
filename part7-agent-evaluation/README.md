@@ -502,11 +502,6 @@ evaluation/results/
 │       └── test_results.json
 ```
 
-Each run folder contains:
-- `conversation_history.json` - Full conversation logs
-- `metrics.json` - Computed metrics for the run
-- `test_results.json` - Detailed test case results
-
 ### Step 3: Analyze Results
 
 **💡 Ask Bob:**
