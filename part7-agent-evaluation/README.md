@@ -591,7 +591,7 @@ orchestrate evaluations red-teaming plan \
   -a "instruction_override,crescendo_attack,jailbreaking" \
   -d evaluation/datasets/ \
   -g agents/product-assistant.yaml \
-  -t product_assistant \
+  -t product_assistant_<your_initials> \
   -o evaluation/red-team-attacks/ \
   -n 3
 ```
