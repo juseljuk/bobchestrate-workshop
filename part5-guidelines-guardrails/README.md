@@ -74,8 +74,7 @@ When a user sends a request to an agent with guidelines, here's what happens:
 │                                                                 │
 │  Example Match:                                                 │
 │  ✓ "Customer requests refund over $10,000"                      │
-│    → Action: Escalate to specialist                             │
-│    → Tool: escalation_agent                                     │
+│    → Action: Escalate to specialist via collaborator            │
 └────────────────────────────┬────────────────────────────────────┘
                              │
                              ▼
@@ -94,6 +93,8 @@ When a user sends a request to an agent with guidelines, here's what happens:
 │  │ Available Tools:                                │            │
 │  │ • check_order_status                            │            │
 │  │ • process_refund                                │            │
+│  │                                                 │            │
+│  │ Available Collaborators:                        │            │
 │  │ • escalation_agent                              │            │
 │  └─────────────────────────────────────────────────┘            │
 └────────────────────────────┬────────────────────────────────────┘
@@ -105,14 +106,14 @@ When a user sends a request to an agent with guidelines, here's what happens:
 │  • Understands context from instructions                        │
 │  • Recognizes guideline applies to this situation               │
 │  • Decides to follow guideline action                           │
-│  • Invokes escalation_agent tool                                │
+│  • Invokes escalation_agent collaborator                        │
 └────────────────────────────┬────────────────────────────────────┘
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Tool Execution                               │
 │                                                                 │
-│  escalation_agent invoked with context:                         │
+│  escalation_agent (collaborator) invoked with context:          │
 │  "Customer requests $15,000 refund - requires manager approval" │
 └────────────────────────────┬────────────────────────────────────┘
                              │
@@ -149,7 +150,7 @@ When a user sends a request to an agent with guidelines, here's what happens:
 1. **Selective Inclusion**: Only guidelines relevant to the current request are added to the prompt, keeping it efficient
 2. **Priority Order**: Guidelines are evaluated in the order they appear in your YAML file
 3. **Complementary**: Guidelines work alongside instructions - instructions provide general behavior, guidelines handle specific scenarios
-4. **Tool Integration**: Guidelines can automatically invoke tools or collaborator agents
+4. **Tool Integration**: Guidelines can automatically invoke tools; collaborators are invoked through action descriptions
 5. **Guardrails**: Pre/post-invoke plugins provide an additional safety layer independent of guidelines
 
 ### When to Use Guidelines vs Instructions
@@ -170,12 +171,14 @@ Guidelines follow this structure in your agent YAML:
 guidelines:
   - condition: "Description of when this guideline applies"
     action: "What the agent should do"  # Optional if tool is provided
-    tool: "tool_name_to_invoke"  # Optional if action is provided
+    tool: "tool_name_to_invoke"  # Optional if action is provided - must be a tool from 'tools' list
 ```
 
 **Important:**
 
 - You must provide at least one of `action` or `tool`
+- The `tool` field must reference a **tool** (as listed by `orchestrate tools list`), NOT a collaborator agent
+- To invoke collaborator agents, describe the handoff in the `action` field
 - Guidelines execute in priority order (list position matters)
 - Only relevant guidelines are included in prompts to reduce complexity
 
@@ -230,12 +233,10 @@ collaborators:
 # Rule-based guidelines for specific scenarios
 guidelines:
   - condition: "Customer requests a refund over $10,000"
-    action: "Explain that this requires manager approval and you're connecting them with a specialist"
-    tool: "escalation_agent"
+    action: "Explain that this requires manager approval and connect them with the escalation_agent collaborator who can review high-value refund requests"
   
   - condition: "Customer threatens legal action or mentions lawsuit"
-    action: "Acknowledge their concern professionally and escalate to specialist who can address legal matters"
-    tool: "escalation_agent"
+    action: "Acknowledge their concern professionally and hand off to the escalation_agent collaborator who can address legal matters"
   
   - condition: "Customer shares sensitive information like passwords, credit card numbers, or SSN"
     action: "Immediately inform them not to share sensitive data in chat for their security, and guide them to secure channels if needed"
@@ -247,15 +248,13 @@ guidelines:
     action: "Politely explain that you can only help with order-related questions and suggest they consult appropriate professionals for specialized advice"
   
   - condition: "Suspected fraud or security breach is detected"
-    action: "Follow security protocols, do not alert the customer, and escalate immediately to the security team"
-    tool: "escalation_agent"
+    action: "Follow security protocols, do not alert the customer, and immediately hand off to the escalation_agent collaborator for security team review"
   
   - condition: "Customer requests access to another customer's data"
     action: "Decline the request, explain privacy policies, and verify they are inquiring about their own account"
   
   - condition: "Request requires an exception to standard policy"
-    action: "Explain the standard policy, note their request, and connect them with a specialist who can review exceptions"
-    tool: "escalation_agent"
+    action: "Explain the standard policy, note their request, and hand off to the escalation_agent collaborator who can review policy exceptions"
 
 ```
 

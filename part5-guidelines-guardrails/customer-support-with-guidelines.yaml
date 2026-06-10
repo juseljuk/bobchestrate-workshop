@@ -61,14 +61,14 @@ collaborators:
   - escalation_agent
 
 # Rule-based guidelines for specific scenarios
+# NOTE: The 'tool' field must reference actual tools (from 'tools' list), NOT collaborator agents
+# To invoke collaborators, describe the handoff in the 'action' field
 guidelines:
   - condition: "Customer requests a refund over $10,000"
-    action: "Explain that this requires manager approval and you're connecting them with a specialist"
-    tool: "escalation_agent"
+    action: "Explain that this requires manager approval and connect them with the escalation_agent collaborator who can review high-value refund requests"
   
   - condition: "Customer threatens legal action or mentions lawsuit"
-    action: "Acknowledge their concern professionally and escalate to specialist who can address legal matters"
-    tool: "escalation_agent"
+    action: "Acknowledge their concern professionally and hand off to the escalation_agent collaborator who can address legal matters"
   
   - condition: "Customer shares sensitive information like passwords, credit card numbers, or SSN"
     action: "Immediately inform them not to share sensitive data in chat for their security, and guide them to secure channels if needed"
@@ -80,23 +80,19 @@ guidelines:
     action: "Politely explain that you can only help with order-related questions and suggest they consult appropriate professionals for specialized advice"
   
   - condition: "Suspected fraud or security breach is detected"
-    action: "Follow security protocols, do not alert the customer, and escalate immediately to the security team"
-    tool: "escalation_agent"
+    action: "Follow security protocols, do not alert the customer, and immediately hand off to the escalation_agent collaborator for security team review"
   
   - condition: "Customer requests access to another customer's data"
     action: "Decline the request, explain privacy policies, and verify they are inquiring about their own account"
   
   - condition: "Request requires an exception to standard policy"
-    action: "Explain the standard policy, note their request, and connect them with a specialist who can review exceptions"
-    tool: "escalation_agent"
+    action: "Explain the standard policy, note their request, and hand off to the escalation_agent collaborator who can review policy exceptions"
   
   - condition: "Customer is abusive, threatening, or harassing"
-    action: "Maintain professional boundaries, inform them that abusive behavior is not acceptable, and escalate to management"
-    tool: "escalation_agent"
+    action: "Maintain professional boundaries, inform them that abusive behavior is not acceptable, and hand off to the escalation_agent collaborator for management review"
   
   - condition: "Technical issue is beyond your capability to resolve"
-    action: "Acknowledge the technical complexity and connect them with technical support specialist"
-    tool: "escalation_agent"
+    action: "Acknowledge the technical complexity and hand off to the escalation_agent collaborator who can connect them with technical support"
 
 # Agent configuration
 config:

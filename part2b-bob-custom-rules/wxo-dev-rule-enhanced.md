@@ -1715,9 +1715,13 @@ guidelines:
 #### Required Fields
 - **condition** (required): The trigger condition in natural language (the "when" part)
 - **action** (optional): The action to perform when condition is met (the "then" part)
-- **tool** (optional): The tool name to invoke (must match a tool in the `tools` list)
+- **tool** (optional): The tool name to invoke - **MUST be a tool from the `tools` list, NOT a collaborator agent**
 
-**Note**: You must provide at least one of `action` or `tool` for each guideline.
+**CRITICAL**:
+- You must provide at least one of `action` or `tool` for each guideline
+- The `tool` field can ONLY reference tools (as listed by `orchestrate tools list`)
+- To invoke collaborator agents, describe the handoff in the `action` field using natural language
+- Collaborator agents are listed in the `collaborators` section, NOT in the `tool` field of guidelines
 
 #### Guidelines Best Practices
 
@@ -1726,7 +1730,7 @@ guidelines:
    - ❌ Bad: "High value refund"
 
 2. **Specify Concrete Actions**: Describe exactly what the agent should do
-   - ✅ Good: "Acknowledge the request, explain that high-value refunds require specialist review, and escalate to the escalation agent"
+   - ✅ Good: "Acknowledge the request, explain that high-value refunds require specialist review, and hand off to the escalation_agent collaborator"
    - ❌ Bad: "Handle it appropriately"
 
 3. **Order Matters**: Guidelines are evaluated in order, so place more specific conditions before general ones
@@ -1739,15 +1743,22 @@ guidelines:
        tool: "process_refund"
    ```
 
-4. **Tool References**: When specifying a tool, ensure it exists in the `tools` list
+4. **Tool References**: When specifying a tool, ensure it exists in the `tools` list (NOT collaborators)
    ```yaml
    tools:
-     - process_refund_JKJ
-     - check_order_status_JKJ
+     - process_refund
+     - check_order_status
+   
+   collaborators:
+     - escalation_agent
    
    guidelines:
      - condition: "Customer asks about order"
-       tool: "check_order_status_JKJ"  # Must match exactly
+       tool: "check_order_status"  # ✅ CORRECT - references a tool
+     
+     - condition: "Customer needs escalation"
+       action: "Hand off to the escalation_agent collaborator"  # ✅ CORRECT - collaborator in action
+       # ❌ WRONG: tool: "escalation_agent"  # Never reference collaborators in tool field
    ```
 
 5. **Combine with Instructions**: Use guidelines for specific rules, instructions for general behavior
@@ -1787,14 +1798,14 @@ guidelines:
     tool: "process_refund"
   
   - condition: "The customer requests a refund over $10,000"
-    action: "Acknowledge request and escalate to specialist for review"
+    action: "Acknowledge request and hand off to the escalation_agent collaborator for specialist review"
   
   # Escalation rules
   - condition: "The customer mentions legal action or lawyers"
-    action: "Remain professional and immediately escalate to the escalation agent"
+    action: "Remain professional and immediately hand off to the escalation_agent collaborator"
   
   - condition: "The customer is very upset after 2-3 resolution attempts"
-    action: "Acknowledge frustration and connect with a specialist"
+    action: "Acknowledge frustration and hand off to the escalation_agent collaborator"
   
   # Order status rules
   - condition: "The customer asks about their order status"
@@ -1811,10 +1822,11 @@ collaborators:
 
 #### Common Guideline Patterns
 
-**Escalation Pattern:**
+**Escalation Pattern (Collaborator Handoff):**
 ```yaml
 - condition: "The [specific trigger condition]"
-  action: "Acknowledge [the situation] and escalate to [collaborator agent]"
+  action: "Acknowledge [the situation] and hand off to the [collaborator_name] collaborator"
+  # NOTE: Do NOT use tool field for collaborators - describe handoff in action
 ```
 
 **Tool Invocation Pattern:**
