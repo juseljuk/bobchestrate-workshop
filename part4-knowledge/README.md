@@ -484,7 +484,7 @@ The agent should recognize this needs escalation and delegate to the escalation-
 
 You can create specialized knowledge bases for different domains. Each knowledge base requires actual document files.
 
-**Example: Technical Support Knowledge Base**
+**Example: Technical Support Knowledge Base** (_just an exammple, you do not need to follow and execure these steps_)
 
 1. **Obtain / create document files:**
 
@@ -618,15 +618,16 @@ Create a knowledge base with product information and connect it to a sales agent
 
 **Ask Bob:**
 ```
-Bob, create a product catalog knowledge base with 5 products and a sales agent that uses it
+Bob, create a product catalog knowledge base with 5 products and a sales agent that uses it. Do not add the new knowledge base and the sales agent to the import-all script within the workspace.
 ```
+> **Note:** This can take a while, since Bob will probably also create some documentation for the for the sales agent setup and for the knowledge base.
 
 ### Exercise 2: Multi-Agent System
 Create a system with 3 agents: front-line support, technical support, and billing support.
 
 **Ask Bob:**
 ```
-Bob, design a multi-agent customer service system with specialized agents for different departments
+Bob, design a multi-agent customer service system with specialized agents for different departments: front-line support, technical support, and billing support.
 ```
 
 ### Exercise 3: Knowledge Base Optimization
