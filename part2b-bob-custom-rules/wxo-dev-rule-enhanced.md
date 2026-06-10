@@ -640,8 +640,8 @@ orchestrate evaluations quick-eval -p tests/ -o results/ -t tools/
 
 ### Quick Evaluation
 ```bash
-# Quick evaluation of agent
-orchestrate evaluations quick-eval -p tests/ -o results/ -t tools/
+# Quick evaluation of agent (directory containing JSON test files)
+orchestrate evaluations quick-eval -p evaluation/datasets/ -o results/ -t tools/
 
 # Evaluate specific test cases with config file
 orchestrate evaluations quick-eval -c evaluation/config.yaml
@@ -656,9 +656,9 @@ orchestrate evaluations quick-eval -c evaluation/config.yaml
 
 **For Developer Edition (Local):**
 ```yaml
-# test_paths - array of dataset file/directory paths
+# test_paths - array of dataset file/directory paths containing JSON files
 test_paths:
-  - evaluation/test-cases.jsonl
+  - evaluation/datasets/
 
 # auth_config - authentication settings
 auth_config:
@@ -683,7 +683,7 @@ n_runs: 1
 **For SaaS:**
 ```yaml
 test_paths:
-  - evaluation/test-cases.jsonl
+  - evaluation/datasets/
 
 auth_config:
   url: https://api.<region>.watson-orchestrate.ibm.com/instances/<instance-id>
@@ -698,7 +698,7 @@ n_runs: 1
 **For On-Premises:**
 ```yaml
 test_paths:
-  - evaluation/test-cases.jsonl
+  - evaluation/datasets/
 
 auth_config:
   url: https://<api-url>:<port>/orchestrate/instances/<instance-id>
@@ -747,13 +747,13 @@ metrics:
 
 ❌ **Wrong - Using dataset_path:**
 ```yaml
-dataset_path: evaluation/test-cases.jsonl
+dataset_path: evaluation/datasets/
 ```
 
 ✅ **Correct - Using test_paths:**
 ```yaml
 test_paths:
-  - evaluation/test-cases.jsonl
+  - evaluation/datasets/
 ```
 
 **Important Notes:**
@@ -761,15 +761,50 @@ test_paths:
 - Use `test_paths` (not `dataset_path`)
 - Do NOT include `tools_path` in config (use `-t` CLI flag for quick-eval)
 - The `tenant_name` must match the environment name from `orchestrate env add`
+- Test cases must be in JSON format (not JSONL) with official ground truth structure
 
 
 ### Evaluation Datasets
-- Create comprehensive test cases covering:
-  - Happy path scenarios
-  - Edge cases and boundary conditions
-  - Error scenarios
-  - Multi-turn conversations
-- Store test cases in `tests/` or `evaluation/` directory
+
+**CRITICAL**: Evaluation datasets use **JSON format** (not JSONL) with structured ground truth data.
+
+Each test case is a **separate JSON file** containing:
+- `agent` - Name of the agent being evaluated
+- `goals` - Dependency graph showing tool call relationships
+- `goal_details` - Step-by-step list of tool calls and final response
+- `story` - Narrative description of the user's intent
+- `starting_sentence` - The user's initial query
+
+Example structure:
+```json
+{
+    "agent": "my_agent",
+    "goals": {
+        "tool_call-1": ["summarize"]
+    },
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "tool_call-1",
+            "tool_name": "my_tool",
+            "args": {"param": "value"}
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "Expected response",
+            "keywords": ["key", "terms"]
+        }
+    ],
+    "story": "User story context",
+    "starting_sentence": "User's initial query"
+}
+```
+
+Best practices:
+- Create comprehensive test cases covering happy path, edge cases, and error scenarios
+- Store test cases in `evaluation/datasets/` directory
+- Each test case should be a separate `.json` file
 - Version control your test datasets
 
 ### LLM Vulnerability Testing

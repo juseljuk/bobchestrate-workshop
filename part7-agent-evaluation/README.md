@@ -103,44 +103,58 @@ watsonx Orchestrate provides two types of evaluation metrics:
 
 ### Step 1: Understand Test Case Format
 
-Evaluation datasets use **JSONL (JSON Lines)** format.
+Evaluation datasets use **JSON format** with structured ground truth data.
 
-#### What is JSONL?
+#### Ground Truth Dataset Structure
 
-JSONL is a text format where **each line is a separate, valid JSON object**. Unlike regular JSON files that contain one large array or object, JSONL files have one JSON object per line:
+Each test case is a **separate JSON file** containing:
 
-**Regular JSON** (one big array):
 ```json
-[
-  {"input": "query 1", "output": "response 1"},
-  {"input": "query 2", "output": "response 2"}
-]
+{
+    "agent": "product_assistant_agent",
+    "goals": {
+        "search_products-1": ["summarize"]
+    },
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "search_products-1",
+            "tool_name": "search_products",
+            "args": {
+                "query": "laptops"
+            }
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "Here are the available laptops in our catalog.",
+            "keywords": ["laptops", "catalog"]
+        }
+    ],
+    "story": "You want to search for laptops in the product catalog.",
+    "starting_sentence": "Show me laptops"
+}
 ```
 
-**JSONL** (one object per line):
-```jsonl
-{"input": "query 1", "output": "response 1"}
-{"input": "query 2", "output": "response 2"}
-```
+#### Required Fields
 
-**Why JSONL?**
-- ✅ Easy to stream and process line-by-line
-- ✅ Can append new test cases without parsing entire file
-- ✅ Works well with large datasets
-- ✅ Standard format for ML/AI evaluation datasets
+- **`agent`** (string) - Name of the agent being evaluated (use `orchestrate agents list` to find)
+- **`goals`** (object) - Dependency graph showing which tool calls depend on others
+  - Keys are unique goal identifiers (e.g., `"search_products-1"`)
+  - Values are arrays of dependent goals (e.g., `["summarize"]`)
+- **`goal_details`** (array) - Step-by-step list of tool calls and final response
+  - Tool calls have: `type: "tool_call"`, `name`, `tool_name`, `args`
+  - Final response has: `type: "text"`, `name: "summarize"`, `response`, `keywords`
+- **`story`** (string) - Narrative description of the user's intent and context
+- **`starting_sentence`** (string) - The user's initial query
 
-#### Test Case Structure
+#### Why This Format?
 
-Each line in your JSONL file should have:
-
-```jsonl
-{"input": "user query", "expected_output": "expected response or behavior", "metadata": {"category": "test_type"}}
-```
-
-**Fields:**
-- `input` (required) - The user's query or prompt
-- `expected_output` (optional) - Expected agent response or behavior
-- `metadata` (optional) - Additional info like category, tool name, etc.
+- ✅ Captures complete conversation context
+- ✅ Defines expected tool call sequences
+- ✅ Includes dependency relationships between tools
+- ✅ Provides ground truth for comprehensive evaluation
+- ✅ Enables metrics like Journey Success, Tool Call Precision/Recall
 
 ### Step 2: Create Test Cases for Product Assistant
 
@@ -148,75 +162,142 @@ Let's create comprehensive test cases for the product assistant agent from Part 
 
 **💡 Ask Bob:**
 ```
-Bob, create an evaluation dataset file called test-cases.jsonl in the evaluation/ 
-directory with 25 test cases for the product assistant agent. Include:
+Bob, create evaluation dataset files in the evaluation/datasets/ directory
+for the product assistant agent. Create separate JSON files for:
 - 10 happy path cases (normal product searches, details, inventory)
 - 8 edge cases (out of stock, invalid IDs, ambiguous queries)
 - 7 error scenarios (malformed inputs, missing parameters)
 
-Make sure each test case has input, expected_output, and metadata fields.
+Use the official ground truth dataset format with agent, goals, goal_details,
+story, and starting_sentence fields.
 ```
 
-Or create it manually. Here's a starter template:
+Or create them manually. Here's an example test case file:
 
-```jsonl
-{"input": "Show me laptops", "expected_output": "search_products tool called with query='laptops'", "metadata": {"category": "happy_path", "tool": "search_products"}}
-{"input": "Tell me about LAPTOP-001", "expected_output": "get_product_details tool called with product_id='LAPTOP-001'", "metadata": {"category": "happy_path", "tool": "get_product_details"}}
-{"input": "Is the SmartPhone X in stock?", "expected_output": "check_inventory tool called after finding product ID", "metadata": {"category": "happy_path", "tool": "check_inventory"}}
-{"input": "What tablets do you recommend?", "expected_output": "get_recommendations tool called with category='Tablets'", "metadata": {"category": "happy_path", "tool": "get_recommendations"}}
-{"input": "Show me products under $500", "expected_output": "search_products tool called with price filter", "metadata": {"category": "happy_path", "tool": "search_products"}}
-{"input": "Do you have any wireless headphones?", "expected_output": "search_products tool called with query='wireless headphones'", "metadata": {"category": "happy_path", "tool": "search_products"}}
-{"input": "What's the price of the ProBook 15?", "expected_output": "get_product_details tool called for ProBook 15", "metadata": {"category": "happy_path", "tool": "get_product_details"}}
-{"input": "I need a monitor for my home office", "expected_output": "search_products or get_recommendations for monitors", "metadata": {"category": "happy_path", "tool": "search_products"}}
-{"input": "Show me all products in the Audio category", "expected_output": "get_recommendations tool called with category='Audio'", "metadata": {"category": "happy_path", "tool": "get_recommendations"}}
-{"input": "What's available in stock right now?", "expected_output": "search_products with in_stock filter or multiple check_inventory calls", "metadata": {"category": "happy_path", "tool": "search_products"}}
-{"input": "Tell me about product INVALID-999", "expected_output": "Error message: product not found", "metadata": {"category": "edge_case", "tool": "get_product_details"}}
-{"input": "Is product XYZ-000 in stock?", "expected_output": "Error message: product not found", "metadata": {"category": "edge_case", "tool": "check_inventory"}}
-{"input": "Show me products", "expected_output": "Clarifying question or search all products", "metadata": {"category": "edge_case", "tool": "search_products"}}
-{"input": "What do you recommend?", "expected_output": "Clarifying question about category or preferences", "metadata": {"category": "edge_case", "tool": "get_recommendations"}}
-{"input": "I want to buy something", "expected_output": "Clarifying questions about product type", "metadata": {"category": "edge_case", "tool": "none"}}
-{"input": "Do you have any gaming laptops?", "expected_output": "Search results or message about no gaming laptops", "metadata": {"category": "edge_case", "tool": "search_products"}}
-{"input": "Show me the cheapest product", "expected_output": "Search with price sorting or recommendation", "metadata": {"category": "edge_case", "tool": "search_products"}}
-{"input": "What's the most expensive item?", "expected_output": "Search with price sorting or recommendation", "metadata": {"category": "edge_case", "tool": "search_products"}}
-{"input": "", "expected_output": "Error or prompt for input", "metadata": {"category": "error", "tool": "none"}}
-{"input": "12345", "expected_output": "Clarifying question or error", "metadata": {"category": "error", "tool": "none"}}
-{"input": "!@#$%^&*()", "expected_output": "Error message or clarifying question", "metadata": {"category": "error", "tool": "none"}}
-{"input": "Show me products with price -100", "expected_output": "Error or clarifying question about invalid price", "metadata": {"category": "error", "tool": "search_products"}}
-{"input": "Get details for product", "expected_output": "Error: missing product ID", "metadata": {"category": "error", "tool": "get_product_details"}}
-{"input": "Check inventory", "expected_output": "Error: missing product ID", "metadata": {"category": "error", "tool": "check_inventory"}}
-{"input": "Recommend me category", "expected_output": "Error or clarifying question", "metadata": {"category": "error", "tool": "get_recommendations"}}
+**`evaluation/datasets/search_laptops.json`**:
+```json
+{
+    "agent": "product_assistant_agent",
+    "goals": {
+        "search_products-1": ["summarize"]
+    },
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "search_products-1",
+            "tool_name": "search_products",
+            "args": {
+                "query": "laptops"
+            }
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "Here are the available laptops in our catalog.",
+            "keywords": ["laptops", "catalog", "available"]
+        }
+    ],
+    "story": "You want to search for laptops in the product catalog to see what's available.",
+    "starting_sentence": "Show me laptops"
+}
 ```
 
-### Step 3: Create Evaluation Configuration (Optional)
+**`evaluation/datasets/get_product_details.json`**:
+```json
+{
+    "agent": "product_assistant_agent",
+    "goals": {
+        "get_product_details-1": ["summarize"]
+    },
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "get_product_details-1",
+            "tool_name": "get_product_details",
+            "args": {
+                "product_id": "LAPTOP-001"
+            }
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "The UltraBook Pro 15 is a premium laptop with Intel Core i7 processor, 32GB RAM, and 1TB SSD storage, priced at $1,899.99.",
+            "keywords": ["UltraBook Pro 15", "Intel Core i7", "$1,899.99"]
+        }
+    ],
+    "story": "You want to get detailed information about product LAPTOP-001.",
+    "starting_sentence": "Tell me about LAPTOP-001"
+}
+```
 
-For full evaluation with reference-based metrics, create `evaluation/config.yaml`:
+**`evaluation/datasets/check_inventory.json`**:
+```json
+{
+    "agent": "product_assistant_agent",
+    "goals": {
+        "search_products-1": ["check_inventory-1"],
+        "check_inventory-1": ["summarize"]
+    },
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "search_products-1",
+            "tool_name": "search_products",
+            "args": {
+                "query": "SmartPhone X"
+            }
+        },
+        {
+            "type": "tool_call",
+            "name": "check_inventory-1",
+            "tool_name": "check_inventory",
+            "args": {
+                "product_id": "PHONE-001"
+            }
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "The SmartPhone X is currently in stock with 45 units available.",
+            "keywords": ["SmartPhone X", "in stock", "45 units"]
+        }
+    ],
+    "story": "You want to check if the SmartPhone X is in stock. First find the product, then check its inventory.",
+    "starting_sentence": "Is the SmartPhone X in stock?"
+}
+```
+
+### Step 3: Create Evaluation Configuration
+
+For evaluation, create `evaluation/config.yaml`:
 
 ```yaml
-# Full evaluation configuration (reference-based)
-agent_name: product_assistant_<your_initials>
-dataset_path: evaluation/test-cases.jsonl
-output_dir: evaluation/results/
-tools_path: tools/
+# Evaluation configuration
+test_paths:
+  - evaluation/datasets/
 
-# Metrics to compute (all are optional)
-metrics:
-  - response_confidence
-  - retrieval_confidence
-  - faithfulness
-  - answer_relevancy
-  - tool_call_precision
-  - tool_call_recall
-  - text_match
-  - journey_success
-  - average_response_time
+auth_config:
+  url: http://localhost:4321
+  tenant_name: local
+
+output_dir: evaluation/results/
+enable_verbose_logging: true
+
+# Optional: User response style
+llm_user_config:
+  user_response_style:
+    - "Be concise in messages and confirmations"
+
+# Number of evaluation runs (default: 1)
+n_runs: 1
 ```
 
-**Note:** Full evaluation requires test cases with `expected_output` fields. For quick evaluation without expected outputs, you don't need a config file.
+**Note:** Metrics are automatically computed by the evaluation framework and cannot be configured in the YAML file. The framework will compute all applicable metrics based on your test cases.
 
 **💡 Ask Bob:**
 ```
 Bob, create an evaluation configuration file called config.yaml in the
-evaluation/ directory for full evaluation of the product assistant agent.
+evaluation/ directory for the product assistant agent using the official format.
 ```
 
 ---
@@ -227,33 +308,39 @@ evaluation/ directory for full evaluation of the product assistant agent.
 
 The watsonx Orchestrate CLI provides two evaluation modes:
 
-**Quick Evaluation** (reference-less - no expected outputs needed):
+**Quick Evaluation** (reference-less - lightweight checks):
 
 ```bash
 orchestrate evaluations quick-eval \
-  -p evaluation/test-cases.jsonl \
+  -p evaluation/datasets/ \
   -o evaluation/results/ \
   -t tools/
 ```
 
 **Parameters:**
-- `-p` / `--prompts` - Path to test dataset file or directory
+- `-p` / `--test-paths` - Path to test dataset files or directory containing JSON files
 - `-o` / `--output-dir` - Directory for evaluation results
 - `-t` / `--tools-path` - Directory containing tool definitions
 
 **What this does:**
 - Runs each test case against your agent
 - Measures: Tool Calls, Successful Tool Calls, Schema Mismatch, Hallucination
-- Generates evaluation report without needing expected outputs
+- Generates evaluation report with reference-less metrics
 - Saves results to output directory
 
-**Full Evaluation** (reference-based - requires expected outputs):
+**Or use a config file:**
+
+```bash
+orchestrate evaluations quick-eval -c evaluation/config.yaml
+```
+
+**Full Evaluation** (reference-based - comprehensive metrics):
 
 ```bash
 orchestrate evaluations evaluate -c evaluation/config.yaml
 ```
 
-This requires a config file with expected outputs and measures all metrics including Response Confidence, Faithfulness, Answer Relevancy, etc.
+This requires ground truth datasets with complete `goal_details` and measures all metrics including Response Confidence, Faithfulness, Answer Relevancy, Tool Call Precision/Recall, Journey Success, etc.
 
 ### Step 2: Review Results
 
@@ -355,7 +442,7 @@ Generate attack scenarios based on your evaluation dataset:
 # Create attack scenarios
 orchestrate evaluations red-teaming plan \
   -a "instruction_override,crescendo_attack,jailbreaking,crescendo_prompt_leakage" \
-  -d evaluation/test-cases.jsonl \
+  -d evaluation/datasets/ \
   -g . \
   -t product_assistant_<your_initials> \
   -o evaluation/red-team-attacks/ \
@@ -364,7 +451,7 @@ orchestrate evaluations red-teaming plan \
 
 **Parameters:**
 - `-a` - Comma-separated list of attack types to generate
-- `-d` - Dataset file(s) to base attacks on
+- `-d` - Dataset file(s) or directory containing JSON test cases to base attacks on
 - `-g` - Directory containing agent definitions
 - `-t` - Target agent name
 - `-o` - Output directory for generated attacks
@@ -373,7 +460,7 @@ orchestrate evaluations red-teaming plan \
 **💡 Ask Bob:**
 ```
 Bob, run the red-teaming plan command to generate attack scenarios for the
-product assistant agent using the test-cases.jsonl dataset.
+product assistant agent using the datasets in evaluation/datasets/.
 ```
 
 ### Step 3: Run Attack Scenarios
@@ -542,14 +629,14 @@ After implementing fixes, re-run evaluations:
 ```bash
 # Re-run functional tests
 orchestrate evaluations quick-eval \
-  -p evaluation/test-cases.jsonl \
+  -p evaluation/datasets/ \
   -o evaluation/results-v2/ \
   -t tools/
 
 # Re-run red-team attacks
 orchestrate evaluations red-teaming plan \
   -a "instruction_override,crescendo_attack,jailbreaking,crescendo_prompt_leakage" \
-  -d evaluation/test-cases.jsonl \
+  -d evaluation/datasets/ \
   -g . \
   -t product_assistant_improved_<your_initials> \
   -o evaluation/red-team-attacks-v2/ \
@@ -629,28 +716,30 @@ Compare results:
 
 ### Exercise 1: Expand Test Coverage (Easy)
 
-Add 10 more test cases to `test-cases.jsonl` covering:
-- Multi-turn conversations
-- Complex queries requiring multiple tools
+Create 10 more JSON test case files in `evaluation/datasets/` covering:
+- Multi-turn conversations with multiple tool calls
+- Complex queries requiring tool call dependencies
 - Boundary conditions (very long queries, special characters)
 
 **💡 Ask Bob:**
 ```
-Bob, add 10 more test cases to evaluation/test-cases.jsonl focusing on 
-multi-turn conversations and complex queries.
+Bob, create 10 more JSON test case files in evaluation/datasets/ focusing on
+multi-turn conversations and complex queries. Use the official ground truth
+dataset format with agent, goals, goal_details, story, and starting_sentence.
 ```
 
 ### Exercise 2: Create Safety Tests (Medium)
 
-Create a new file `safety-tests.jsonl` with 15 test cases for:
+Create JSON test case files in `evaluation/datasets/safety/` for:
 - PII handling (what if user shares personal info?)
 - Inappropriate content requests
 - Attempts to use agent for unintended purposes
 
 **💡 Ask Bob:**
 ```
-Bob, create a new file evaluation/safety-tests.jsonl with 15 test cases 
-focused on safety: PII handling, inappropriate requests, and misuse attempts.
+Bob, create 15 JSON test case files in evaluation/datasets/safety/ focused on
+safety scenarios: PII handling, inappropriate requests, and misuse attempts.
+Use the official ground truth dataset format.
 ```
 
 ### Exercise 3: Build Evaluation Dashboard (Advanced)
