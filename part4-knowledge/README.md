@@ -122,6 +122,7 @@ orchestrate models list
 | HTML | 5 MB | Web pages |
 
 **Limits:**
+
 - Maximum 100 files per knowledge base
 - Each file must have a unique name
 
@@ -182,6 +183,7 @@ Use Bob to create a knowledge base YAML file to import the FAQ PDF.
    - **Direct download**: [FAQ.pdf](./FAQ.pdf)
    
    The FAQ.pdf contains comprehensive FAQs about:
+   
    - Shipping Information
    - Returns and Refunds
    - Payment Methods and Billing
