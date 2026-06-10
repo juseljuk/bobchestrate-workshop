@@ -486,8 +486,7 @@ You can create specialized knowledge bases for different domains. Each knowledge
 
 **Example: Technical Support Knowledge Base**
 
-1. **Create document files:**
-
+1. **Obtain / create document files:**
  - `device-setup-guide.pdf` - Device setup instructions
  - `troubleshooting-guide.pdf` - Common troubleshooting steps
 
@@ -542,6 +541,7 @@ knowledge_base:
 ```
 
 **Benefits of Multiple Knowledge Bases:**
+
 - ✅ Organize information by domain or topic
 - ✅ Share common knowledge bases across multiple agents
 - ✅ Update specific knowledge bases independently
