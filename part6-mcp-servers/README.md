@@ -437,20 +437,9 @@ You can now close the new terminal and stop the server in the other terminal wit
 
 Create `product-catalog-toolkit.yaml`:
 
-```yaml
-kind: mcp
-name: product-catalog
-description: Product catalog tools for searching, viewing details, and checking inventory
-language: python
-package_root: ./
-command: python product_catalog_server.py
-tools:
-  - "*"  # Import all tools from the server
-```
-
 **💡 Ask Bob:**
 
->**NOTE**: Before consulting Bob, check your toolkit folder and ensure that Bob has not already created any yaml-files to it. If is has, please remove it to avoid any confusion.
+>**NOTE**: Before consulting Bob, check your **toolkit** folder and ensure that Bob has not already created any yaml-files to it. If is has, please remove it to avoid any confusion.
 
 >**NOTE2**: Switch your Bob chat mode back to **WXO Agent Architect**.
 
