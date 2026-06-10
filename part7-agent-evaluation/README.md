@@ -338,20 +338,45 @@ n_runs: 1
 
 #### About `wxo_lite_version` Parameter
 
-The `wxo_lite_version` parameter specifies the watsonx Orchestrate evaluation framework version:
+The `wxo_lite_version` parameter specifies the **watsonx Orchestrate ADK (SDK) version**:
 
 - **Required for SaaS and on-premises environments**
 - **NOT needed for Developer Edition (local)**
-- Should match your tenant's watsonx Orchestrate version
+- Should match your installed ADK version
 - Common versions: 1.12.0, 1.13.0, 1.14.0, 1.15.0
-- Default: 1.12.0 (widely compatible)
-- Starting from version 1.12.0, evaluations work with SaaS/on-prem (not just Developer Edition)
+- Minimum version: 1.12.0 (first version supporting SaaS/on-prem evaluations)
 
-**How to determine the correct version:**
-1. Check your tenant version in the watsonx Orchestrate UI
-2. Run `orchestrate --version` to see your CLI version
-3. Consult with your admin if unsure
-4. Use 1.12.0 as a safe default (widely compatible)
+**How to find the correct version:**
+
+**Check Your ADK Version (Recommended)**
+```bash
+# Get your installed ADK version
+orchestrate --version
+```
+
+Output example:
+```
+watsonx Orchestrate CLI version 1.15.0
+```
+
+Use the version number shown in your config file:
+```yaml
+wxo_lite_version: 1.15.0
+```
+
+**Important Notes:**
+- The `wxo_lite_version` refers to your **ADK version**, not your SaaS tenant version
+- Use the exact version from `orchestrate --version`
+- If you're using ADK 1.12.0 or higher, that version supports SaaS evaluations
+- The ADK version and tenant version don't need to match exactly, but using your installed ADK version ensures compatibility
+
+**Safe Default:**
+If you encounter issues, you can try the minimum supported version:
+```yaml
+wxo_lite_version: 1.12.0
+```
+
+However, it's best practice to use your actual ADK version from `orchestrate --version`.
 
 **Note:** Metrics are automatically computed by the evaluation framework and cannot be configured in the YAML file. The framework will compute all applicable metrics based on your test cases.
 
