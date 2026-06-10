@@ -375,7 +375,7 @@ Filter and validate agent responses before sending to users.
 - Validate response format
 - Add disclaimers
 
-### Input Guardrail Example - Agent pre-invoke
+### Input Guardrail **Example** - Agent pre-invoke
 
 ```python
 # content_safety_plugin.py
