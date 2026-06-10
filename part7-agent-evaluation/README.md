@@ -588,10 +588,10 @@ Generate attack scenarios based on your evaluation dataset:
 ```bash
 # Create attack scenarios
 orchestrate evaluations red-teaming plan \
-  -a "instruction_override,crescendo_attack,jailbreaking,crescendo_prompt_leakage" \
+  -a "instruction_override,crescendo_attack,jailbreaking" \
   -d evaluation/datasets/ \
-  -g . \
-  -t product_assistant_<your_initials> \
+  -g agents/product-assistant.yaml \
+  -t product_assistant \
   -o evaluation/red-team-attacks/ \
   -n 3
 ```
