@@ -424,6 +424,10 @@ evaluation/ directory for the product assistant agent. Use the SaaS environment
 configuration format with wxo_lite_version 2.10.1.
 ```
 
+#### IMPORTANT: ####
+
+**_Check the created configuration file and make sure that you update the "auth_config:url" with the URL that you got from your instructor at the start of the workshop - you used it earlier to create and active the SaaS environment that you have been using during the workshop._**
+
 ---
 
 ## Part 3: Running Automated Evaluations
@@ -453,7 +457,7 @@ orchestrate evaluations quick-eval \
 
 - `-p` / `--test-paths` - Path to test dataset files or directory containing JSON files
 - `-o` / `--output-dir` - Directory for evaluation results
-- `-t` / `--tools-path` - Directory containing tool definitions
+- `-t` / `--tools-path` - Directory containing tool definitions, e.g., `tools/` or `toolkits/` if your agent uses MCP toolkits
 
 **What this does:**
 
