@@ -269,10 +269,49 @@ Or create them manually. Here's an example test case file:
 
 ### Step 3: Create Evaluation Configuration
 
-For evaluation, create `evaluation/config.yaml`:
+You can run evaluations using either your **locally installed Developer Edition** or a **connected SaaS environment**. For this workshop, we'll use the **SaaS environment as the default**.
+
+#### Option 1: SaaS Environment (Workshop Default)
+
+For evaluation using a connected SaaS tenant, create `evaluation/config.yaml`:
 
 ```yaml
-# Evaluation configuration
+# Evaluation configuration for SaaS environment
+test_paths:
+  - evaluation/datasets/
+
+auth_config:
+  url: https://api.<region>.watson-orchestrate.ibm.com/instances/<instance-id>
+  tenant_name: saas  # Must match the environment name from 'orchestrate env add'
+
+output_dir: evaluation/results/
+enable_verbose_logging: true
+
+# Required for SaaS/on-premises environments
+wxo_lite_version: 1.12.0
+
+# Optional: User response style
+llm_user_config:
+  user_response_style:
+    - "Be concise in messages and confirmations"
+
+# Number of evaluation runs (default: 1)
+n_runs: 1
+```
+
+**Important Notes for SaaS:**
+- Replace `<region>` with your region (e.g., `us-south`, `eu-de`)
+- Replace `<instance-id>` with your actual instance ID
+- The `tenant_name` must match the environment name you configured with `orchestrate env add`
+- The `wxo_lite_version` parameter is **required** for SaaS environments
+- Use version 1.12.0 or higher (check your tenant version in the UI or with `orchestrate --version`)
+
+#### Option 2: Developer Edition (Local)
+
+For evaluation using your locally installed Developer Edition, create `evaluation/config.yaml`:
+
+```yaml
+# Evaluation configuration for local Developer Edition
 test_paths:
   - evaluation/datasets/
 
@@ -292,12 +331,35 @@ llm_user_config:
 n_runs: 1
 ```
 
+**Important Notes for Developer Edition:**
+- The `wxo_lite_version` parameter is **NOT needed** for local Developer Edition
+- Ensure your Developer Edition is running (`orchestrate dev start`)
+- The default URL is `http://localhost:4321`
+
+#### About `wxo_lite_version` Parameter
+
+The `wxo_lite_version` parameter specifies the watsonx Orchestrate evaluation framework version:
+
+- **Required for SaaS and on-premises environments**
+- **NOT needed for Developer Edition (local)**
+- Should match your tenant's watsonx Orchestrate version
+- Common versions: 1.12.0, 1.13.0, 1.14.0, 1.15.0
+- Default: 1.12.0 (widely compatible)
+- Starting from version 1.12.0, evaluations work with SaaS/on-prem (not just Developer Edition)
+
+**How to determine the correct version:**
+1. Check your tenant version in the watsonx Orchestrate UI
+2. Run `orchestrate --version` to see your CLI version
+3. Consult with your admin if unsure
+4. Use 1.12.0 as a safe default (widely compatible)
+
 **Note:** Metrics are automatically computed by the evaluation framework and cannot be configured in the YAML file. The framework will compute all applicable metrics based on your test cases.
 
 **💡 Ask Bob:**
 ```
 Bob, create an evaluation configuration file called config.yaml in the
-evaluation/ directory for the product assistant agent using the official format.
+evaluation/ directory for the product assistant agent. Use the SaaS environment
+configuration format with wxo_lite_version 1.12.0.
 ```
 
 ---
