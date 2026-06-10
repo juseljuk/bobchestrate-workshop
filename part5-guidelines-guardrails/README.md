@@ -849,7 +849,7 @@ Create an agent that uses both guidelines for rule-based responses and guardrail
 
 **Ask Bob:**
 ```
-Bob, create a financial services agent with guidelines for handling account inquiries and guardrails for protecting sensitive financial data
+Bob, create a financial services agent with guidelines for handling account inquiries and guardrails for protecting sensitive financial data.
 ```
 
 ### Exercise 4: Test Safety Measures
