@@ -512,7 +512,7 @@ You should see `product-catalog` in the list with all 4 tools.
 Create `product-assistant-agent.yaml`:
 
 ```yaml
-spec_version: 0.7
+spec_version: v1
 kind: native
 name: product_assistant
 title: Product Assistant
