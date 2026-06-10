@@ -104,49 +104,49 @@ if __name__ == "__main__":
 **Understanding the Components:**
 
 1. **Server Instance Creation**
-   ```python
-   app = Server("my-server")
-   ```
-   - Creates the MCP server with a unique name
-   - This name identifies your server in the watsonx Orchestrate toolkit
-   - Use descriptive names like "product-catalog" or "customer-data"
+    ```python
+    app = Server("my-server")
+    ```
+    - Creates the MCP server with a unique name
+    - This name identifies your server in the watsonx Orchestrate toolkit
+    - Use descriptive names like "product-catalog" or "customer-data"
 
 2. **Tool Definition with `@app.list_tools()`**
-   ```python
-   @app.list_tools()
-   async def list_tools() -> list[Tool]:
-   ```
-   - This decorator registers a function that returns available tools
-   - watsonx Orchestrate calls this to discover what tools your server provides
-   - Each `Tool` object defines:
-     - **name**: Unique identifier for the tool (use snake_case)
-     - **description**: Clear explanation of what the tool does (helps the LLM decide when to use it)
-     - **inputSchema**: JSON Schema defining required and optional parameters
+    ```python
+    @app.list_tools()
+    async def list_tools() -> list[Tool]:
+    ```
+    - This decorator registers a function that returns available tools
+    - watsonx Orchestrate calls this to discover what tools your server provides
+    - Each `Tool` object defines:
+        - **name**: Unique identifier for the tool (use snake_case)
+        - **description**: Clear explanation of what the tool does (helps the LLM decide when to use it)
+        - **inputSchema**: JSON Schema defining required and optional parameters
 
 3. **Input Schema Structure**
-   ```python
-   inputSchema={
-       "type": "object",
-       "properties": {
-           "param": {"type": "string"}
-       },
-       "required": ["param"]
-   }
-   ```
-   - Defines the parameters your tool accepts
-   - **properties**: Dictionary of parameter names and their types
-   - **required**: Array of parameter names that must be provided
-   - Supports types: `string`, `number`, `boolean`, `array`, `object`
+    ```python
+    inputSchema={
+        "type": "object",
+        "properties": {
+            "param": {"type": "string"}
+        },
+        "required": ["param"]
+    }
+    ```
+    - Defines the parameters your tool accepts
+    - **properties**: Dictionary of parameter names and their types
+    - **required**: Array of parameter names that must be provided
+    - Supports types: `string`, `number`, `boolean`, `array`, `object`
 
 4. **Tool Implementation with `@app.call_tool()`**
-   ```python
-   @app.call_tool()
-   async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-   ```
-   - This decorator handles the actual tool execution
-   - Receives the tool `name` and `arguments` from watsonx Orchestrate
-   - Must return a list of `TextContent` objects with the results
-   - Use `if name == "tool_name"` to route to the correct tool logic
+    ```python
+    @app.call_tool()
+    async def call_tool(name: str, arguments: dict) -> list [TextContent]:
+    ```
+    - This decorator handles the actual tool execution
+    - Receives the tool `name` and `arguments` from watsonx Orchestrate
+    - Must return a list of `TextContent` objects with the results
+    - Use `if name == "tool_name"` to route to the correct tool logic
 
 5. **Server Execution**
    ```python
