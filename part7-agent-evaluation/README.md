@@ -164,9 +164,9 @@ Let's create comprehensive test cases for the product assistant agent from Part 
 ```
 Bob, create evaluation dataset files in the evaluation/datasets/ directory
 for the product assistant agent. Create separate JSON files for:
-- 10 happy path cases (normal product searches, details, inventory)
-- 8 edge cases (out of stock, invalid IDs, ambiguous queries)
-- 7 error scenarios (malformed inputs, missing parameters)
+- 6 happy path cases (normal product searches, details, inventory)
+- 3 edge cases (out of stock, invalid IDs, ambiguous queries)
+- 3 error scenarios (malformed inputs, missing parameters)
 
 Use the official ground truth dataset format with agent, goals, goal_details,
 story, and starting_sentence fields.
