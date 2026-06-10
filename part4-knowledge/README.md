@@ -183,7 +183,7 @@ Use Bob to create a knowledge base YAML file to import the FAQ PDF.
    - **Direct download**: [FAQ.pdf](./FAQ.pdf)
    
    The FAQ.pdf contains comprehensive FAQs about:
-   
+
    - Shipping Information
    - Returns and Refunds
    - Payment Methods and Billing
@@ -217,7 +217,7 @@ When naming your knowledge base, follow these best practices:
 
 ## Step 2: Import the Knowledge Base
 
-## IMPORTANT: Since the workshop participants will be using the same watsonx Orchestrate environment, RENAME your _knowledge-base_ in the yaml-file by adding your initials as a postfix. ###
+### IMPORTANT: Since the workshop participants will be using the same watsonx Orchestrate environment, RENAME your _knowledge-base_ in the yaml-file by adding your initials as a postfix. ###
 
 For example, `name: customer-support-faq` becomes `name: customer-support-faq-JKJ`.
 
