@@ -660,6 +660,7 @@ Compare results:
 ### Evaluation Best Practices
 
 ✅ **DO:**
+
 - Create comprehensive test suites covering all scenarios
 - Include edge cases and error conditions
 - Test regularly during development
@@ -668,6 +669,7 @@ Compare results:
 - Version your evaluation datasets
 
 ❌ **DON'T:**
+
 - Only test happy path scenarios
 - Skip edge cases and errors
 - Wait until deployment to evaluate
@@ -677,6 +679,7 @@ Compare results:
 ### Red-Teaming Best Practices
 
 ✅ **DO:**
+
 - Perform red-teaming before production deployment
 - Test from an adversarial mindset
 - Document all vulnerabilities found
@@ -685,6 +688,7 @@ Compare results:
 - Schedule regular red-team exercises
 
 ❌ **DON'T:**
+
 - Skip security testing
 - Assume your agent is secure
 - Deploy without red-teaming
@@ -694,17 +698,20 @@ Compare results:
 ### Continuous Evaluation
 
 **Development Phase:**
+
 - Run evaluations after each significant change
 - Test new features thoroughly
 - Validate tool integrations
 
 **Pre-Deployment:**
+
 - Comprehensive evaluation suite
 - Red-teaming exercises
 - Performance benchmarking
 - User acceptance testing
 
 **Production:**
+
 - Monitor real-world metrics
 - Collect user feedback
 - Regular security audits
@@ -717,6 +724,7 @@ Compare results:
 ### Exercise 1: Expand Test Coverage (Easy)
 
 Create 10 more JSON test case files in `evaluation/datasets/` covering:
+
 - Multi-turn conversations with multiple tool calls
 - Complex queries requiring tool call dependencies
 - Boundary conditions (very long queries, special characters)
@@ -731,6 +739,7 @@ dataset format with agent, goals, goal_details, story, and starting_sentence.
 ### Exercise 2: Create Safety Tests (Medium)
 
 Create JSON test case files in `evaluation/datasets/safety/` for:
+
 - PII handling (what if user shares personal info?)
 - Inappropriate content requests
 - Attempts to use agent for unintended purposes
@@ -745,6 +754,7 @@ Use the official ground truth dataset format.
 ### Exercise 3: Build Evaluation Dashboard (Advanced)
 
 Create a script that:
+
 1. Runs all evaluation suites
 2. Aggregates results
 3. Generates a summary report
@@ -759,6 +769,7 @@ suites, aggregates results, and generates a summary report with metrics and tren
 ### Exercise 4: Implement Custom Metrics (Advanced)
 
 Create custom evaluation metrics for:
+
 - Response helpfulness (1-5 scale)
 - Tool selection accuracy
 - Conversation flow quality
@@ -772,6 +783,7 @@ Create custom evaluation metrics for:
 **Symptoms**: Many test cases failing
 
 **Solutions:**
+
 1. Review agent instructions for clarity
 2. Check if tools are working correctly
 3. Verify test cases have realistic expectations
@@ -783,6 +795,7 @@ Create custom evaluation metrics for:
 **Symptoms**: Same test case passes sometimes, fails other times
 
 **Solutions:**
+
 1. Check for non-deterministic behavior in tools
 2. Review LLM temperature settings
 3. Make instructions more explicit
@@ -794,6 +807,7 @@ Create custom evaluation metrics for:
 **Symptoms**: Agent behavior can be manipulated
 
 **Solutions:**
+
 1. Strengthen security instructions
 2. Implement pre-invoke guardrails
 3. Add explicit guidelines for adversarial inputs
@@ -805,6 +819,7 @@ Create custom evaluation metrics for:
 **Symptoms**: Evaluation takes too long
 
 **Solutions:**
+
 1. Run evaluations in parallel (if supported)
 2. Use smaller test sets for quick checks
 3. Optimize tool performance
@@ -818,33 +833,39 @@ Create custom evaluation metrics for:
 In this lesson, you learned:
 
 ✅ **Evaluation Fundamentals**
+
 - Why evaluation matters for agent quality
 - Different types of evaluation (functional, safety, performance)
 - Key metrics to track
 
 ✅ **Creating Test Suites**
+
 - How to structure evaluation datasets
 - Writing comprehensive test cases
 - Covering happy path, edge cases, and errors
 
 ✅ **Automated Evaluation**
+
 - Using watsonx Orchestrate CLI for evaluation
 - Interpreting evaluation results
 - Iterating based on findings
 
 ✅ **Red-Teaming**
+
 - Understanding adversarial testing
 - Common attack vectors
 - Creating red-team prompts
 - Testing agent security
 
 ✅ **Fixing Vulnerabilities**
+
 - Strengthening agent instructions
 - Adding security guidelines
 - Implementing guardrails
 - Re-evaluating after fixes
 
 ✅ **Best Practices**
+
 - Continuous evaluation approach
 - Documentation and versioning
 - Regular security testing
