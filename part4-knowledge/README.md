@@ -493,24 +493,24 @@ You can create specialized knowledge bases for different domains. Each knowledge
 
 2. **Create the knowledge base YAML:**
 
-```yaml
-# technical-support-kb.yaml
-spec_version: v1
-kind: knowledge_base
-name: technical-support-kb
-description: Technical troubleshooting guides and device setup instructions
-
-documents:
-  - device-setup-guide.pdf
-  - troubleshooting-guide.pdf
-
-vector_index:
-  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
-  chunk_size: 600           # Larger chunks for technical content
-  chunk_overlap: 75
-  limit: 10
-  extraction_strategy: standard
-```
+    ```yaml
+    # technical-support-kb.yaml
+    spec_version: v1
+    kind: knowledge_base
+    name: technical-support-kb
+    description: Technical troubleshooting guides and device setup instructions
+    
+    documents:
+      - device-setup-guide.pdf
+      - troubleshooting-guide.pdf
+    
+    vector_index:
+      embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
+      chunk_size: 600           # Larger chunks for technical content
+      chunk_overlap: 75
+      limit: 10
+      extraction_strategy: standard
+    ```
 
 3. **Import the knowledge base:**
 
