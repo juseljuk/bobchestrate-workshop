@@ -430,6 +430,13 @@ configuration format with wxo_lite_version 2.10.1.
 
 ### Step 1: Run Quick Evaluation
 
+#### IMPORTANT ####
+Before running evaluations, make sure to install / upgrade the latest AgentOps libraries to your ADK. Run the command:
+
+```bash
+pip install --upgrade "ibm-watsonx-orchestrate[agentops]"
+```
+
 The watsonx Orchestrate CLI provides two evaluation modes:
 
 **Quick Evaluation** (reference-less - lightweight checks):
@@ -442,11 +449,13 @@ orchestrate evaluations quick-eval \
 ```
 
 **Parameters:**
+
 - `-p` / `--test-paths` - Path to test dataset files or directory containing JSON files
 - `-o` / `--output-dir` - Directory for evaluation results
 - `-t` / `--tools-path` - Directory containing tool definitions
 
 **What this does:**
+
 - Runs each test case against your agent
 - Measures: Tool Calls, Successful Tool Calls, Schema Mismatch, Hallucination
 - Generates evaluation report with reference-less metrics
