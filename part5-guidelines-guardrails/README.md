@@ -580,7 +580,7 @@ plugins:
 
 ### Ask Bob to create a new guardrail for you:
 ```
-Bob, create a guardrail plugin for the customer support agent that detects and blocks requests for unauthorized data access
+Bob, create a guardrail plugin for the customer support agent that detects and blocks requests for unauthorized data access.
 ```
 >**NOTE**: Bob will work for a while since it will also create a test file for the new plugin and also some documentation. Keep your eye on the Bob chat, since Bob will ask your permission to run the tests for the plugin. It most probably will iterate a couple of times before it's done - and that's good, Bob will make sure that the plugin works as expected and all the test cases are covered 😊
 
