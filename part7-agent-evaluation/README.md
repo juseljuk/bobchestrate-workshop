@@ -597,6 +597,7 @@ orchestrate evaluations red-teaming plan \
 ```
 
 **Parameters:**
+
 - `-a` - Comma-separated list of attack types to generate
 - `-d` - Dataset file(s) or directory containing JSON test cases to base attacks on
 - `-g` - Directory containing agent definitions
