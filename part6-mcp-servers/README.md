@@ -427,7 +427,7 @@ It will show you the response from the server and conclude the findings:
 
 <img src="images/image.png" alt="test results" width="550px">
 
-Ypu can now close the new terminal and stop the server in the other terminal with `Ctrl+C`.
+You can now close the new terminal and stop the server in the other terminal with `Ctrl+C`.
 
 ---
 
