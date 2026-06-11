@@ -158,7 +158,7 @@ Wait for the installation to complete. After a while, you should see a notificat
 Install the watsonx Orchestrate MCP servers through the ADK extension:
 
 1. Open the Command Palette in IBM Bob IDE (press `Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux)
-2. Start typing "**watsonx Orchestrate: Install MCP Servers**" and select it
+2. Start typing "**watsonx Orchestrate: Install WXO MCP Servers**" and select it
 3. Wait for the installation to complete
 4. You should see a confirmation message that the MCP servers have been installed successfully
 
