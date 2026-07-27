@@ -580,54 +580,21 @@
   // document$.subscribe fires once for the current page on load,
   // then again after every instant-navigation page switch.
 
-  // ── Auto-init via MutationObserver ──────────────────────
-  // Watch for divs with data-quiz="<id>" appearing anywhere in the DOM.
-  // This fires the instant Material injects the new page content —
-  // no dependency on document$, DOMContentLoaded, or setTimeout timing.
+  // ── Auto-init ────────────────────────────────────────────
+  // navigation.instant is disabled in mkdocs.yml so every link
+  // is a full page load — DOMContentLoaded fires reliably every time.
 
-  function bootElement(el) {
-    var quizId = el.getAttribute('data-quiz');
-    if (quizId && QUIZ_DATA[quizId]) {
-      var cfg = QUIZ_DATA[quizId];
-      init({ id: cfg.id, containerId: el.id, questions: cfg.questions });
-    }
-    if (el.id === 'quiz-dashboard') {
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-quiz]').forEach(function (el) {
+      var quizId = el.getAttribute('data-quiz');
+      if (quizId && QUIZ_DATA[quizId]) {
+        var cfg = QUIZ_DATA[quizId];
+        init({ id: cfg.id, containerId: el.id, questions: cfg.questions });
+      }
+    });
+    if (document.getElementById('quiz-dashboard')) {
       renderDashboard('quiz-dashboard');
     }
-  }
-
-  function scanAndBoot() {
-    // Quiz containers
-    document.querySelectorAll('[data-quiz]').forEach(bootElement);
-    // Dashboard
-    var dash = document.getElementById('quiz-dashboard');
-    if (dash) renderDashboard('quiz-dashboard');
-  }
-
-  var observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-      mutation.addedNodes.forEach(function (node) {
-        if (node.nodeType !== 1) return; // elements only
-        // Check the node itself
-        if (node.hasAttribute && node.hasAttribute('data-quiz')) bootElement(node);
-        if (node.id === 'quiz-dashboard') renderDashboard('quiz-dashboard');
-        // Check descendants
-        if (node.querySelectorAll) {
-          node.querySelectorAll('[data-quiz]').forEach(bootElement);
-          if (node.querySelector('#quiz-dashboard')) renderDashboard('quiz-dashboard');
-        }
-      });
-    });
   });
-
-  // Start observing as early as possible
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-
-  // Also scan immediately in case the page is already loaded (hard navigation)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', scanAndBoot);
-  } else {
-    scanAndBoot();
-  }
 
 })();
