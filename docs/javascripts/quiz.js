@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -330,6 +330,66 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part2': {
+      id: 'part2-first-agent',
+      questions: [
+        {
+          text: 'Which four fields are mandatory in every watsonx Orchestrate agent YAML specification?',
+          options: [
+            'name, description, tools, collaborators',
+            'spec_version, kind, name, llm',
+            'spec_version, name, instructions, style',
+            'kind, name, llm, guidelines'
+          ],
+          correctIndex: 1,
+          hint: 'Every agent MUST have `spec_version`, `kind`, `name`, and `llm`. All other fields — description, instructions, tools, etc. — are optional.'
+        },
+        {
+          text: 'What is the most critical field in an agent\'s YAML configuration, and why?',
+          options: [
+            'The `llm` field — it determines the model powering the agent',
+            'The `name` field — it is the unique identifier used by the CLI',
+            'The `instructions` field — it defines the agent\'s personality, behavior, and how it uses tools',
+            'The `kind` field — it controls whether the agent is native or external'
+          ],
+          correctIndex: 2,
+          hint: 'The `instructions` field is the most critical part of agent configuration. Well-written instructions lead to predictable, helpful agent responses — it defines role, capabilities, behavior, and output format.'
+        },
+        {
+          text: 'Which CLI command imports a new agent (or updates an existing one) from a YAML file?',
+          options: [
+            'orchestrate agents deploy -f hello-agent.yaml',
+            'orchestrate agents create -f hello-agent.yaml',
+            'orchestrate agents import -f hello-agent.yaml',
+            'orchestrate agents push -f hello-agent.yaml'
+          ],
+          correctIndex: 2,
+          hint: '`orchestrate agents import -f <file>` is used both to create a new agent and to update an existing one after you change the YAML. Always re-import after editing.'
+        },
+        {
+          text: 'Agent names in watsonx Orchestrate must follow a specific convention. Which format is correct?',
+          options: [
+            'hello-world-agent (kebab-case with hyphens)',
+            'HelloWorldAgent (PascalCase)',
+            'hello_world_agent (snake_case with underscores)',
+            'helloWorldAgent (camelCase)'
+          ],
+          correctIndex: 2,
+          hint: 'watsonx Orchestrate requires snake_case for agent names — underscores only, no hyphens, no spaces, no camelCase. For example: `hello_world_agent`, not `hello-world-agent`.'
+        },
+        {
+          text: 'Which CLI command lets you test an agent interactively without opening the watsonx Orchestrate UI?',
+          options: [
+            'orchestrate agents test --name <agent_name>',
+            'orchestrate chat ask --agent-name <agent_name>',
+            'orchestrate run --agent <agent_name>',
+            'orchestrate agents chat -n <agent_name>'
+          ],
+          correctIndex: 1,
+          hint: '`orchestrate chat ask --agent-name <name>` starts an interactive terminal chat session with your agent — great for quick testing without needing to log in to the UI.'
+        }
+      ]
+    },
     'quiz-part1': {
       id: 'part1-setup',
       questions: [

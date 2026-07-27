@@ -372,3 +372,15 @@ Continue to [Part 2b: Using Custom Rules with Bob IDE](../part2b-bob-custom-rule
 ---
 
 **💡 Pro Tip:** Use Bob to iterate on your agent instructions. Ask Bob to review and improve them based on your specific use case!
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you've built your first agent, test what you've learned!
+
+!!! tip "Part 2 Quiz"
+    Take the short 5-question quiz to check your understanding of agent configuration and the watsonx Orchestrate CLI.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 2 Quiz →](quiz.md){ .md-button .md-button--primary }

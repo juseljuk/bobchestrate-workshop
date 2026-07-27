@@ -73,6 +73,7 @@ nav:
   - Part 2 - First Agent:
       - Overview: part2-first-agent/README.md
       - Exercises: part2-first-agent/exercises.md
+      - Quiz: part2-first-agent/quiz.md
   - Part 2b - Bob Custom Rules:
       - Overview: part2b-bob-custom-rules/README.md
   - Part 3 - Custom Tools:
