@@ -392,19 +392,38 @@
     }
   };
 
-  /* ── Auto-init: dashboard + any quiz container on this page ── */
-  document.addEventListener('DOMContentLoaded', function () {
-    // Dashboard
+  /* ── Auto-init: runs after every page load/navigation ────── */
+  // Material for MkDocs uses instant navigation (SPA-style). DOMContentLoaded
+  // only fires once on first load. We must also hook into Material's
+  // document$ observable so quizzes render when navigating between pages.
+  function autoInit() {
     if (document.getElementById('quiz-dashboard')) {
       renderDashboard('quiz-dashboard');
     }
-    // Quiz containers — keyed by div id in QUIZ_DATA
     Object.keys(QUIZ_DATA).forEach(function (containerId) {
       if (document.getElementById(containerId)) {
         var cfg = QUIZ_DATA[containerId];
         init({ id: cfg.id, containerId: containerId, questions: cfg.questions });
       }
     });
-  });
+  }
+
+  // First hard load
+  document.addEventListener('DOMContentLoaded', autoInit);
+
+  // Subsequent instant-navigation page switches (Material theme)
+  if (typeof document$ !== 'undefined') {
+    document$.subscribe(autoInit);
+  } else {
+    // Fallback: poll until document$ is available (script load order variance)
+    var pollInterval = setInterval(function () {
+      if (typeof document$ !== 'undefined') {
+        clearInterval(pollInterval);
+        document$.subscribe(autoInit);
+      }
+    }, 50);
+    // Give up polling after 5 s — DOMContentLoaded already covers the first load
+    setTimeout(function () { clearInterval(pollInterval); }, 5000);
+  }
 
 })();
