@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {

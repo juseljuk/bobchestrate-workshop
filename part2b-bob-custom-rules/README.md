@@ -289,3 +289,15 @@ Continue to [Part 3: Adding Custom Tools](../part3-custom-tools/README.md) →
 ---
 
 **💡 Pro Tip:** Start with a simple rule file and expand it as you discover patterns in your project. Let Bob help you refine the rules based on real usage!
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you understand Bob custom rules, test what you've learned!
+
+!!! tip "Part 2b Quiz"
+    Take the short 5-question quiz to check your understanding of Bob custom rules and ADK project conventions.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 2b Quiz →](quiz.md){ .md-button .md-button--primary }
