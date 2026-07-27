@@ -453,60 +453,40 @@
   };
 
   /* ── Auto-init: runs after every page load/navigation ────── */
-  // Strategy: watch the entire document body with a MutationObserver.
-  // Whenever a quiz container or dashboard div appears in the DOM —
-  // whether via a hard load or Material's instant SPA navigation —
-  // initialise it immediately. This is reliable regardless of when
-  // document$ becomes available.
+  // Material instant navigation swaps page content without a full reload.
+  // The only fully reliable hook is document$.subscribe() — Material fires
+  // this after every page transition, including the first hard load.
+  // We delay subscription until after window 'load' so the Material runtime
+  // (and therefore document$) is guaranteed to exist.
+  // init() and renderDashboard() both replace innerHTML so they are safe
+  // to call on every navigation with no deduplication guard needed.
 
-  var _initialised = {};   // track which container IDs have been booted
-
-  function tryInit() {
-    // Dashboard
-    var dash = document.getElementById('quiz-dashboard');
-    if (dash && !_initialised['quiz-dashboard']) {
-      _initialised['quiz-dashboard'] = true;
+  function runOnPage() {
+    if (document.getElementById('quiz-dashboard')) {
       renderDashboard('quiz-dashboard');
     }
-    // Quiz containers
     Object.keys(QUIZ_DATA).forEach(function (containerId) {
-      var el = document.getElementById(containerId);
-      if (el && !_initialised[containerId]) {
-        _initialised[containerId] = true;
+      if (document.getElementById(containerId)) {
         var cfg = QUIZ_DATA[containerId];
         init({ id: cfg.id, containerId: containerId, questions: cfg.questions });
       }
     });
   }
 
-  // Reset the initialised map on every navigation so the next page
-  // gets a clean slate (Material swaps <article> content in-place).
-  function resetAndInit() {
-    _initialised = {};
-    tryInit();
-  }
-
-  // MutationObserver watches for DOM changes — catches instant navigation
-  var observer = new MutationObserver(function (mutations) {
-    for (var i = 0; i < mutations.length; i++) {
-      if (mutations[i].addedNodes.length) {
-        tryInit();
-        break;
-      }
-    }
-  });
-
-  // Run on first hard load
-  document.addEventListener('DOMContentLoaded', function () {
-    resetAndInit();
-    // Observe the whole body for subtree changes (instant nav content swaps)
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-
-  // Also hook Material's document$ if available (belt-and-suspenders)
+  // document$ is set by Material after its own scripts execute.
+  // Subscribing inside window 'load' guarantees Material is ready.
   window.addEventListener('load', function () {
     if (typeof document$ !== 'undefined') {
-      document$.subscribe(resetAndInit);
+      // Fires once immediately for the current page, then again on every
+      // subsequent instant-navigation page switch.
+      document$.subscribe(function () {
+        // Small defer so Material has finished injecting page content
+        // into the DOM before we look for our containers.
+        setTimeout(runOnPage, 0);
+      });
+    } else {
+      // Fallback for non-Material or if document$ never loads
+      runOnPage();
     }
   });
 
