@@ -330,6 +330,66 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part2b': {
+      id: 'part2b-bob-custom-rules',
+      questions: [
+        {
+          text: 'Where must custom rule files be placed for Bob IDE to automatically apply them?',
+          options: [
+            'In the project root as .bobrc files',
+            'In the .bob/rules/ directory inside your project',
+            'In a rules/ folder next to your agents/ directory',
+            'Uploaded via the Bob IDE settings panel'
+          ],
+          correctIndex: 1,
+          hint: 'Custom rules live in `.bob/rules/` inside your project directory. Bob automatically picks them up from there — no extra configuration needed.'
+        },
+        {
+          text: 'What format are Bob IDE custom rule files written in?',
+          options: [
+            'YAML — the same format as agent specifications',
+            'JSON — structured key-value rule definitions',
+            'Markdown (.md) — natural language guidelines',
+            'Python — executable rule scripts'
+          ],
+          correctIndex: 2,
+          hint: 'Custom rules are plain Markdown (.md) files. They use natural language to describe conventions, patterns, and guidelines that Bob should follow in your project.'
+        },
+        {
+          text: 'According to the watsonx Orchestrate development rule, where should Python tools using the @tool decorator be saved?',
+          options: [
+            'In the agents/ directory alongside YAML files',
+            'In the scripts/ directory',
+            'In the tools/ directory',
+            'In the src/ directory'
+          ],
+          correctIndex: 2,
+          hint: 'The ADK convention is: `tools/` for Python tools and flows, `agents/` for YAML configurations, `knowledge_bases/` for knowledge bases, and `toolkits/` for MCP toolkits.'
+        },
+        {
+          text: 'Which MCP server should Bob use when searching for watsonx Orchestrate ADK documentation, API references, and code examples?',
+          options: [
+            'ibm-cloud-docs',
+            'watsonx-orchestrate-adk-docs',
+            'wx-orchestrate-api',
+            'ibm-developer-docs'
+          ],
+          correctIndex: 1,
+          hint: 'The `watsonx-orchestrate-adk-docs` MCP server is specifically set up to search ADK documentation, find API references, and provide code examples for watsonx Orchestrate projects.'
+        },
+        {
+          text: 'What should you do if Bob is not following your custom rules?',
+          options: [
+            'Reinstall the watsonx Orchestrate ADK extension',
+            'Delete and recreate the .bob/ directory',
+            'Check the file is in .bob/rules/, confirm valid markdown syntax, then ask Bob to reload rules',
+            'Add the rules directly into the agent YAML instructions field'
+          ],
+          correctIndex: 2,
+          hint: 'Troubleshooting checklist: verify the file is in `.bob/rules/`, check the markdown syntax is valid, restart/refresh Bob, then ask: "Bob, please reload your custom rules and confirm you can see them."'
+        }
+      ]
+    },
     'quiz-part2': {
       id: 'part2-first-agent',
       questions: [
