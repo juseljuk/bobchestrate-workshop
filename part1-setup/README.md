@@ -625,7 +625,7 @@ Continue to [Part 2: Building Your First Agent](../part2-first-agent/README.md) 
 
 ---
 
-## :material-help-circle: Knowledge Check
+## 🧠 Knowledge Check
 
 Now that you've completed the setup, test what you've learned!
 
