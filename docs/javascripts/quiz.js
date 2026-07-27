@@ -453,37 +453,61 @@
   };
 
   /* ── Auto-init: runs after every page load/navigation ────── */
-  // Material for MkDocs uses instant navigation (SPA-style). DOMContentLoaded
-  // only fires once on first load. We must also hook into Material's
-  // document$ observable so quizzes render when navigating between pages.
-  function autoInit() {
-    if (document.getElementById('quiz-dashboard')) {
+  // Strategy: watch the entire document body with a MutationObserver.
+  // Whenever a quiz container or dashboard div appears in the DOM —
+  // whether via a hard load or Material's instant SPA navigation —
+  // initialise it immediately. This is reliable regardless of when
+  // document$ becomes available.
+
+  var _initialised = {};   // track which container IDs have been booted
+
+  function tryInit() {
+    // Dashboard
+    var dash = document.getElementById('quiz-dashboard');
+    if (dash && !_initialised['quiz-dashboard']) {
+      _initialised['quiz-dashboard'] = true;
       renderDashboard('quiz-dashboard');
     }
+    // Quiz containers
     Object.keys(QUIZ_DATA).forEach(function (containerId) {
-      if (document.getElementById(containerId)) {
+      var el = document.getElementById(containerId);
+      if (el && !_initialised[containerId]) {
+        _initialised[containerId] = true;
         var cfg = QUIZ_DATA[containerId];
         init({ id: cfg.id, containerId: containerId, questions: cfg.questions });
       }
     });
   }
 
-  // First hard load
-  document.addEventListener('DOMContentLoaded', autoInit);
-
-  // Subsequent instant-navigation page switches (Material theme)
-  if (typeof document$ !== 'undefined') {
-    document$.subscribe(autoInit);
-  } else {
-    // Fallback: poll until document$ is available (script load order variance)
-    var pollInterval = setInterval(function () {
-      if (typeof document$ !== 'undefined') {
-        clearInterval(pollInterval);
-        document$.subscribe(autoInit);
-      }
-    }, 50);
-    // Give up polling after 5 s — DOMContentLoaded already covers the first load
-    setTimeout(function () { clearInterval(pollInterval); }, 5000);
+  // Reset the initialised map on every navigation so the next page
+  // gets a clean slate (Material swaps <article> content in-place).
+  function resetAndInit() {
+    _initialised = {};
+    tryInit();
   }
+
+  // MutationObserver watches for DOM changes — catches instant navigation
+  var observer = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      if (mutations[i].addedNodes.length) {
+        tryInit();
+        break;
+      }
+    }
+  });
+
+  // Run on first hard load
+  document.addEventListener('DOMContentLoaded', function () {
+    resetAndInit();
+    // Observe the whole body for subtree changes (instant nav content swaps)
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+
+  // Also hook Material's document$ if available (belt-and-suspenders)
+  window.addEventListener('load', function () {
+    if (typeof document$ !== 'undefined') {
+      document$.subscribe(resetAndInit);
+    }
+  });
 
 })();
