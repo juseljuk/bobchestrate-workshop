@@ -24,6 +24,20 @@ This estimate includes:
 
 **Level:** Beginner to Intermediate (Advanced for Part 9)
 
+## :material-check-decagram: Your Quiz Progress
+
+Track your progress across all module quizzes. Results are saved in your browser automatically — revisit this page at any time to see how you're doing.
+
+<div id="quiz-dashboard"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.WXOQuiz) {
+    WXOQuiz.renderDashboard('quiz-dashboard');
+  }
+});
+</script>
+
 **Prerequisites:**
 
 - Computer with internet access, Windows, macOS, or Linux operating system, at least 8GB RAM and 500 MB of free disk space

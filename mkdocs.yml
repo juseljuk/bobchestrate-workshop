@@ -69,6 +69,7 @@ nav:
   - Home: index.md
   - Part 1 - Setup:
       - Overview: part1-setup/README.md
+      - Quiz: part1-setup/quiz.md
   - Part 2 - First Agent:
       - Overview: part2-first-agent/README.md
       - Exercises: part2-first-agent/exercises.md
@@ -109,5 +110,13 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/yourusername/bobchestrate-workshop
+
+
+extra_css:
+  - stylesheets/quiz.css
+
+extra_javascript:
+  - javascripts/quiz.js
+
 
 # Made with Bob
