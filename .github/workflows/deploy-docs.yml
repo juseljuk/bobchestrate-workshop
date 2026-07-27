@@ -29,10 +29,12 @@ jobs:
         run: |
           # Sync all workshop parts automatically
           # This copies any directory starting with 'part' or named 'bob-prompts'
+          # Note: --delete is NOT used so that files only in docs/ (e.g. quiz.md,
+          # stylesheets/, javascripts/) are preserved and not wiped by the sync.
           for dir in part* bob-prompts; do
             if [ -d "$dir" ]; then
               echo "Syncing $dir to docs/$dir"
-              rsync -av --delete "$dir/" "docs/$dir/"
+              rsync -av "$dir/" "docs/$dir/"
             fi
           done
           
