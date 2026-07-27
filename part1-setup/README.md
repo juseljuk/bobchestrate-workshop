@@ -623,6 +623,18 @@ Continue to [Part 2: Building Your First Agent](../part2-first-agent/README.md) 
 
 **💡 Pro Tip:** Keep Bob's chat panel open throughout the workshop. Whenever you're stuck, just ask Bob for help!
 
+---
+
+## :material-help-circle: Knowledge Check
+
+Now that you've completed the setup, test what you've learned!
+
+!!! tip "Part 1 Quiz"
+    Take the short 5-question quiz to check your understanding of the setup steps.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 1 Quiz →](quiz.md){ .md-button .md-button--primary }
+
 ## 🙏 Acknowledgements
 
 Special thanks to **Ryan Sparks** and **Mike McMahon** for providing the Windows-specific additions to this setup guide.

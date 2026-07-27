@@ -1,6 +1,6 @@
 # Part 1 Quiz — Setup & Environment
 
-Test your knowledge of the setup steps before moving on to Part 2.
+Test your knowledge of watsonx Orchestrate and IBM Bob before moving on to Part 2.
 
 !!! tip "How it works"
     Read each question and select the answer you think is correct, then click **Check Answer** to see instant feedback. Work through all 5 questions and submit to see your final score. You need **4 out of 5** to pass. Your result is saved automatically in your browser.
@@ -14,59 +14,59 @@ document.addEventListener('DOMContentLoaded', function () {
     containerId: 'quiz-part1',
     questions: [
       {
-        text: 'Which Python versions are supported for this workshop?',
+        text: 'What is IBM watsonx Orchestrate?',
         options: [
-          'Python 3.8, 3.9, or 3.10',
-          'Python 3.11, 3.12, or 3.13',
-          'Python 3.6 or higher',
-          'Any Python 3.x version'
+          'A Python package manager for AI projects',
+          'An AI platform for building, deploying, and managing intelligent agents and workflows',
+          'A cloud storage service for IBM Watson models',
+          'A code editor plugin for writing YAML configurations'
         ],
         correctIndex: 1,
-        hint: 'The workshop requires Python 3.11–3.13. Earlier versions are not supported by the watsonx Orchestrate ADK.'
+        hint: 'watsonx Orchestrate is IBM\'s AI platform that lets you build and deploy intelligent agents powered by LLMs, connect them to tools and data, and orchestrate multi-agent workflows.'
       },
       {
-        text: 'What is `uv` used for in this workshop?',
+        text: 'Which command do you use to verify your watsonx Orchestrate environment is connected and working?',
         options: [
-          'A tool to upload files to IBM Cloud',
-          'A Python package manager and virtual environment tool',
-          'The command-line interface for watsonx Orchestrate',
-          'An IBM Bob IDE extension'
-        ],
-        correctIndex: 1,
-        hint: '`uv` is a fast Python package installer and virtual environment manager, used here to create and manage the workshop\'s Python environment.'
-      },
-      {
-        text: 'Where do you download IBM Bob IDE?',
-        options: [
-          'https://marketplace.visualstudio.com',
-          'https://pypi.org/project/ibm-bob',
-          'https://bob.ibm.com/download',
-          'https://developer.watson-orchestrate.ibm.com'
+          'orchestrate env status',
+          'orchestrate ping',
+          'orchestrate agents list',
+          'orchestrate verify --connection'
         ],
         correctIndex: 2,
-        hint: 'IBM Bob IDE is available at bob.ibm.com/download. For full installation instructions, visit bob.ibm.com/docs/ide/getting-started/install.'
+        hint: '`orchestrate agents list` is the standard check — if your environment is correctly configured it will return a list of agents (or an empty list), confirming the connection works.'
       },
       {
-        text: 'Why should you avoid spaces in your workshop folder path?',
+        text: 'What is IBM Bob\'s role throughout this workshop?',
         options: [
-          'MkDocs cannot build sites from paths with spaces',
-          'Spaces cause issues with some CLI tools and scripts used in the workshop',
-          'IBM Bob IDE does not support folders with spaces',
-          'Python cannot import modules from paths containing spaces'
+          'Bob is the name of the watsonx Orchestrate CLI tool',
+          'Bob is an AI coding assistant that helps you write, debug, and explain code',
+          'Bob is a cloud deployment pipeline for publishing agents',
+          'Bob is a testing framework for validating agent responses'
         ],
         correctIndex: 1,
-        hint: 'Spaces in folder paths can break shell commands and scripts. The workshop recommends using hyphens or underscores instead — e.g. `bobchestrate-ws`.'
+        hint: 'IBM Bob is an AI pair programmer — you use it to generate Python tools, debug issues, explain concepts, and accelerate development throughout the workshop.'
       },
       {
-        text: 'What must you do in IBM Bob IDE before its AI capabilities are available?',
+        text: 'How often does your watsonx Orchestrate authentication token expire, and what must you do when it does?',
         options: [
-          'Install the watsonx Orchestrate ADK extension',
-          'Configure a `.env` file with your API keys',
-          'Log in with your IBM ID',
-          'Run `orchestrate env activate` in the terminal'
+          'Every 24 hours — restart IBM Bob IDE',
+          'Every 8 hours — reinstall the ADK',
+          'Every 2 hours — run `orchestrate env activate` again',
+          'Every 30 minutes — regenerate your API key'
         ],
         correctIndex: 2,
-        hint: 'You must be logged in with your IBM ID to use Bob\'s AI features throughout the workshop. If you encounter login issues, contact your instructor.'
+        hint: 'Authentication against a remote watsonx Orchestrate environment expires every two hours. Run `orchestrate env activate <name>` to re-authenticate — keep your API key handy.'
+      },
+      {
+        text: 'Which of the following is a good way to use IBM Bob effectively during the workshop?',
+        options: [
+          '"Bob, fix this" — short and direct',
+          '"Bob, do everything for me" — let Bob handle all tasks',
+          '"Bob, create a Python tool that checks order status given an order ID" — specific with context',
+          '"Bob, make it work" — describe the desired outcome'
+        ],
+        correctIndex: 2,
+        hint: 'Bob works best with specific, contextual prompts. Vague requests like "fix this" or "make it work" give Bob too little context to help effectively.'
       }
     ]
   });
