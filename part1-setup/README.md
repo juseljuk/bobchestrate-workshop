@@ -19,45 +19,100 @@ Before starting, ensure you have:
 
 ### ⚠️ Warning ⚠️ ###
 
-> **Make sure you have all the prerequisites filled! You will face a lot of issues with wrong Python version for example. Follow the steps in correct order to assure the setup procedure works as designed!** 
+> **Make sure you have all the prerequisites filled! You will face a lot of issues with the wrong Python version for example. Follow the steps in the correct order to assure the setup procedure works as designed!**
 
 ## Step 1: Verify Python Installation
 
+### macOS / Linux
+
 Open a terminal and run:
 ```bash
-python --version
-# or
 python3 --version
 ```
-***IMPORTANT: If you see something else than version 3.11.x, 3.12.x or 3.13.x, you need install one of the supported versions, 3.11.x - 3.13.x, to your computer!***
+***IMPORTANT: If you see something other than version 3.11.x, 3.12.x or 3.13.x, you need to install one of the supported versions, 3.11.x - 3.13.x, on your computer!***
+
+### Windows 11
+
+Open PowerShell or Windows Terminal and run:
+```powershell
+python --version
+```
+> **Note:** On Windows, use `python` not `python3`. If typing `python` opens the Microsoft Store instead of showing a version, disable the stub via **Settings → Apps → Advanced app settings → App execution aliases** and toggle off the Python entries.
+
+***IMPORTANT: If you see something other than version 3.11.x, 3.12.x or 3.13.x, you need to install one of the supported versions, 3.11.x - 3.13.x, on your computer!***
+
+During installation, make sure to check:
+- ✅ **Add Python to PATH**
+- ✅ **Install pip**
+
+---
 
 Download supported Python version: ([https://www.python.org/downloads/](https://www.python.org/downloads/))
 
 ## Step 2: Verify uv Installation
 
+### macOS / Linux
+
 Open a terminal and run:
 ```bash
 uv --version
 ```
-***IMPORTANT: You should see a version displayed. The version number does not matter, you just need to have the uv installed.***
+
+If not installed, install via Homebrew:
+```bash
+brew install uv
+```
+
+### Windows 11
+
+Open PowerShell and run:
+```powershell
+uv --version
+```
+
+If not installed, install via PowerShell:
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+Or via pip:
+```powershell
+pip install uv
+```
+
+---
+
+***IMPORTANT: You should see a version displayed. The version number does not matter, you just need to have uv installed.***
 
 Download uv: ([https://pypi.org/project/uv/](https://pypi.org/project/uv/))
 
 ## Step 3: Create a new folder for the Workshop
 
-Create a dedicated folder for your workshop project - you can place it where ever you want:
+> **⚠️ WARNING: Avoid spaces in your folder path.** The ADK extension will fail to install if any part of the folder path contains spaces (e.g. `My Projects/bobchestrate-ws` will cause issues). Use hyphens or underscores instead — for example `bobchestrate-ws` or `bobchestrate_ws`. This applies to all parent folders in the path as well.
+
+Create a dedicated folder for your workshop project - you can place it wherever you want.
+
+### macOS / Linux
 
 ```bash
 mkdir bobchestrate-ws
 cd bobchestrate-ws
 ```
 
+### Windows 11
+
+```powershell
+mkdir bobchestrate-ws
+cd bobchestrate-ws
+```
+
+> **Note:** The commands are the same, but paths on Windows use backslashes (e.g. `C:\Users\YourName\bobchestrate-ws`). PowerShell accepts both forward and backslashes.
+
 This folder will contain all your workshop files, agents, and tools.
 ## Step 4: Open IBM Bob IDE and Login with your IBM ID
 
-> **Download IBM Bob IDE:** If you haven't installed IBM Bob IDE yet, download it from [bob.ibm.com/download](https://bob.ibm.com/download). Download the TRIAL version, if you do not have Bob offered by your workshop instructor.
+> **Download IBM Bob IDE:** If you haven't installed IBM Bob IDE yet, download it from [bob.ibm.com/download](https://bob.ibm.com/download) and install it to your computer. Make sure to use the **Bob IDE** version.
 
-<img src="images/image-0.png" alt="Getting started" width="700px">
+<img src="images/image_download.png" alt="Getting started" width="700px">
 
 > **Detailed Installation Instructions:** For complete installation guidance, visit [bob.ibm.com/docs/ide/getting-started/install](https://bob.ibm.com/docs/ide/getting-started/install)
 
@@ -66,7 +121,7 @@ This folder will contain all your workshop files, agents, and tools.
 
 ## Step 5: Open Folder in IBM Bob IDE
 
-1. When Bob IDE opened:
+1. Once IBM Bob IDE has opened:
 2. Click **File** → **Open Folder**
    
       <img src="images/image.png" alt="IBM Bob IDE File menu showing Open Folder option" width="250px">
@@ -84,9 +139,11 @@ The empty workspace will open.
 ### ❗️ IMPORTANT ❗️ ###
 > The Python virtual environment is crucial for the workshop. Please make sure to complete this step before proceeding to install the wxO VS Code extension and the wxO ADK itself.
 
-Create a virtual environment for the workshop to keep dependencies isolated using IBM Bob IDE's built-in commands:
+### macOS / Linux
 
-1. Open the Command Palette in IBM Bob IDE (press `Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux)
+Create a virtual environment using IBM Bob IDE's built-in commands:
+
+1. Open the Command Palette in IBM Bob IDE (press `Cmd+Shift+P`)
 2. Start typing "Python: Create Environment" and select it
 3. Choose "Venv" as the environment type
 4. Select your Python interpreter (Python 3.11-3.13) and wait for the virtual environment to be created
@@ -103,6 +160,66 @@ IBM Bob IDE will automatically:<br>
 - Show `(.venv)` in your terminal prompt
 
 > **NOTE:** The virtual environment will be automatically activated when you open new terminals in IBM Bob IDE.
+
+### Windows 11
+
+You can create the virtual environment via IBM Bob IDE (recommended) or manually in PowerShell.
+
+#### Option A: Using IBM Bob IDE (Recommended)
+
+1. Open the Command Palette in IBM Bob IDE (press `Ctrl+Shift+P`)
+2. Start typing "Python: Create Environment" and select it
+3. Choose "Venv" as the environment type
+4. Select your Python interpreter (Python 3.11-3.13) and wait for the virtual environment to be created
+
+   **IMPORTANT:** _Make sure to select the supported Python interpreter version (3.11-3.13). If you do not see the correct version, you may need to install it first. If you have installed the correct version and still don't see it, restart IBM Bob IDE._
+
+IBM Bob IDE will automatically create and activate `.venv` in new terminals.
+
+#### Option B: Manual PowerShell Setup
+
+If you prefer the terminal or run into IDE issues:
+
+```powershell
+# Navigate to your project folder
+cd C:\Users\YourName\bobchestrate-ws
+
+# Create the virtual environment
+python -m venv .venv
+```
+
+Activate it:
+```powershell
+# PowerShell
+.venv\Scripts\Activate.ps1
+
+# CMD (if you must)
+.venv\Scripts\activate.bat
+```
+
+> **⚠️ PowerShell Execution Policy:** If you get a script execution error, run this once:
+> ```powershell
+> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+> ```
+
+Verify activation — your prompt will show `(.venv)` and:
+```powershell
+where python   # Should point to .venv\Scripts\python.exe
+pip --version  # Should show pip inside .venv
+```
+
+> **NOTE:** Add `.venv` to your `.gitignore` — never commit the virtual environment folder.
+
+#### Alternative Tools Worth Knowing
+
+| Tool | When to Use |
+|---|---|
+| venv (built-in) | Default choice for most projects |
+| conda / miniconda | Data science / scientific computing (manages Python versions too) |
+| pyenv-win | Need to manage multiple Python versions on the same machine |
+| uv | Fastest modern alternative; drop-in replacement for pip+venv |
+| pipenv | Combined dependency management + venv (heavier, less popular now) |
+| poetry | Full dependency/packaging management for library authors |
 
 ## Step 7: Install watsonx Orchestrate ADK VS Code Extension
 
@@ -122,7 +239,7 @@ Install the watsonx Orchestrate extension for IBM Bob IDE:
 3. Click **Install** on the "_**watsonx Orchestrate ADK**_" extension
 4. Wait for the installation to complete
 5. Reload VS Code if prompted
-6. You should now see the extension icon appear in the Activity Bar - You do NOT need to open it. If you do, do **NOT** initalize the workspace using it. This might cause some issues with the setup procedure we're using right now:
+6. You should now see the extension icon appear in the Activity Bar - You do NOT need to open it. If you do, do **NOT** initialize the workspace using it. This might cause some issues with the setup procedure we're using right now:
    
       <img src="images/image-3.png" alt="IBM Bob IDE File menu showing Open Folder option" width="75px">
 
@@ -137,9 +254,11 @@ The IBM watsonx Orchestrate ADK VS Code extension provides:
 ### ❗️ IMPORTANT ❗️ ###
 > Do **NOT** open the extension itself, you just need it installed. Using the extension to initialise the workspace can cause issues!
 
-## Step 8: Install watsonx Orchestrate SDK
+## Step 8: Install watsonx Orchestrate ADK
 
-Since you now have the watsonx Orchestrate ADK extension installed, you will see the ADK informaton in the bottom Status Bar. Since we just created a fresh Python virtual environment to our workspace, you should see just a red cross ❌ stating that you need to install the ADK.
+### macOS / Linux
+
+Since you now have the watsonx Orchestrate ADK extension installed, you will see the ADK information in the bottom Status Bar. Since we just created a fresh Python virtual environment to our workspace, you should see just a red cross ❌ stating that you need to install the ADK.
 
 <img src="images/image-7.png" alt="IBM Bob IDE Status Bar showing ADK not installed" width="300px">
 
@@ -152,6 +271,29 @@ Wait for the installation to complete. After a while, you should see a notificat
 <img src="images/image-9.png" alt="IBM Bob IDE Status Bar showing ADK installed" width="300px">
 
 >**NOTE**: The version number you are seeing in the Status Bar is the version of the ADK that is installed. It might be different from the version shown in the picture above. New ADK versions are released regularly, so the version number will change over time.
+
+### Windows 11
+
+You can install the ADK via IBM Bob IDE (same as macOS above) or manually via PowerShell.
+
+#### Option A: Using IBM Bob IDE (Recommended)
+
+Follow the same steps as macOS above — click the red cross ❌ in the Status Bar and select the install option.
+
+#### Option B: Manual Installation via PowerShell
+
+With your virtual environment activated, run:
+
+```powershell
+pip install --upgrade ibm-watsonx-orchestrate
+```
+
+Validate the installation:
+```powershell
+orchestrate --version
+```
+
+You should see the ADK version number printed in the terminal.
 
 ## Step 9: Install watsonx Orchestrate MCP Servers
 
@@ -192,7 +334,7 @@ The MCP servers provide:
 
 Import a pre-configured custom mode specialized for building watsonx Orchestrate agents.
 
->**NOTE**: IBM Bob Marketplace has a lot of pre-configured modes for IBM Bob IDE, including a mode for building watsonx Orchestrate agents. Unfortuntately, the marketplace is currently not available for non-IBMers but will be in the near future. This step will guide you on how to import a custom mode manually.
+>**NOTE**: IBM Bob Marketplace has a lot of pre-configured modes for IBM Bob IDE, including a mode for building watsonx Orchestrate agents. Unfortunately, the marketplace is currently not available for non-IBMers but will be in the near future. This step will guide you on how to import a custom mode manually.
 
 Download the mode configuration file:
 
@@ -276,7 +418,7 @@ Copy the **Service instance URL** from the API details information. This is the 
    ```bash
    orchestrate env add -n <your-env-name> -u <your-api-url>
    ```
-   Where `<your-env-name>` is a name you choose for your environment (e.g., "my-wxo-cloud") and `<your-api-url>` is the URL you got in Step 10.
+   Where `<your-env-name>` is a name you choose for your environment (e.g., "my-wxo-cloud") and `<your-api-url>` is the URL you got in Step 11.
    
    After running the command, you should see a message: `[INFO] Environment '<your-env-name>' has been created`
 
@@ -285,7 +427,7 @@ Copy the **Service instance URL** from the API details information. This is the 
    ```bash
    orchestrate env activate <your-env-name> -a <your-api-key>
    ```
-   Where `<your-env-name>` is a name you choose for your environment (e.g., "my-wxo-cloud") and `<your-api-key>` is the API key you got in Step 10.
+   Where `<your-env-name>` is a name you choose for your environment (e.g., "my-wxo-cloud") and `<your-api-key>` is the API key you got in Step 11.
    
    After running the command, you should see a message: `[INFO] Environment '<your-env-name>' is now active`. This means your environment is now active and ready to use with the ADK. You can ignore the warning regarding the Auth Type.
 
@@ -296,15 +438,15 @@ Copy the **Service instance URL** from the API details information. This is the 
 
 Now that you have watsonx Orchestrate MCP servers and the WXO Agent Architect mode enabled, you can use Bob to help you with the setup.
 
-1. Make sure that you have the **WXO Agent Architect** mode selected for your Bob chat. Then ask Bob to create a script to add and activate new watsonx Orchestarte environment for the ADK:
+1. Make sure that you have the **WXO Agent Architect** mode selected for your Bob chat. Then ask Bob to create a script to add and activate a new watsonx Orchestrate environment for the ADK:
 
       ```
       Create a simple shell script to add and activate new watsonx Orchestrate SaaS environment for the ADK. I have the environment URL and API key ready.
       ```
 
-      <img src="images/image-16.png" alt="Create a script to add and activate new watsonx Orchestarte environment for the ADK" width="400px">
+      <img src="images/image-16.png" alt="Create a script to add and activate a new watsonx Orchestrate environment for the ADK" width="400px">
 
-2. When Bob starts working, it will be asking for a permissionm to access watsonx-orchestarte-adk-docs MCP server. Click on the **Aprove** button to allow Bob to access the documentation.
+2. When Bob starts working, it will be asking for permission to access the watsonx-orchestrate-adk-docs MCP server. Click on the **Approve** button to allow Bob to access the documentation.
 
       >**NOTE**: You can also check the **Always allow** checkbox to always allow Bob to access the MCP server. One option is to enable **Auto-approval**. If you do this, you can specify the different options that you want to allow.
 
@@ -312,7 +454,7 @@ Now that you have watsonx Orchestrate MCP servers and the WXO Agent Architect mo
 
       >**NOTE**: Bob might ask you to approve the MCP server access multiple times. This is because Bob is trying to access the MCP server to get the more detailed information after first learning about the environment setup. Recommendation is to enable **Auto-approval** for the MCP servers to avoid granting the permission manually each time.
 
-3. After Bob has created the script (e.g. _add_wxo_env.sh_, name could be something else for you), it will ask you to permission to save the script. Click on the **Save** button to save the script.
+3. After Bob has created the script (e.g. _add_wxo_env.sh_, the name could be something else for you), it will ask for permission to save the script. Click on the **Save** button to save the script.
 
 4. Next, Bob will (or not, depends on the day 😅) create a documentation - an MD-file - for the script. Click on the **Save** button to save the documentation.
 
@@ -336,7 +478,7 @@ Now that you have watsonx Orchestrate MCP servers and the WXO Agent Architect mo
 
       `./<name_of_your_created_script>, e.g. ./add_wxo_env.sh`
 
-9. When asked, provide name for your environment, e.g. `my-wxo-cloud`
+9. When asked, provide a name for your environment, e.g. `my-wxo-cloud`
 
       <img src="images/image-19.png" alt="Env name" width="450px">
 
@@ -391,10 +533,26 @@ Bob is your AI pair programmer for this workshop. Here's how to use Bob effectiv
 ## Troubleshooting
 
 ### Issue: "orchestrate: command not found"
-**Solution:** Make sure you installed the SDK and it's in your PATH:
+
+#### macOS / Linux
+Make sure your virtual environment is activated — `(.venv)` should appear in your prompt. Then reinstall:
 ```bash
-pip install --user ibm-watsonx-orchestrate
-# Add ~/.local/bin to your PATH if needed
+pip install --upgrade ibm-watsonx-orchestrate
+```
+If the `orchestrate` command is still not found after reinstalling, your venv may not be activated. Open a new terminal in IBM Bob IDE (which auto-activates `.venv`) and try again.
+
+#### Windows 11
+Make sure your virtual environment is activated — `(.venv)` should appear in your prompt. Then reinstall:
+```powershell
+pip install --upgrade ibm-watsonx-orchestrate
+```
+If the `orchestrate` command is still not found, add the Scripts folder to your PATH:
+```powershell
+# Find the Scripts path
+where.exe orchestrate
+
+# If not found, manually add the venv Scripts folder to PATH
+$env:PATH += ";C:\Users\YourName\bobchestrate-ws\.venv\Scripts"
 ```
 
 ### Issue: "Authentication failed"
@@ -464,3 +622,7 @@ Continue to [Part 2: Building Your First Agent](../part2-first-agent/README.md) 
 ---
 
 **💡 Pro Tip:** Keep Bob's chat panel open throughout the workshop. Whenever you're stuck, just ask Bob for help!
+
+## Acknowledgements
+
+Special thanks to **Ryan Sparks** and **Mike McMahon** for providing the Windows-specific additions to this setup guide.
