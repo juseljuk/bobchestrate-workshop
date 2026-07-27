@@ -467,3 +467,15 @@ Continue to [Part 3b: AI Gateway and Using Different Models](../part3b-ai-gatewa
 ---
 
 **💡 Pro Tip:** Use Bob to generate tool templates and then customize them for your specific needs!
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you've built custom tools, test what you've learned!
+
+!!! tip "Part 3 Quiz"
+    Take the short 5-question quiz to check your understanding of Python tools and how agents use them.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 3 Quiz →](quiz.md){ .md-button .md-button--primary }

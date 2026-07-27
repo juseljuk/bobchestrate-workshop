@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -330,6 +330,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part3': {
+      id: 'part3-custom-tools',
+      questions: [
+        {
+          text: 'Which Python decorator is used to define a watsonx Orchestrate tool?',
+          options: [
+            '@agent',
+            '@flow',
+            '@tool',
+            '@function'
+          ],
+          correctIndex: 2,
+          hint: 'The `@tool` decorator from `ibm_watsonx_orchestrate.agent_builder.tools` marks a Python function as a watsonx Orchestrate tool. Without it, the function cannot be imported or used by an agent.'
+        },
+        {
+          text: 'Where does a watsonx Orchestrate tool get its description from by default — the text the agent uses to decide when to call it?',
+          options: [
+            'The function name converted to a sentence',
+            'The Python function\'s docstring',
+            'The agent YAML instructions field',
+            'A separate description.txt file in the tools/ directory'
+          ],
+          correctIndex: 1,
+          hint: 'By default the tool description is extracted from the function\'s docstring. You can also pass it directly via `@tool(description="...")`. A clear description is critical — it\'s how the agent decides when to call the tool.'
+        },
+        {
+          text: 'Which CLI command imports a Python tool file into watsonx Orchestrate?',
+          options: [
+            'orchestrate tools add -f tools/my_tool.py',
+            'orchestrate tools deploy -k python -f tools/my_tool.py',
+            'orchestrate tools import -k python -f tools/my_tool.py',
+            'orchestrate agents import -k python -f tools/my_tool.py'
+          ],
+          correctIndex: 2,
+          hint: '`orchestrate tools import -k python -f <file>` imports a Python tool. The `-k python` flag specifies the tool kind. Use `orchestrate tools list` afterwards to verify it was imported successfully.'
+        },
+        {
+          text: 'In the workshop, why do participants add their initials as a postfix to tool function names (e.g. `check_order_status_JKJ`)?',
+          options: [
+            'It is required by the @tool decorator for unique identification',
+            'To avoid naming conflicts since all participants share the same watsonx Orchestrate environment',
+            'The CLI refuses to import tools without a unique suffix',
+            'It helps Bob identify which tools belong to which developer'
+          ],
+          correctIndex: 1,
+          hint: 'All workshop participants work in the same shared watsonx Orchestrate environment. Adding initials as a postfix ensures each participant\'s tools have unique names and don\'t overwrite each other\'s work.'
+        },
+        {
+          text: 'For an agent to use a custom tool, what must you do in the agent\'s YAML file?',
+          options: [
+            'Set `tools_enabled: true` in the agent YAML',
+            'Add the tool\'s file path under an `imports:` key',
+            'List the tool name under the `tools:` key in the agent YAML',
+            'Add a `use_tool` instruction to the agent\'s instructions field'
+          ],
+          correctIndex: 2,
+          hint: 'Tools must be explicitly listed by name under the `tools:` key in the agent YAML. The name must exactly match the imported tool name — including any initials postfix you added.'
+        }
+      ]
+    },
+
     'quiz-part2b': {
       id: 'part2b-bob-custom-rules',
       questions: [
