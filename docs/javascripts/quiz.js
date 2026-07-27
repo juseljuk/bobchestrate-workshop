@@ -580,27 +580,54 @@
   // document$.subscribe fires once for the current page on load,
   // then again after every instant-navigation page switch.
 
-  function runOnPage() {
-    if (document.getElementById('quiz-dashboard')) {
+  // ── Auto-init via MutationObserver ──────────────────────
+  // Watch for divs with data-quiz="<id>" appearing anywhere in the DOM.
+  // This fires the instant Material injects the new page content —
+  // no dependency on document$, DOMContentLoaded, or setTimeout timing.
+
+  function bootElement(el) {
+    var quizId = el.getAttribute('data-quiz');
+    if (quizId && QUIZ_DATA[quizId]) {
+      var cfg = QUIZ_DATA[quizId];
+      init({ id: cfg.id, containerId: el.id, questions: cfg.questions });
+    }
+    if (el.id === 'quiz-dashboard') {
       renderDashboard('quiz-dashboard');
     }
-    Object.keys(QUIZ_DATA).forEach(function (containerId) {
-      if (document.getElementById(containerId)) {
-        var cfg = QUIZ_DATA[containerId];
-        init({ id: cfg.id, containerId: containerId, questions: cfg.questions });
-      }
-    });
   }
 
-  // Defer one tick so bundle.js has finished setting up document$
-  // before we try to subscribe.
-  setTimeout(function () {
-    if (typeof document$ !== 'undefined') {
-      document$.subscribe(runOnPage);
-    } else {
-      // Non-Material fallback
-      document.addEventListener('DOMContentLoaded', runOnPage);
-    }
-  }, 0);
+  function scanAndBoot() {
+    // Quiz containers
+    document.querySelectorAll('[data-quiz]').forEach(bootElement);
+    // Dashboard
+    var dash = document.getElementById('quiz-dashboard');
+    if (dash) renderDashboard('quiz-dashboard');
+  }
+
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      mutation.addedNodes.forEach(function (node) {
+        if (node.nodeType !== 1) return; // elements only
+        // Check the node itself
+        if (node.hasAttribute && node.hasAttribute('data-quiz')) bootElement(node);
+        if (node.id === 'quiz-dashboard') renderDashboard('quiz-dashboard');
+        // Check descendants
+        if (node.querySelectorAll) {
+          node.querySelectorAll('[data-quiz]').forEach(bootElement);
+          if (node.querySelector('#quiz-dashboard')) renderDashboard('quiz-dashboard');
+        }
+      });
+    });
+  });
+
+  // Start observing as early as possible
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+
+  // Also scan immediately in case the page is already loaded (hard navigation)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scanAndBoot);
+  } else {
+    scanAndBoot();
+  }
 
 })();
