@@ -452,14 +452,12 @@
     }
   };
 
-  /* ── Auto-init: runs after every page load/navigation ────── */
-  // Material instant navigation swaps page content without a full reload.
-  // The only fully reliable hook is document$.subscribe() — Material fires
-  // this after every page transition, including the first hard load.
-  // We delay subscription until after window 'load' so the Material runtime
-  // (and therefore document$) is guaranteed to exist.
-  // init() and renderDashboard() both replace innerHTML so they are safe
-  // to call on every navigation with no deduplication guard needed.
+  /* ── Auto-init ────────────────────────────────────────── */
+  // quiz.js is loaded as an extra_javascript after bundle.js.
+  // bundle.js sets up document$ synchronously, so by the time any
+  // deferred (setTimeout 0) code runs, document$ is available.
+  // document$.subscribe fires once for the current page on load,
+  // then again after every instant-navigation page switch.
 
   function runOnPage() {
     if (document.getElementById('quiz-dashboard')) {
@@ -473,21 +471,15 @@
     });
   }
 
-  // document$ is set by Material after its own scripts execute.
-  // Subscribing inside window 'load' guarantees Material is ready.
-  window.addEventListener('load', function () {
+  // Defer one tick so bundle.js has finished setting up document$
+  // before we try to subscribe.
+  setTimeout(function () {
     if (typeof document$ !== 'undefined') {
-      // Fires once immediately for the current page, then again on every
-      // subsequent instant-navigation page switch.
-      document$.subscribe(function () {
-        // Small defer so Material has finished injecting page content
-        // into the DOM before we look for our containers.
-        setTimeout(runOnPage, 0);
-      });
+      document$.subscribe(runOnPage);
     } else {
-      // Fallback for non-Material or if document$ never loads
-      runOnPage();
+      // Non-Material fallback
+      document.addEventListener('DOMContentLoaded', runOnPage);
     }
-  });
+  }, 0);
 
 })();
