@@ -146,12 +146,14 @@
           return acc + (ans === questions[idx].correctIdx ? 1 : 0);
         }, 0);
         var passed = score >= Math.ceil(questions.length * 0.8);
+        var quizEntry = QUIZ_REGISTRY.find(function (r) { return r.id === config.id; });
+        var quizLabel = quizEntry ? quizEntry.label : config.id;
         var bCls = passed ? 'quiz-score-banner pass show' : 'quiz-score-banner retry show';
         var bTitle = passed
           ? '✓ Passed — ' + score + ' / ' + questions.length + ' correct'
           : score + ' / ' + questions.length + ' correct — Try again to improve your score';
         var bBody = passed
-          ? 'Great work! You\'ve completed the Part 1 quiz.'
+          ? 'Great work! You\'ve completed the ' + quizLabel + ' quiz.'
           : 'Review the material and give it another go — you need 4/5 to pass.';
         scoreBannerHTML = '<div class="' + bCls + '">' +
           '<div class="quiz-score-banner-title">' + bTitle + '</div>' +
