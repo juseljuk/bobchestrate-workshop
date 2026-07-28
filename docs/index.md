@@ -30,14 +30,6 @@ Track your progress across all module quizzes. Results are saved in your browser
 
 <div id="quiz-dashboard"></div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  if (window.WXOQuiz) {
-    WXOQuiz.renderDashboard('quiz-dashboard');
-  }
-});
-</script>
-
 **Prerequisites:**
 
 - Computer with internet access, Windows, macOS, or Linux operating system, at least 8GB RAM and 500 MB of free disk space
