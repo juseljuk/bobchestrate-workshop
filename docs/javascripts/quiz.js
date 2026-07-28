@@ -54,11 +54,11 @@
     { id: 'part6b-agentic-workflows',      label: 'Part 6b — Agentic Workflows' },
     { id: 'part7-agent-evaluation',        label: 'Part 7 — Agent Evaluations' },
     { id: 'part8-deployment',              label: 'Part 8 — Deployment' },
-    { id: 'part9-multi-agent',             label: 'Part 9 — Multi-Agent Orchestration' }
+    { id: 'part9-multi-agent-orchestration', label: 'Part 9 — Multi-Agent Orchestration' }
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers', 'part6b-agentic-workflows', 'part7-agent-evaluation'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers', 'part6b-agentic-workflows', 'part7-agent-evaluation', 'part8-deployment', 'part9-multi-agent-orchestration'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -939,6 +939,132 @@
         }
       ]
     }
+
+    ,
+    'quiz-part8': {
+      id: 'part8-deployment',
+      questions: [
+        {
+          text: 'In Developer Edition, which deployment command is NOT supported?',
+          options: [
+            'orchestrate agents import -f agent.yaml',
+            'orchestrate agents deploy --name my-agent',
+            'orchestrate tools import -k python -f tool.py',
+            'orchestrate knowledge-bases import -f kb.yaml'
+          ],
+          correctIndex: 1,
+          hint: 'Developer Edition only has a draft environment. The `orchestrate agents deploy` command that promotes an agent to the live environment is not available — agents always remain in draft state.'
+        },
+        {
+          text: 'Which CLI command generates the HTML/JavaScript snippet you embed on your website to show the chat widget?',
+          options: [
+            'orchestrate agents export --name my-agent',
+            'orchestrate channels webchat embed --agent-name my-agent --env live',
+            'orchestrate channels deploy --agent-name my-agent',
+            'orchestrate agents publish --env live'
+          ],
+          correctIndex: 1,
+          hint: 'The `orchestrate channels webchat embed` command outputs the window.wxOConfiguration + wxoLoader script block that you paste into your website\'s HTML.'
+        },
+        {
+          text: 'Quick Evaluation metrics are computed automatically. Which of the following is NOT one of the four metrics quick-eval tracks?',
+          options: [
+            'Schema Mismatch',
+            'Hallucination',
+            'Faithfulness',
+            'Successful Tool Calls'
+          ],
+          correctIndex: 2,
+          hint: 'Quick Evaluation (reference-less) tracks Tool Calls, Successful Tool Calls, Schema Mismatch, and Hallucination. Faithfulness is a Full Evaluation metric that requires reference data.'
+        },
+        {
+          text: 'When unit-testing a Python tool decorated with @tool, what is the recommended approach?',
+          options: [
+            'Import the decorated function directly and call it like a normal function',
+            'Use the orchestrate CLI to run the test automatically',
+            'Copy the business logic into the test file WITHOUT the @tool decorator',
+            'Mock the @tool decorator using unittest.mock'
+          ],
+          correctIndex: 2,
+          hint: 'The @tool decorator wraps the function for the watsonx Orchestrate framework and changes its return behaviour. Tests should call a plain copy of the business logic, not the decorated version.'
+        },
+        {
+          text: 'A "crescendo_attack" belongs to which category of red-teaming attacks?',
+          options: [
+            'Off-Policy',
+            'On-Policy',
+            'Structural',
+            'Embedding'
+          ],
+          correctIndex: 1,
+          hint: 'crescendo_attack is an On-Policy attack type (alongside instruction_override, emotional_appeal, role_playing, etc.). Off-Policy attacks include jailbreaking, topic_derailment, and unsafe_topics.'
+        }
+      ]
+    }
+
+
+    ,
+    'quiz-part9': {
+      id: 'part9-multi-agent-orchestration',
+      questions: [
+        {
+          text: 'In a multi-agent system, what is the primary role of the Orchestrator (parent) agent?',
+          options: [
+            'Execute all domain-specific tools directly',
+            'Route requests to specialist agents and synthesise their responses',
+            'Store knowledge bases and answer general questions only',
+            'Run red-teaming attacks on collaborator agents'
+          ],
+          correctIndex: 1,
+          hint: 'The orchestrator routes requests to the appropriate specialists, manages conversation flow, and synthesises their responses into a coherent reply — it does not handle domain tasks directly.'
+        },
+        {
+          text: 'In the Tool-Based Routing (Supervisory) pattern, what does the orchestrator have in its own YAML?',
+          options: [
+            'All domain tools from every specialist',
+            'No domain-specific tools — only specialist agents as collaborators',
+            'A single catch-all tool that delegates internally',
+            'Guidelines that bypass specialists for simple queries'
+          ],
+          correctIndex: 1,
+          hint: 'The supervisory pattern works because the orchestrator has NO flight/hotel/activity tools. It recognises it lacks the needed tools and must delegate to a specialist, creating natural capability-boundary routing.'
+        },
+        {
+          text: 'Why must agent names follow snake_case (underscores) in the YAML name field even when the filename uses dashes?',
+          options: [
+            'Dashes are reserved for connection identifiers',
+            'It is only a style preference with no functional impact',
+            'watsonx Orchestrate requires snake_case names for proper agent registration and routing',
+            'The CLI automatically converts dashes to underscores, so either works'
+          ],
+          correctIndex: 2,
+          hint: 'The `name` field in agent YAML must use underscores (snake_case) because watsonx Orchestrate uses it for agent registration and routing. The filename can use dashes but the name field cannot.'
+        },
+        {
+          text: 'In the Part 9 travel-concierge workshop, when a user asks "Plan a week in London", what is the correct routing order?',
+          options: [
+            'budget_advisor → flight_specialist → hotel_specialist → activity_planner',
+            'flight_specialist → hotel_specialist → activity_planner → budget_advisor',
+            'activity_planner → hotel_specialist → flight_specialist → budget_advisor',
+            'hotel_specialist → flight_specialist → budget_advisor → activity_planner'
+          ],
+          correctIndex: 1,
+          hint: 'The orchestrator instructions specify: for complex requests route to flight_specialist first, then hotel_specialist, then activity_planner, and finally budget_advisor to synthesise the full travel plan.'
+        },
+        {
+          text: 'When multiple workshop participants share a single watsonx Orchestrate environment, how should they avoid tool and agent name conflicts?',
+          options: [
+            'Use a shared prefix like "workshop_" for all names',
+            'Add personal initials as a postfix to every tool function name and agent name field',
+            'Deploy to separate namespaces using orchestrate env add',
+            'Use hidden: true in agent YAML to keep agents private'
+          ],
+          correctIndex: 1,
+          hint: 'Part 4.5 of the workshop specifies adding your initials as a postfix: tool functions become `search_flights_JS` and agent name fields become `flight_specialist_JS` — ensuring complete isolation from other participants.'
+        }
+      ]
+    }
+
   };
 
 

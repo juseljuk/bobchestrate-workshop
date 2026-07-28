@@ -914,3 +914,12 @@ You've completed the workshop and built a production-ready customer support agen
 Want to take your skills to the next level? Continue with **Part 9: Multi-agent Orchestration and workflows**
 
 **[Continue to Part 9 →](../part9-multi-agent-orchestration/README.md)**
+
+---
+
+## 🧠 Knowledge Check
+
+Ready to test what you've learned in this part?
+
+[Take the Part 8 Quiz →](quiz.md){ .md-button .md-button--primary }
+

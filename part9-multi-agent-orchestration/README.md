@@ -1690,3 +1690,12 @@ In this lesson, you learned:
 **Want to learn more?** This completes the advanced multi-agent orchestration module. You can now apply these patterns to build sophisticated agent systems for any domain! 🚀
 
 For testing and deployment best practices, refer back to [Part 8: Testing & Deployment](../part8-deployment/README.md).
+
+---
+
+## 🧠 Knowledge Check
+
+Ready to test what you've learned in this part?
+
+[Take the Part 9 Quiz →](quiz.md){ .md-button .md-button--primary }
+

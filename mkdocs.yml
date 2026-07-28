@@ -103,8 +103,10 @@ nav:
       - Quiz: part7-agent-evaluation/quiz.md
   - Part 8 - Deployment:
       - Overview: part8-deployment/README.md
+      - Quiz: part8-deployment/quiz.md
   - Part 9 - Multi-Agent Orchestration:
       - Overview: part9-multi-agent-orchestration/README.md
+      - Quiz: part9-multi-agent-orchestration/quiz.md
   - Bob Prompts:
       - Helpful Prompts: bob-prompts/helpful-prompts.md
 
