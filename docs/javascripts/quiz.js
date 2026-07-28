@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers', 'part6b-agentic-workflows'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers', 'part6b-agentic-workflows', 'part7-agent-evaluation'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -332,6 +332,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part7': {
+      id: 'part7-agent-evaluation',
+      questions: [
+        {
+          text: 'What is the difference between Quick Evaluation and Full Evaluation in watsonx Orchestrate?',
+          options: [
+            'Quick Evaluation runs only 3 test cases; Full Evaluation runs all test cases in the dataset',
+            'Quick Evaluation is reference-less and measures tool calls, schema mismatches, and hallucination; Full Evaluation is reference-based and measures metrics like faithfulness, tool call precision, and journey success',
+            'Quick Evaluation tests locally; Full Evaluation requires a SaaS environment',
+            'Quick Evaluation uses the CLI; Full Evaluation requires the Bob IDE evaluation panel'
+          ],
+          correctIndex: 1,
+          hint: 'Quick Evaluation (reference-less) measures: Tool Calls, Successful Tool Calls, Schema Mismatch, Hallucination. Full Evaluation (reference-based) additionally measures: Faithfulness, Answer Relevancy, Tool Call Precision/Recall, Journey Success, etc.'
+        },
+        {
+          text: 'Which CLI command runs a quick evaluation using a config file?',
+          options: [
+            'orchestrate evaluations run -c evaluation/config.yaml',
+            'orchestrate evaluations quick-eval -c evaluation/config.yaml',
+            'orchestrate evaluations test --config evaluation/config.yaml',
+            'orchestrate agents evaluate -f evaluation/config.yaml'
+          ],
+          correctIndex: 1,
+          hint: '`orchestrate evaluations quick-eval -c <config>` runs a quick (reference-less) evaluation. For full (reference-based) evaluation use `orchestrate evaluations evaluate -c <config>`.'
+        },
+        {
+          text: 'What is red-teaming in the context of watsonx Orchestrate agents?',
+          options: [
+            'A performance testing technique that measures agent response times under high load',
+            'A cost analysis method for comparing agent token usage across different LLM models',
+            'Adversarial testing that simulates real-world attacks to find security vulnerabilities before malicious actors can exploit them',
+            'A deployment validation process that checks agent YAML configurations for syntax errors'
+          ],
+          correctIndex: 2,
+          hint: 'Red-teaming tests agent resilience against manipulation, identifies vulnerabilities, validates security boundaries, and measures attack success rates — simulating what a malicious user might attempt.'
+        },
+        {
+          text: 'The `crescendo_attack` is a type of red-teaming attack. What does it do?',
+          options: [
+            'Uses encoded input (base64, hex) to obfuscate harmful instructions and evade content filters',
+            'Gradually escalates from harmless requests to prohibited ones to bypass safety rules incrementally',
+            'Overrides built-in guardrails by claiming to have higher-priority directives',
+            'Frames the interaction as fictional role-play to justify harmful outputs'
+          ],
+          correctIndex: 1,
+          hint: 'Crescendo attack gradually escalates — starting with innocent requests and slowly building toward prohibited content, exploiting the model\'s tendency to stay consistent with previous responses.'
+        },
+        {
+          text: 'What format must evaluation dataset test cases use in watsonx Orchestrate?',
+          options: [
+            'JSONL files — one JSON object per line, one file per test suite',
+            'YAML files — same format as agent configuration files',
+            'Individual JSON files — one separate .json file per test case',
+            'CSV files with columns for agent, input, and expected_output'
+          ],
+          correctIndex: 2,
+          hint: 'Each test case must be a separate `.json` file stored in the evaluation datasets directory. The JSON contains `agent`, `goals`, `goal_details`, `story`, and `starting_sentence` fields. JSONL is not supported.'
+        }
+      ]
+    },
+
     'quiz-part6b': {
       id: 'part6b-agentic-workflows',
       questions: [

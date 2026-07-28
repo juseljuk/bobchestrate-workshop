@@ -1033,3 +1033,15 @@ In this lesson, you learned:
 ---
 
 **🎉 Congratulations!** You now know how to evaluate and secure your watsonx Orchestrate agents through comprehensive testing and red-teaming.
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you understand agent evaluation and red-teaming, test what you've learned!
+
+!!! tip "Part 7 Quiz"
+    Take the short 5-question quiz to check your understanding of evaluation, metrics, and red-teaming.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 7 Quiz →](quiz.md){ .md-button .md-button--primary }

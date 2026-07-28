@@ -100,6 +100,7 @@ nav:
   - Part 7 - Agent Evaluations:
       - Overview: part7-agent-evaluation/README.md
       - Exercises: part7-agent-evaluation/exercises.md
+      - Quiz: part7-agent-evaluation/quiz.md
   - Part 8 - Deployment:
       - Overview: part8-deployment/README.md
   - Part 9 - Multi-Agent Orchestration:
