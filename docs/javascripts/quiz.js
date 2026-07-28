@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers', 'part6b-agentic-workflows'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -332,6 +332,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part6b': {
+      id: 'part6b-agentic-workflows',
+      questions: [
+        {
+          text: 'What is the fundamental difference between an agentic workflow and a regular agent in watsonx Orchestrate?',
+          options: [
+            'Agentic workflows use a different LLM model than regular agents',
+            'Agentic workflows are deterministic predefined sequences of tool executions with no LLM reasoning between steps; agents use LLM reasoning to decide each step dynamically',
+            'Agentic workflows can only run locally; regular agents run in the cloud',
+            'Agentic workflows require more tokens and cost more than regular agents'
+          ],
+          correctIndex: 1,
+          hint: 'Workflows are deterministic pipelines — same input always produces the same execution path, with no LLM calls between steps. This makes them ~60% faster and ~80% cheaper than agent-based approaches for fixed processes.'
+        },
+        {
+          text: 'Which Python import is required for the `@flow` decorator used to define an agentic workflow?',
+          options: [
+            'from ibm_watsonx_orchestrate.agent_builder.tools import flow',
+            'from ibm_watsonx_orchestrate.flow_builder.flows import flow',
+            'from ibm_watsonx_orchestrate.workflows import flow',
+            'from ibm_watsonx_orchestrate.tools import flow, Flow'
+          ],
+          correctIndex: 1,
+          hint: 'The correct import is `from ibm_watsonx_orchestrate.flow_builder.flows import Flow, flow, START, END, Branch`. Using the wrong module (e.g. `agent_builder.tools`) will cause an import error.'
+        },
+        {
+          text: 'In an agentic workflow, how do you pass data from the workflow input to a tool node?',
+          options: [
+            'The workflow input is automatically passed to all tool nodes as keyword arguments',
+            'Use `aflow.connect(source="flow.input.param", target="tool_node.param")`',
+            'Use `tool_node.map_input(input_variable="param", expression="flow.input.param")`',
+            'Set the input in Pydantic schema defaults and the flow engine infers the mapping'
+          ],
+          correctIndex: 2,
+          hint: '`node.map_input(input_variable="param_name", expression="flow.input.param_name")` is required to pass data into each tool node. Without it, the tool receives empty parameters and will fail with a "required property" error.'
+        },
+        {
+          text: 'Which CLI command is used to import an agentic workflow Python file into watsonx Orchestrate?',
+          options: [
+            'orchestrate agents import -f tools/my_workflow.py',
+            'orchestrate workflows import -f tools/my_workflow.py',
+            'orchestrate tools import -k flow -f tools/my_workflow.py',
+            'orchestrate toolkits import -k workflow -f tools/my_workflow.py'
+          ],
+          correctIndex: 2,
+          hint: 'Workflows are imported as flow-type tools using `orchestrate tools import -k flow -f <file>`. They then appear in `orchestrate tools list` and can be assigned to agents like any other tool.'
+        },
+        {
+          text: 'When should you choose an agentic workflow over a regular agent?',
+          options: [
+            'When you need the LLM to reason about each step and adapt to unexpected inputs',
+            'When the process is fixed and deterministic, steps have clear inputs/outputs, and cost and speed are priorities',
+            'When you need the agent to handle multi-turn conversation with a user',
+            'When the number of tools is fewer than three'
+          ],
+          correctIndex: 1,
+          hint: 'Use workflows for fixed, predictable processes like loan approval or order processing — no LLM reasoning needed between steps. Use agents when dynamic decision-making, conversation, or flexibility is required.'
+        }
+      ]
+    },
+
     'quiz-part6': {
       id: 'part6-mcp-servers',
       questions: [

@@ -726,3 +726,15 @@ Now that you understand agentic workflows, you can:
 4. ✅ Optimize costs by replacing agent chains with workflows
 
 Continue to [Part 7: Agent Evaluations](../part7-agent-evaluation/README.md) to learn how to evaluate your workflows and agents! →
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you understand agentic workflows, test what you've learned!
+
+!!! tip "Part 6b Quiz"
+    Take the short 5-question quiz to check your understanding of agentic workflows and deterministic tool orchestration.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 6b Quiz →](quiz.md){ .md-button .md-button--primary }
