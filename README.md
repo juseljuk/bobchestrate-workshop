@@ -278,16 +278,21 @@ By the end of this workshop, you will:
 
 ## Additional Resources
 
+- [Workshop Website & Quizzes](https://juseljuk.github.io/bobchestrate-workshop/)
+- [Bob Helpful Prompts](./bob-prompts/helpful-prompts.md)
 - [watsonx Orchestrate Documentation](https://developer.watson-orchestrate.ibm.com/)
 - [Python Tools Guide](https://developer.watson-orchestrate.ibm.com/tools/create_tool)
 - [Agent Builder API Reference](https://developer.watson-orchestrate.ibm.com/apis/agents/)
-- [Community Forum](https://community.ibm.com/community/user/watsonai/communities/community-home?CommunityKey=7a3dc5ba-3018-452d-9a43-a49dc6819633)
+- [Community Forum](https://community.ibm.com/community/user/groups/community-home?CommunityKey=3ad46381-9535-462e-85c9-568b21f4b067)
 
 ## Need Help?
 
 - Ask Bob: "Bob, I'm stuck on [specific issue]"
-- Check the solutions folder for reference implementations
-- Review the bob-prompts guide for helpful prompts
+- Review the [bob-prompts guide](./bob-prompts/helpful-prompts.md) for helpful prompts
 - Consult the watsonx Orchestrate documentation
+
+## Reporting Issues and Asking for Enhancements
+
+If you have any issues or suggestions for improvement, please open an issue in the [Bobchestrate repository](https://github.com/juseljuk/bobchestrate-workshop/issues) — you'll need a GitHub account to do this. Cheers 🍻
 
 Let's get started! Head to [Part 1: Setup](./part1-setup/README.md) →
