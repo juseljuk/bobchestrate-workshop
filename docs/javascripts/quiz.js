@@ -261,17 +261,18 @@
     var cardsHTML = QUIZ_REGISTRY.map(function (quiz) {
       var result = results[quiz.id];
       var available = AVAILABLE_QUIZZES.indexOf(quiz.id) !== -1;
+      var quizUrl = '../' + quiz.id + '/quiz/';
       var scoreHTML, badgeHTML, dateHTML;
 
       if (result) {
         scoreHTML = '<div class="quiz-card-score">' + result.score + ' / ' + result.total + '</div>';
         badgeHTML = result.passed
-          ? '<span class="quiz-badge quiz-badge-pass">Passed</span>'
-          : '<span class="quiz-badge quiz-badge-retry">Try again</span>';
+          ? '<a href="' + quizUrl + '" class="quiz-badge quiz-badge-pass">Passed ↗</a>'
+          : '<a href="' + quizUrl + '" class="quiz-badge quiz-badge-retry">Try again ↗</a>';
         dateHTML = '<div class="quiz-card-date">' + formatDate(result.completedAt) + '</div>';
       } else if (available) {
         scoreHTML = '<div class="quiz-card-score" style="color:var(--quiz-text-muted)">—</div>';
-        badgeHTML = '<span class="quiz-badge quiz-badge-pending">Not attempted</span>';
+        badgeHTML = '<a href="' + quizUrl + '" class="quiz-badge quiz-badge-pending">Start quiz ↗</a>';
         dateHTML = '';
       } else {
         scoreHTML = '';

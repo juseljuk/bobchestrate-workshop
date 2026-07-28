@@ -337,6 +337,12 @@
 .quiz-badge-pending { background: var(--quiz-surface-alt); color: var(--quiz-text-muted); border: 1px solid var(--quiz-border); }
 .quiz-badge-soon    { background: var(--quiz-surface-alt); color: var(--quiz-text-muted); border: 1px solid var(--quiz-border); font-style: italic; }
 
+a.quiz-badge { text-decoration: none !important; cursor: pointer; }
+a.quiz-badge:hover { filter: brightness(1.1); opacity: .9; }
+a.quiz-badge-pass:hover    { color: var(--quiz-success); }
+a.quiz-badge-retry:hover   { color: var(--quiz-warning); }
+a.quiz-badge-pending:hover { color: var(--quiz-text-muted); }
+
 .quiz-dashboard-actions {
   display: flex;
   align-items: center;
