@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -332,6 +332,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part4': {
+      id: 'part4-knowledge',
+      questions: [
+        {
+          text: 'What is the correct `kind` value in a knowledge base YAML configuration file?',
+          options: [
+            'kind: agent',
+            'kind: knowledge',
+            'kind: knowledge_base',
+            'kind: vector_store'
+          ],
+          correctIndex: 2,
+          hint: 'The `kind` field must be exactly `knowledge_base`. Other required fields are `spec_version: v1`, `name`, `description`, and `documents`. Getting `kind` wrong will cause the import to fail.'
+        },
+        {
+          text: 'Which CLI command imports a knowledge base YAML file into watsonx Orchestrate?',
+          options: [
+            'orchestrate agents import -f customer-support-faq.yaml',
+            'orchestrate knowledge-bases import -f customer-support-faq.yaml',
+            'orchestrate tools import -k knowledge -f customer-support-faq.yaml',
+            'orchestrate kb add -f customer-support-faq.yaml'
+          ],
+          correctIndex: 1,
+          hint: '`orchestrate knowledge-bases import -f <file>` uploads and indexes the knowledge base. After importing, use `orchestrate knowledge-bases list` to check the status — wait for "ready" before testing.'
+        },
+        {
+          text: 'How do you connect a knowledge base to an agent in the agent\'s YAML configuration?',
+          options: [
+            'Add the knowledge base name under the `tools:` key',
+            'Set `knowledge_enabled: true` and provide the name in `knowledge_source:`',
+            'Add the knowledge base name under the `knowledge_base:` key',
+            'Reference it in the agent\'s `instructions:` field with @knowledge syntax'
+          ],
+          correctIndex: 2,
+          hint: 'Add a `knowledge_base:` list to the agent YAML with the exact knowledge base name (including your initials postfix). The name must match what was imported — use `orchestrate knowledge-bases list` to confirm.'
+        },
+        {
+          text: 'In watsonx Orchestrate, what is an agent "collaborator"?',
+          options: [
+            'A human supervisor who reviews agent responses before they are sent',
+            'Another agent that the main agent can delegate tasks to for specialised handling',
+            'A shared tool that multiple agents can call simultaneously',
+            'A second LLM model used to validate the primary agent\'s responses'
+          ],
+          correctIndex: 1,
+          hint: 'Collaborators are specialist agents listed under the `collaborators:` key. The main agent can delegate tasks to them — for example, escalating complex refund requests to a senior escalation agent.'
+        },
+        {
+          text: 'According to the Part 4 workshop, when should the customer support agent escalate to the escalation agent?',
+          options: [
+            'For every refund request regardless of amount',
+            'Only when the customer explicitly asks to speak to a manager',
+            'For refund requests over $10,000, legal threats, policy exceptions, or requests beyond its authority',
+            'Whenever the knowledge base does not return a relevant result'
+          ],
+          correctIndex: 2,
+          hint: 'The escalation criteria are: refunds over $10,000, upset customers or legal threats, requests requiring policy exceptions, issues beyond the agent\'s authority, or a customer requesting a manager.'
+        }
+      ]
+    },
+
     'quiz-part3b': {
       id: 'part3b-ai-gateway-models',
       questions: [

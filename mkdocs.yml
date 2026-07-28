@@ -86,6 +86,7 @@ nav:
       - Quiz: part3b-ai-gateway-models/quiz.md
   - Part 4 - Knowledge:
       - Overview: part4-knowledge/README.md
+      - Quiz: part4-knowledge/quiz.md
   - Part 5 - Guidelines & Guardrails:
       - Overview: part5-guidelines-guardrails/README.md
   - Part 6 - MCP Servers:

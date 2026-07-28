@@ -663,3 +663,15 @@ Continue to [Part 5: Agent guidelines and guardrails](../part5-guidelines-guardr
 ---
 
 **💡 Pro Tip:** Use Bob to help design your agent hierarchy. Ask: "Bob, design an agent system for [your use case]"
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you've built knowledge bases and agent collaborators, test what you've learned!
+
+!!! tip "Part 4 Quiz"
+    Take the short 5-question quiz to check your understanding of knowledge bases and agent collaboration.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 4 Quiz →](quiz.md){ .md-button .md-button--primary }
