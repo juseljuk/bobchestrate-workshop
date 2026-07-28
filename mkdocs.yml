@@ -65,8 +65,9 @@ markdown_extensions:
 
 # Navigation structure
 nav:
-  - Home: index.md
-  - "✅ Quiz Progress": quiz-progress/index.md
+  - Home:
+      - Overview: index.md
+      - "✅ Quiz Progress": quiz-progress/index.md
   - Part 1 - Setup:
       - Overview: part1-setup/README.md
       - Quiz: part1-setup/quiz.md
