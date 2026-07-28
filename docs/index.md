@@ -8,19 +8,19 @@ Welcome! This workshop will guide you through building AI agents using IBM watso
 
 ## Workshop Overview
 
-**Duration:** 270-300 minutes (4.5-5 hours) for complete workshop
+**Duration:** 295-345 minutes (5-6 hours) for the complete workshop
 
 This estimate includes:
 
-- Core instruction time: 220 minutes
+- Core instruction time: 255 minutes (all parts)
 - Setup and troubleshooting: 20-30 minutes
 - Short breaks: 15-20 minutes
 - Q&A and discussion: 15-30 minutes
 
 **Alternative Options:**
 
-- **Core Workshop** (Parts 1-8): 240-270 minutes (4-4.5 hours)
-- **Advanced Exercise Only** (Part 1 + Part 9): 60-75 minutes (1-1.25 hours) - setup + multi-agent orchestration as standalone exercise
+- **Core Workshop** (Parts 1-8, skip Part 9): 225-245 minutes (3.75-4 hours) + overhead
+- **Advanced Exercise Only** (Parts 1, 2b + Part 9): 75-90 minutes (1.25-1.5 hours) — environment setup, Bob conventions, and multi-agent orchestration as a standalone exercise
 
 **Level:** Beginner to Intermediate (Advanced for Part 9)
 
@@ -51,7 +51,7 @@ Each part builds on the last, taking you from a working environment to a fully d
 | [8 — Testing & Deployment](part8-deployment/README.md) | Unit-test tools, deploy to live, generate a webchat embed snippet | 20 min |
 | [9 — Multi-Agent Orchestration](part9-multi-agent-orchestration/README.md) ⭐ | Build a travel concierge with four specialist agents and an orchestrator | 30 min |
 
-> ⭐ Part 9 can also be run as a **standalone advanced exercise** (Part 1 + Part 9, ~75 min).
+> ⭐ Part 9 can also be run as a **standalone advanced exercise** (Parts 1, 2b + Part 9, ~75-90 min).
 
 ## How Bob Helps You
 
