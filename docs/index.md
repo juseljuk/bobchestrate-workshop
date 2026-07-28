@@ -24,14 +24,6 @@ This estimate includes:
 
 **Level:** Beginner to Intermediate (Advanced for Part 9)
 
-## 🧠 Test Your Knowledge Along the Way
-
-Every part of this workshop comes with a short **5-question quiz** to help you lock in what you've just learned. Quizzes are built right into the workshop pages — just scroll to the bottom of any part and hit the quiz link.
-
-You need **4 out of 5** to pass, and your results are saved automatically in your browser so you can pick up where you left off. Want to see how you're doing across all parts at a glance? Check your personal progress dashboard — it's always one click away in the top navigation menu.
-
-[View your Quiz Progress →](quiz-progress/index.md){ .md-button .md-button--primary }
-
 **Prerequisites:**
 
 - Computer with internet access, Windows, macOS, or Linux operating system, at least 8GB RAM and 500 MB of free disk space
@@ -195,6 +187,14 @@ By the end of this workshop, you will:
 - ✅ Build responsible AI agents
 - ✅ Leverage Bob as an AI pair programmer
 - ✅ Test and deploy agents to production
+
+## 🧠 Test Your Knowledge Along the Way
+
+Every part of this workshop comes with a short **5-question quiz** to help you lock in what you've just learned. Quizzes are built right into the workshop pages — just scroll to the bottom of any part and hit the quiz link.
+
+You need **4 out of 5** to pass, and your results are saved automatically in your browser so you can pick up where you left off. Want to see how you're doing across all parts at a glance? Check your personal progress dashboard — it's always one click away in the top navigation menu.
+
+[View your Quiz Progress →](quiz-progress/index.md){ .md-button .md-button--primary }
 
 ## Tips for Success
 
