@@ -28,7 +28,7 @@ This estimate includes:
 
 Every part of this workshop comes with a short **5-question quiz** to help you lock in what you've just learned. Quizzes are built right into the workshop pages — just scroll to the bottom of any part and hit the quiz link.
 
-You need **4 out of 5** to pass, and your results are saved automatically in your browser so you can pick up where you left off. Want to see how you're doing across all parts at a glance? Check your personal progress dashboard — it's always one click away in the sidebar.
+You need **4 out of 5** to pass, and your results are saved automatically in your browser so you can pick up where you left off. Want to see how you're doing across all parts at a glance? Check your personal progress dashboard — it's always one click away in the top navigation menu.
 
 [View your Quiz Progress →](quiz-progress/index.md){ .md-button .md-button--primary }
 
