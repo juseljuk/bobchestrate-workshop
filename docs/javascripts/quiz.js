@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -332,6 +332,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part6': {
+      id: 'part6-mcp-servers',
+      questions: [
+        {
+          text: 'What does MCP stand for, and what is its purpose in watsonx Orchestrate?',
+          options: [
+            'Multi-Channel Protocol — used to deploy agents across Slack, Teams, and web chat simultaneously',
+            'Model Context Protocol — a standardized protocol for connecting AI agents to external tools and data sources',
+            'Managed Compute Platform — IBM\'s serverless runtime for executing Python tool code',
+            'Modular Component Pipeline — a framework for chaining multiple agents in sequence'
+          ],
+          correctIndex: 1,
+          hint: 'MCP (Model Context Protocol) is a standardized protocol that packages multiple related tools together into a "toolkit", making them reusable across agents and easy to integrate with watsonx Orchestrate.'
+        },
+        {
+          text: 'In a Python MCP server, which two decorators are used to define and implement tools?',
+          options: [
+            '@app.register_tool() to define and @app.execute_tool() to implement',
+            '@tool to define and @app.run() to implement',
+            '@app.list_tools() to define and @app.call_tool() to implement',
+            '@mcp.tool() to define and @mcp.handler() to implement'
+          ],
+          correctIndex: 2,
+          hint: '`@app.list_tools()` registers a function that returns the list of available Tool objects (for discovery). `@app.call_tool()` handles the actual execution when an agent calls a tool.'
+        },
+        {
+          text: 'What is the correct `kind` value in a toolkit YAML file for importing an MCP server?',
+          options: [
+            'kind: toolkit',
+            'kind: python',
+            'kind: server',
+            'kind: mcp'
+          ],
+          correctIndex: 3,
+          hint: 'The toolkit YAML must have `kind: mcp` along with `spec_version: v1`, `name`, `description`, `command` (to start the server), `env`, `tools`, and `package_root`.'
+        },
+        {
+          text: 'Which CLI command imports an MCP server toolkit from a YAML file?',
+          options: [
+            'orchestrate tools import -k mcp -f product-catalog-toolkit.yaml',
+            'orchestrate toolkits import -f product-catalog-toolkit.yaml',
+            'orchestrate agents import -k toolkit -f product-catalog-toolkit.yaml',
+            'orchestrate mcp import -f product-catalog-toolkit.yaml'
+          ],
+          correctIndex: 1,
+          hint: '`orchestrate toolkits import -f <file>` is the correct command. After importing, verify with `orchestrate toolkits list` — you should see your toolkit with all its tools listed.'
+        },
+        {
+          text: 'When referencing MCP toolkit tools in an agent YAML file, what format must tool names use?',
+          options: [
+            'Just the tool name: `search_products`',
+            'The toolkit name and tool name separated by a slash: `product-catalog/search_products`',
+            'The toolkit name and tool name separated by a colon: `product-catalog:search_products`',
+            'A full import path: `toolkits.product-catalog.search_products`'
+          ],
+          correctIndex: 2,
+          hint: 'MCP toolkit tools must be referenced as `toolkit-name:tool-name` in the agent YAML `tools:` list. For example: `product-catalog-JKJ:search_products`. Missing the toolkit prefix causes a "tool not found" error.'
+        }
+      ]
+    },
+
     'quiz-part5': {
       id: 'part5-guidelines-guardrails',
       questions: [

@@ -92,6 +92,7 @@ nav:
       - Quiz: part5-guidelines-guardrails/quiz.md
   - Part 6 - MCP Servers:
       - Overview: part6-mcp-servers/README.md
+      - Quiz: part6-mcp-servers/quiz.md
   - Part 6b - Agentic Workflows:
       - Overview: part6b-agentic-workflows/README.md
       - Exercises: part6b-agentic-workflows/exercises.md

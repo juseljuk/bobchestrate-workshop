@@ -1087,3 +1087,15 @@ In this lesson, you learned:
 ---
 
 **Ready for the next lesson?** Head to [Part 7: Agent Evaluations & Red-Teaming](../part7-agent-evaluation/README.md) to learn how to evaluate and secure your agents! 🚀
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you've built and imported an MCP server, test what you've learned!
+
+!!! tip "Part 6 Quiz"
+    Take the short 5-question quiz to check your understanding of MCP servers and toolkit integration.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 6 Quiz →](quiz.md){ .md-button .md-button--primary }
