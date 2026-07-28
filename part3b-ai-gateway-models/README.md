@@ -375,3 +375,15 @@ Continue to [Part 4: Knowledge Bases & Collaborators](../part4-knowledge/README.
 ---
 
 **💡 Pro Tip:** Start with the default groq/openai/gpt-oss-120b model and only add external providers when you have specific requirements that the default model cannot meet!
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you understand the AI Gateway and model policies, test what you've learned!
+
+!!! tip "Part 3b Quiz"
+    Take the short 5-question quiz to check your understanding of AI Gateway and external model providers.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 3b Quiz →](quiz.md){ .md-button .md-button--primary }

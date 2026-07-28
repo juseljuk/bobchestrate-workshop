@@ -83,6 +83,7 @@ nav:
   - Part 3b - AI Gateway Models:
       - Overview: part3b-ai-gateway-models/README.md
       - Model Selection Guide: part3b-ai-gateway-models/model-selection-guide.md
+      - Quiz: part3b-ai-gateway-models/quiz.md
   - Part 4 - Knowledge:
       - Overview: part4-knowledge/README.md
   - Part 5 - Guidelines & Guardrails:

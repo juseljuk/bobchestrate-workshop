@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -332,6 +332,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part3b': {
+      id: 'part3b-ai-gateway-models',
+      questions: [
+        {
+          text: 'What is the primary purpose of the AI Gateway in watsonx Orchestrate?',
+          options: [
+            'To store and version agent YAML configuration files',
+            'To provide a unified interface for accessing multiple LLM providers through a single API',
+            'To monitor Python tool execution times and errors',
+            'To manage the watsonx Orchestrate CLI authentication tokens'
+          ],
+          correctIndex: 1,
+          hint: 'The AI Gateway acts as a unified interface between your agents and various LLM providers (OpenAI, Anthropic, Google, AWS Bedrock, etc.), handling abstraction, governance, and cost tracking centrally.'
+        },
+        {
+          text: 'Which is the default recommended model for watsonx Orchestrate agents in this workshop?',
+          options: [
+            'openai/gpt-4-turbo',
+            'anthropic/claude-3-opus',
+            'groq/openai/gpt-oss-120b',
+            'watsonx/ibm/granite-3-8b-instruct'
+          ],
+          correctIndex: 2,
+          hint: '`groq/openai/gpt-oss-120b` is the default platform model — optimised for speed, tool calling, and multilingual support. Start with this before adding external providers.'
+        },
+        {
+          text: 'Which CLI commands are needed to connect an external model provider like OpenAI to watsonx Orchestrate?',
+          options: [
+            'orchestrate models connect and orchestrate models register',
+            'orchestrate connections add, orchestrate connections configure, and orchestrate connections set-credentials',
+            'orchestrate providers add and orchestrate providers authenticate',
+            'orchestrate llm add and orchestrate llm set-key'
+          ],
+          correctIndex: 1,
+          hint: 'Three steps: `orchestrate connections add -a openai`, then `connections configure` to set the type, then `connections set-credentials` to provide the API key. After that you can add the model with `orchestrate models add`.'
+        },
+        {
+          text: 'What does a fallback model policy do in watsonx Orchestrate?',
+          options: [
+            'It resets the agent to use the default model when token limits are exceeded',
+            'It distributes traffic across multiple models based on configurable weights',
+            'It automatically switches to a backup model when the primary model returns errors',
+            'It retries the same model request up to a configured number of times'
+          ],
+          correctIndex: 2,
+          hint: 'A fallback policy (mode: fallback) automatically switches to the next model in the targets list when the primary returns errors (e.g. 503, 500). Loadbalance splits traffic by weight; single retries the same model.'
+        },
+        {
+          text: 'How do you reference an external model or model policy in an agent\'s YAML configuration?',
+          options: [
+            'Add the provider name under an `external_llm:` key in the agent YAML',
+            'Set the model in the `tools:` list alongside other tool names',
+            'Set the `llm:` field to the model or policy name (e.g. `llm: resilient_gpt`)',
+            'Add a `model_policy:` section with the provider and credentials'
+          ],
+          correctIndex: 2,
+          hint: 'The `llm:` field in the agent YAML accepts either a direct model name (e.g. `groq/openai/gpt-oss-120b`) or a policy name (e.g. `resilient_gpt`). The AI Gateway resolves it at runtime.'
+        }
+      ]
+    },
+
     'quiz-part3': {
       id: 'part3-custom-tools',
       questions: [
