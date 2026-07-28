@@ -1086,6 +1086,15 @@
     }
   }
 
-  runOnPage();
+  // Run immediately (sync script at bottom of body)
+  // AND guard with DOMContentLoaded for deferred/module loading
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runOnPage);
+  } else {
+    runOnPage();
+  }
+
+  // Re-run on Material instant navigation (turbo/ajax page transitions)
+  document.addEventListener('DOMContentLoaded', runOnPage);
 
 })();

@@ -24,7 +24,7 @@ This estimate includes:
 
 **Level:** Beginner to Intermediate (Advanced for Part 9)
 
-## :material-check-decagram: Your Quiz Progress
+## ✅ Your Quiz Progress
 
 Track your progress across all module quizzes. Results are saved in your browser automatically — revisit this page at any time to see how you're doing.
 
