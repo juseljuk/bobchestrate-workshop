@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block headerbuttons %}
+  <a href="{{ 'quiz-progress/' | url }}" class="md-header__button quiz-progress-btn" title="Quiz Progress" aria-label="Quiz Progress">
+    <span class="quiz-progress-icon">✅</span>
+    <span class="quiz-progress-label">Progress</span>
+  </a>
+  {{ super() }}
+{% endblock %}
