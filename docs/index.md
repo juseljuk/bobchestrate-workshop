@@ -32,134 +32,26 @@ This estimate includes:
 - watsonx Orchestrate SaaS access (provided by your instructor or you can use your own)
 - IBM Bob IDE installed (trial or one provided by your instructor)
 
-## What You'll Build
-
-Throughout this workshop, you'll build progressively more sophisticated AI agents:
-
-### 1. Hello World Agent (Part 2)
-Your first simple agent to understand the basics of agent configuration and behavior.
-
-### 2. Customer Support System (Parts 3-5)
-A complete customer support solution featuring:
-
-- **Custom Python tools** for order status checking and refund processing
-- **Knowledge base integration** for FAQ handling
-- **Specialized escalation agent** for complex issues
-- **Safety guidelines and guardrails** for responsible AI
-
-### 3. Product Catalog System (Part 6)
-An **MCP server-powered agent** that demonstrates backend integration:
-
-- Product search and details
-- Inventory checking
-- Product recommendations
-- Reusable MCP server architecture
-
-### 4. Agent Evaluations & Red-Teaming (Part 7)
-Learn to **evaluate and secure** your agents:
-
-- Creating comprehensive evaluation datasets
-- Running automated evaluations
-- Red-teaming techniques for security testing
-- Identifying and fixing vulnerabilities
-- Measuring agent performance metrics
-
-### 5. Testing & Deployment (Part 8)
-Learn to **test and deploy** your customer support agent:
-
-- Comprehensive testing strategies
-- Unit and integration testing
-- Deployment best practices
-- Monitoring and observability
-- Production readiness checklist
-
-Each system builds on concepts from previous parts, teaching you to create increasingly sophisticated agentic AI solutions.
-
 ## Workshop Structure
 
-### [Part 1: Setup & Environment](part1-setup/README.md) (15 min)
-- Configure watsonx Orchestrate credentials
-- Verify Bob is working as your AI development partner
-- Understand the project structure
-- Set up your development environment
+Each part builds on the last, taking you from a working environment to a fully deployed, evaluated, multi-agent system.
 
-### [Part 2: Building Your First Agent](part2-first-agent/README.md) (20 min)
-- Create a simple "Hello World" agent
-- Understand agent instructions and behavior
-- Test your agent with the chat interface
-- Learn how to use Bob to help debug issues
+| Part | Topic | Time |
+|------|-------|------|
+| [1 — Setup & Environment](part1-setup/README.md) | Configure watsonx Orchestrate and verify Bob is your AI pair programmer | 15 min |
+| [2 — Your First Agent](part2-first-agent/README.md) | Build and chat with a "Hello World" agent | 20 min |
+| [2b — Bob Custom Rules](part2b-bob-custom-rules/README.md) | Teach Bob your project conventions for consistent code generation | 10 min |
+| [3 — Custom Tools](part3-custom-tools/README.md) | Write Python tools for order status and refunds; wire them into your agent | 30 min |
+| [3b — AI Gateway & Models](part3b-ai-gateway-models/README.md) | Swap LLM providers, compare costs, and build intelligent model routing | 25 min |
+| [4 — Knowledge Bases & Collaborators](part4-knowledge/README.md) | Add an FAQ knowledge base and a specialist escalation agent | 25 min |
+| [5 — Guidelines & Guardrails](part5-guidelines-guardrails/README.md) | Add rule-based behaviour controls and content safety plugins | 20 min |
+| [6 — MCP Servers](part6-mcp-servers/README.md) | Build a reusable MCP server and connect it as a product-catalog agent | 25 min |
+| [6b — Agentic Workflows](part6b-agentic-workflows/README.md) | Replace LLM-driven steps with deterministic flows — 60% faster, 80% cheaper | 25 min |
+| [7 — Evaluations & Red-Teaming](part7-agent-evaluation/README.md) | Measure quality with automated evals; probe for vulnerabilities with red-teaming | 30 min |
+| [8 — Testing & Deployment](part8-deployment/README.md) | Unit-test tools, deploy to live, generate a webchat embed snippet | 20 min |
+| [9 — Multi-Agent Orchestration](part9-multi-agent-orchestration/README.md) ⭐ | Build a travel concierge with four specialist agents and an orchestrator | 30 min |
 
-### [Part 2b: Using Custom Rules with Bob IDE](part2b-bob-custom-rules/README.md) (10 min)
-- Learn how to configure Bob with custom development rules
-- Understand the watsonx Orchestrate development rule
-- Set up project-specific conventions for Bob
-- Create your own custom rules for consistent development
-
-### [Part 3: Adding Custom Tools](part3-custom-tools/README.md) (30 min)
-- Create a Python tool to check order status
-- Create a tool to process refund requests
-- Import tools into your agent
-- Use Bob to help write and debug tool code
-
-### [Part 3b: AI Gateway and Using Different Models](part3b-ai-gateway-models/README.md) (25 min)
-- Understand the AI Gateway architecture
-- Learn about different LLM providers and models
-- Configure agents with different models
-- Compare model performance and costs
-- Create intelligent model routing agents
-- Best practices for model selection
-
-### [Part 4: Knowledge Bases & Collaborators](part4-knowledge/README.md) (25 min)
-- Add a knowledge base for FAQs
-- Create a specialized escalation agent
-- Connect agents as collaborators
-- Test the complete customer support flow
-
-### [Part 5: Agent Guidelines & Guardrails](part5-guidelines-guardrails/README.md) (20 min)
-- Write comprehensive agent guidelines
-- Implement content safety guardrails
-- Create input/output filtering plugins
-- Test safety measures and compliance
-- Learn responsible AI best practices
-
-### [Part 6: MCP Servers - Connecting to Backend Services](part6-mcp-servers/README.md) (25 min)
-- Understand what MCP servers are and their benefits
-- Create an MCP server in Python with multiple tools
-- Define tool schemas and implement tool logic
-- Import MCP servers into watsonx Orchestrate
-- Use MCP server tools in your agents
-- Learn MCP best practices and patterns
-
-### [Part 6b: Agentic Workflows - Deterministic Tool Orchestration](part6b-agentic-workflows/README.md) (25-30 min)
-- Understand what agentic workflows are and when to use them
-- Learn the difference between workflows and agent-based approaches
-- Build deterministic workflows using the Flow Builder
-- Implement parameter mapping and conditional branching
-- Create workflows that are 60% faster and 80% cheaper than agents
-- Test and deploy workflows for fixed business processes
-
-### [Part 7: Agent Evaluations & Red-Teaming](part7-agent-evaluation/README.md) (30-35 min)
-- Create comprehensive evaluation datasets
-- Run automated evaluations with watsonx Orchestrate CLI
-- Perform red-teaming exercises to test agent security
-- Identify and fix agent vulnerabilities
-- Measure agent performance metrics
-- Implement fixes based on evaluation results
-
-### [Part 8: Testing & Deployment](part8-deployment/README.md) (20 min)
-- Test your agent thoroughly
-- Deploy to different environments
-- Generate webchat embed code
-- Monitor agent performance
-
-### [Part 9: Multi-Agent Orchestration & Workflows](part9-multi-agent-orchestration/README.md) (30 min)
-- Understand when and why to use multi-agent systems
-- Design focused specialist agents for specific domains
-- Create orchestrator agents with intelligent routing
-- Manage context and handoffs between agents
-- Implement complex multi-agent workflows
-- Learn best practices for agent hierarchies
-- **Advanced standalone exercise** - Build a complete travel planning system
+> ⭐ Part 9 can also be run as a **standalone advanced exercise** (Part 1 + Part 9, ~75 min).
 
 ## How Bob Helps You
 
