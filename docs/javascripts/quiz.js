@@ -58,7 +58,7 @@
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -332,6 +332,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-part5': {
+      id: 'part5-guidelines-guardrails',
+      questions: [
+        {
+          text: 'Guidelines in watsonx Orchestrate use a "When-Then" format. What do the two parts represent?',
+          options: [
+            'When = the tool to call, Then = the expected output format',
+            'When = a specific condition that triggers the guideline, Then = the action to perform',
+            'When = the user role, Then = the permission level granted',
+            'When = the LLM model to use, Then = the response temperature setting'
+          ],
+          correctIndex: 1,
+          hint: 'Guidelines are condition-action rules: "When [condition is met] → Then [perform this action and/or invoke this tool]". They create predictable, rule-based responses to defined situations.'
+        },
+        {
+          text: 'What is the key difference between guidelines and guardrails?',
+          options: [
+            'Guidelines are written in Python; guardrails are written in YAML',
+            'Guidelines apply to all agents; guardrails are agent-specific',
+            'Guidelines are evaluated by the LLM during reasoning; guardrails are code-based plugins that execute automatically before/after the LLM',
+            'Guidelines filter outputs; guardrails filter inputs'
+          ],
+          correctIndex: 2,
+          hint: 'Guidelines work inside the LLM\'s reasoning — the LLM reads and interprets them contextually. Guardrails are Python plugins that execute deterministically outside the LLM as pre-invoke (input) or post-invoke (output) filters.'
+        },
+        {
+          text: 'Which decorator and `kind` parameter are required to create a pre-invoke guardrail plugin in Python?',
+          options: [
+            '@plugin with kind=PluginKind.PRE_INVOKE',
+            '@guardrail with kind=GuardrailKind.INPUT',
+            '@tool with kind=PythonToolKind.AGENTPREINVOKE',
+            '@tool with kind=PythonToolKind.INPUT_FILTER'
+          ],
+          correctIndex: 2,
+          hint: 'Guardrail plugins use the `@tool` decorator with `kind=PythonToolKind.AGENTPREINVOKE` for input filtering and `PythonToolKind.AGENTPOSTINVOKE` for output filtering. Both `description` and `kind` parameters are required.'
+        },
+        {
+          text: 'According to Part 5, where should collaborator agents be referenced in a guideline — and where should they NOT be?',
+          options: [
+            'In the `tool:` field of the guideline — never in the `action:` field',
+            'In the `action:` field description — never in the `tool:` field (which is only for tools)',
+            'In both the `tool:` and `action:` fields simultaneously for redundancy',
+            'In a separate `collaborators:` section inside each guideline block'
+          ],
+          correctIndex: 1,
+          hint: 'The `tool:` field in a guideline must only reference imported tools. Collaborator handoffs are described in the `action:` field using natural language — e.g. "hand off to the escalation_agent collaborator".'
+        },
+        {
+          text: 'What is the correct way to attach a guardrail plugin to an agent in its YAML configuration?',
+          options: [
+            'Add the plugin file path under a `guardrail_scripts:` key',
+            'List the plugin under `tools:` alongside regular Python tools',
+            'Add the plugin name under `plugins: agent_pre_invoke:` or `plugins: agent_post_invoke:`',
+            'Set `guardrails_enabled: true` and list plugin names under `guardrail_names:`'
+          ],
+          correctIndex: 2,
+          hint: 'After importing a plugin with `orchestrate tools import -k python -f plugin.py`, attach it in the agent YAML under `plugins: agent_pre_invoke:` (for input) or `plugins: agent_post_invoke:` (for output), with `- plugin_name: your_plugin`.'
+        }
+      ]
+    },
+
     'quiz-part4': {
       id: 'part4-knowledge',
       questions: [

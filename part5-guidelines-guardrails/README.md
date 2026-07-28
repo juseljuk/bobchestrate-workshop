@@ -888,3 +888,15 @@ Continue to [Part 6: MCP Servers](../part6-mcp-servers/README.md) →
 ---
 
 **💡 Pro Tip:** Use Bob to help design guidelines: "Bob, create guidelines for my [use case] agent that handle [specific scenarios]" or "Bob, what edge cases should my guidelines cover for [specific situation]?"
+
+---
+
+## 🧠 Knowledge Check
+
+Now that you understand guidelines and guardrails, test what you've learned!
+
+!!! tip "Part 5 Quiz"
+    Take the short 5-question quiz to check your understanding of agent guidelines and guardrails.
+    Your score is saved automatically and shown on the [home page dashboard](../index.md).
+
+    [Take the Part 5 Quiz →](quiz.md){ .md-button .md-button--primary }
