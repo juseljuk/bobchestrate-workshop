@@ -372,38 +372,3 @@
   .quiz-btn { width: 100%; text-align: center; }
 }
 
-/* ── Header quiz progress button ─────────────────────── */
-.md-header .quiz-progress-btn,
-.md-header .quiz-progress-btn:link,
-.md-header .quiz-progress-btn:visited {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0 0.6rem;
-  color: #ffffff !important;
-  fill: #ffffff !important;
-  opacity: 0.85;
-  text-decoration: none !important;
-  font-size: 0.8rem;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: opacity 0.2s;
-}
-.md-header .quiz-progress-btn:hover {
-  opacity: 1;
-}
-.quiz-progress-icon {
-  width: 1.1rem;
-  height: 1.1rem;
-  fill: #ffffff;
-  flex-shrink: 0;
-}
-.quiz-progress-label {
-  display: none;
-  color: #ffffff !important;
-}
-@media (min-width: 60em) {
-  .quiz-progress-label {
-    display: inline;
-  }
-}
