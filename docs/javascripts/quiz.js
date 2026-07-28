@@ -697,18 +697,13 @@
     }
   };
 
-  /* ── Auto-init ────────────────────────────────────────── */
-  // quiz.js is loaded as an extra_javascript after bundle.js.
-  // bundle.js sets up document$ synchronously, so by the time any
-  // deferred (setTimeout 0) code runs, document$ is available.
-  // document$.subscribe fires once for the current page on load,
-  // then again after every instant-navigation page switch.
 
   // ── Auto-init ────────────────────────────────────────────
-  // navigation.instant is disabled in mkdocs.yml so every link
-  // is a full page load — DOMContentLoaded fires reliably every time.
+  // quiz.js is a synchronous <script> at the bottom of <body>.
+  // By the time this code executes the DOM is fully parsed and
+  // DOMContentLoaded has already fired — so run immediately.
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function runOnPage() {
     document.querySelectorAll('[data-quiz]').forEach(function (el) {
       var quizId = el.getAttribute('data-quiz');
       if (quizId && QUIZ_DATA[quizId]) {
@@ -719,6 +714,8 @@
     if (document.getElementById('quiz-dashboard')) {
       renderDashboard('quiz-dashboard');
     }
-  });
+  }
+
+  runOnPage();
 
 })();
