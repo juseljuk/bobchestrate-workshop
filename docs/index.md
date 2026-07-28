@@ -24,11 +24,13 @@ This estimate includes:
 
 **Level:** Beginner to Intermediate (Advanced for Part 9)
 
-## ✅ Your Quiz Progress
+## 🧠 Test Your Knowledge Along the Way
 
-Track your progress across all module quizzes. Results are saved in your browser automatically — revisit this page at any time to see how you're doing.
+Every part of this workshop comes with a short **5-question quiz** to help you lock in what you've just learned. Quizzes are built right into the workshop pages — just scroll to the bottom of any part and hit the quiz link.
 
-<div id="quiz-dashboard"></div>
+You need **4 out of 5** to pass, and your results are saved automatically in your browser so you can pick up where you left off. Want to see how you're doing across all parts at a glance? Check your personal progress dashboard — it's always one click away in the sidebar.
+
+[View your Quiz Progress →](quiz-progress/index.md){ .md-button .md-button--primary }
 
 **Prerequisites:**
 
