@@ -20,22 +20,22 @@ orchestrate agents import \
 echo "✅ echo_agent imported"
 echo ""
 
-# ── Section 3: Simple LLM Agent (pure LangGraph, no Agentic SDK) ─────────────
-echo "🔑 Setting up openai_connection (Section 3)..."
-echo "   (Skipping if OPENAI_API_KEY is not set)"
-if [ -n "${OPENAI_API_KEY:-}" ]; then
-  orchestrate connections add -a openai_connection 2>/dev/null || true
-  orchestrate connections configure -a openai_connection --env draft -t team -k key_value
-  orchestrate connections set-credentials -a openai_connection --env draft -e api_key="$OPENAI_API_KEY"
-  echo "✅ openai_connection configured"
+# ── Section 3: Simple LLM Agent (pure LangGraph + Groq via ChatOpenAI base_url) ──
+echo "🔑 Setting up groq_connection (Section 3)..."
+echo "   (Skipping if GROQ_API_KEY is not set)"
+if [ -n "${GROQ_API_KEY:-}" ]; then
+  orchestrate connections add -a groq_connection 2>/dev/null || true
+  orchestrate connections configure -a groq_connection --env draft -t team -k key_value
+  orchestrate connections set-credentials -a groq_connection --env draft -e api_key="$GROQ_API_KEY"
+  echo "✅ groq_connection configured"
 
-  echo "📦 Importing simple_llm_agent (Section 3 — pure LangGraph with Bob)..."
+  echo "📦 Importing simple_llm_agent (Section 3 — pure LangGraph, ChatOpenAI + Groq)..."
   orchestrate agents import \
     --package-root agents/simple_llm_agent \
     --config-file agents/simple_llm_agent/agent.yaml
   echo "✅ simple_llm_agent imported"
 else
-  echo "⚠️  OPENAI_API_KEY not set — skipping simple_llm_agent."
+  echo "⚠️  GROQ_API_KEY not set — skipping simple_llm_agent."
 fi
 echo ""
 
