@@ -54,11 +54,13 @@
     { id: 'part6b-agentic-workflows',      label: 'Part 6b — Agentic Workflows' },
     { id: 'part7-agent-evaluation',        label: 'Part 7 — Agent Evaluations' },
     { id: 'part8-deployment',              label: 'Part 8 — Deployment' },
-    { id: 'part9-multi-agent-orchestration', label: 'Part 9 — Multi-Agent Orchestration' }
+    { id: 'part9-multi-agent-orchestration', label: 'Part 9 — Multi-Agent Orchestration' },
+    // Advanced workshop
+    { id: 'adv-part1-langgraph',           label: 'Advanced Part 1 — LangGraph Agents' }
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers', 'part6b-agentic-workflows', 'part7-agent-evaluation', 'part8-deployment', 'part9-multi-agent-orchestration'];
+  var AVAILABLE_QUIZZES = ['part1-setup', 'part2-first-agent', 'part2b-bob-custom-rules', 'part3-custom-tools', 'part3b-ai-gateway-models', 'part4-knowledge', 'part5-guidelines-guardrails', 'part6-mcp-servers', 'part6b-agentic-workflows', 'part7-agent-evaluation', 'part8-deployment', 'part9-multi-agent-orchestration', 'adv-part1-langgraph'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -333,6 +335,67 @@
 
   /* ── Quiz data registry ───────────────────────────────── */
   var QUIZ_DATA = {
+    'quiz-adv-part1-langgraph': {
+      id: 'adv-part1-langgraph',
+      questions: [
+        {
+          text: 'What is the required function signature for the wxO LangGraph agent entry point?',
+          options: [
+            'def run_agent(messages: list) -> list',
+            'def create_agent(config: RunnableConfig) -> StateGraph',
+            'def build_graph(state: AgentState) -> StateGraph',
+            'class LangGraphAgent: def __init__(self, config): ...'
+          ],
+          correctIndex: 1,
+          hint: '`create_agent(config: RunnableConfig) -> StateGraph` is the required factory function. wxO calls it at startup, injects the RunnableConfig containing the runtime execution context, and compiles the returned graph internally. The exact name "create_agent" must match the entrypoint declared in agent.yaml.'
+        },
+        {
+          text: 'What is the key watsonx Orchestrate limitation when using custom state fields in a LangGraph AgentState?',
+          options: [
+            'Custom state fields must use Pydantic models — plain TypedDict fields are not supported',
+            'Only the `messages` field persists between separate chat turns — all other custom state fields reset on every new invocation',
+            'Custom state fields are limited to string and integer types only',
+            'Custom state fields are supported but must be declared in agent.yaml under the `state_schema:` key'
+          ],
+          correctIndex: 1,
+          hint: 'wxO only persists the `messages` field (typed as `Annotated[List[BaseMessage], add_messages]`) between turns. Any other fields you add to AgentState reset at the start of every new invocation. Use the Agentic SDK memory API for data that must survive across turns.'
+        },
+        {
+          text: 'What is the purpose of `ChatWxO` from `ibm_watsonx_orchestrate_sdk.langchain` and why use it instead of `ChatOpenAI` directly?',
+          options: [
+            'ChatWxO is a faster model — it skips the tokenisation step for improved latency',
+            'ChatWxO routes LLM calls through the wxO AI Gateway using runtime authentication, making all platform-managed models available without hardcoded API keys',
+            'ChatWxO is required because LangChain\'s ChatOpenAI is not compatible with LangGraph graphs',
+            'ChatWxO automatically selects the best model for each query using cost-based routing'
+          ],
+          correctIndex: 1,
+          hint: 'ChatWxO uses `Client.from_runnable_config(config)` for authentication — no hardcoded keys, no separate credentials. It routes through the wxO AI Gateway so any platform-managed model is available by name, and usage is tracked in wxO observability.'
+        },
+        {
+          text: 'You want the research agent to remember a user\'s product preferences from a previous session (days ago). Which mechanism do you use?',
+          options: [
+            'A `memory` checkpointer in agent.yaml — it persists all state indefinitely',
+            'A SQLite checkpointer — it stores state in a local file that survives across sessions',
+            'The Agentic SDK memory API (`client.memory.add_messages()` / `client.memory.search()`) — user-scoped semantic memory that persists across sessions',
+            'Store preferences in the `messages` list as a SystemMessage — it will be available on the next session'
+          ],
+          correctIndex: 2,
+          hint: 'Checkpointers (memory, SQLite, PostgreSQL) persist graph state within a session — they reset when the user starts a new conversation. The Agentic SDK memory API (`client.memory`) stores semantic facts that survive indefinitely across sessions, agents, and thread boundaries.'
+        },
+        {
+          text: 'Which CLI command imports a LangGraph agent package into watsonx Orchestrate?',
+          options: [
+            'orchestrate agents import -f agents/my_agent/agent.yaml',
+            'orchestrate tools import -k python --package-root agents/my_agent',
+            'orchestrate agents import --package-root agents/my_agent --config-file agents/my_agent/agent.yaml',
+            'orchestrate toolkits import --kind langgraph --package-root agents/my_agent'
+          ],
+          correctIndex: 2,
+          hint: '`orchestrate agents import --package-root <dir> --config-file <dir>/agent.yaml` packages the directory, uploads it, and deploys the agent. The `agent.yaml` must include `framework: langgraph` and `deployment.code_bundle.entrypoint: "module:function"`.'
+        }
+      ]
+    },
+
     'quiz-part7': {
       id: 'part7-agent-evaluation',
       questions: [

@@ -37,13 +37,36 @@ jobs:
               rsync -av "$dir/" "docs/$dir/"
             fi
           done
-          
+
           # Copy logo
           if [ -f "Bobchestrate_Workshop_logo_new.png" ]; then
             cp -f Bobchestrate_Workshop_logo_new.png docs/
           fi
-          
+
           echo "Content sync complete!"
+
+      - name: Sync content to docs-advanced directory
+        run: |
+          # Sync advanced workshop parts to docs-advanced
+          for dir in advanced/part*; do
+            if [ -d "$dir" ]; then
+              part=$(basename "$dir")
+              echo "Syncing $dir to docs-advanced/$part"
+              rsync -av "$dir/" "docs-advanced/$part/"
+            fi
+          done
+
+          # Sync advanced home page
+          if [ -f "advanced/README.md" ]; then
+            cp -f advanced/README.md docs-advanced/index.md
+          fi
+
+          # Copy logo
+          if [ -f "Bobchestrate_Workshop_logo_new.png" ]; then
+            cp -f Bobchestrate_Workshop_logo_new.png docs-advanced/
+          fi
+
+          echo "Advanced content sync complete!"
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -63,8 +86,11 @@ jobs:
           pip install mkdocs-material
           pip install mkdocs-glightbox
 
-      - name: Build MkDocs site
-        run: mkdocs build --strict
+      - name: Build foundation site
+        run: mkdocs build --strict --config-file mkdocs.yml
+
+      - name: Build advanced site into site/advanced/
+        run: mkdocs build --strict --config-file mkdocs-advanced.yml --site-dir site/advanced
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

@@ -1,0 +1,25 @@
+spec_version: v1
+kind: agent
+name: research_agent
+title: Product Research Agent
+description: |
+  A LangGraph-based product research agent that uses a wxO-managed LLM (ChatWxO),
+  calls external tools, stores user preferences in persistent memory, and maintains
+  conversation state across turns within a session using a checkpointer.
+
+framework: langgraph
+
+deployment:
+  code_bundle:
+    entrypoint: "agent:create_agent"
+
+# In-memory checkpointer — state persists within a session, resets on pod restart.
+# For production use: { type: postgres, connection_string_key: db_connection_string }
+checkpointer:
+  type: memory
+
+# Connections auto-mapped during import (ADK 2.11.0+)
+connections:
+  global_requirements:
+    required_app_ids:
+      - news_api        # API key for the external news/search service

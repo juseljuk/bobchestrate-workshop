@@ -1,0 +1,84 @@
+site_name: Bobchestrate Advanced Workshop
+site_description: Advanced topics in watsonx Orchestrate agent development
+site_author: Workshop Team
+site_url: https://juseljuk.github.io/bobchestrate-workshop/advanced/
+
+docs_dir: docs-advanced
+
+# Repository
+repo_name: bobchestrate-workshop
+repo_url: https://github.com/juseljuk/bobchestrate-workshop
+edit_uri: edit/main/
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep-purple
+      accent: deep-purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep-purple
+      accent: deep-purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - "✅ Quiz Progress": quiz-progress/index.md
+  - Part 1 - LangGraph Agents:
+      - Overview: part1-langgraph/README.md
+      - Exercises: part1-langgraph/exercises.md
+      - Quiz: part1-langgraph/quiz.md
+
+plugins:
+  - search
+  - glightbox
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/juseljuk/bobchestrate-workshop
+
+extra_css:
+  - stylesheets/quiz.css
+
+extra_javascript:
+  - javascripts/quiz.js
+
+# Made with Bob

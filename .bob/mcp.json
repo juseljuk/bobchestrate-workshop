@@ -1,1 +1,32 @@
-{"mcpServers":{"watsonx-orchestrate-adk-docs":{"command":"uvx","args":["mcp-proxy","--transport","streamablehttp","https://developer.watson-orchestrate.ibm.com/mcp"],"alwaysAllow":["search_ibm_watsonx_orchestrate_adk","query_docs_filesystem_ibm_watsonx_orchestrate_adk"]},"watsonx-orchestrate-adk":{"command":"uvx","args":["--with","ibm-watsonx-orchestrate==2.7.0","ibm-watsonx-orchestrate-mcp-server==2.7.0"],"env":{"WXO_MCP_WORKING_DIRECTORY":"/Users/jukkajuselius/bob_experiments/bobchestrate-workshop","WXO_MCP_DEBUG":""},"timeout":300}}}
+{
+    "mcpServers": {
+        "watsonx-orchestrate-adk-docs": {
+            "command": "uvx",
+            "args": [
+                "--from",
+                "mcp-proxy==0.8.1",
+                "mcp-proxy",
+                "--transport",
+                "streamablehttp",
+                "https://developer.watson-orchestrate.ibm.com/mcp"
+            ],
+            "alwaysAllow": [
+                "search_ibm_watsonx_orchestrate_adk",
+                "query_docs_filesystem_ibm_watsonx_orchestrate_adk"
+            ]
+        },
+        "watsonx-orchestrate-adk": {
+            "command": "uvx",
+            "args": [
+                "--with",
+                "ibm-watsonx-orchestrate==2.13.0",
+                "ibm-watsonx-orchestrate-mcp-server==2.13.0"
+            ],
+            "env": {
+                "WXO_MCP_WORKING_DIRECTORY": "/Users/jukkajuselius/bob_experiments/bobchestrate-workshop",
+                "WXO_MCP_DEBUG": ""
+            },
+            "timeout": 300
+        }
+    }
+}
