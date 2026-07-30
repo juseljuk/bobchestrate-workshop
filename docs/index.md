@@ -6,6 +6,8 @@
 
 Welcome! This workshop will guide you through building AI agents using IBM watsonx Orchestrate. You'll use IBM Bob, an AI coding assistant, to help you along the way.
 
+> 📊 **Workshop facilitators:** Use the [Bobchestrate Workshop introduction presentation](Bobchestrate%20Workshop.pptx) to introduce the workshop to participants before getting started.
+
 ## Workshop Overview
 
 **Duration:** 295-345 minutes (5-6 hours) for the complete workshop
