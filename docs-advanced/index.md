@@ -24,14 +24,14 @@ Before starting any advanced part:
 
 ## Advanced Topics
 
-| Part | Topic | Time | Difficulty |
-|---|---|---|---|
-| [1 — LangGraph Agents](part1-langgraph/README.md) | Build, package, and deploy custom LangGraph agents with memory and tool-calling | 60–75 min | ⭐⭐⭐ |
-| 2 — Scheduling *(coming soon)* | Make agents and workflows run on a schedule via natural language | 20 min | ⭐ |
-| 3 — Advanced Workflow Nodes *(coming soon)* | Human-in-the-loop, Prompt nodes, Parallel execution, Doc Processing | 30 min | ⭐⭐ |
-| 4 — LLM Model Policies *(coming soon)* | Fallback, load-balancing, and retry across multiple LLM providers | 25 min | ⭐⭐ |
-| 5 — Langflow Tools *(coming soon)* | Build visual AI pipelines and import them as wxO tools | 30 min | ⭐⭐ |
-| 6 — CI/CD & GitOps *(coming soon)* | Deploy agents through GitHub Actions using a GitOps pipeline | 40 min | ⭐⭐ |
+| Part                                              | Topic                                                                           | Time       | Difficulty |
+| ------------------------------------------------- | ------------------------------------------------------------------------------- | ---------- | ---------- |
+| [1 — LangGraph Agents](part1-langgraph/README.md) | Build, package, and deploy custom LangGraph agents with memory and tool-calling | 60–75 min | ⭐⭐⭐     |
+| 2 — Scheduling*(coming soon)*                  | Make agents and workflows run on a schedule via natural language                | 20 min     | ⭐         |
+| 3 — Advanced Workflow Nodes*(coming soon)*     | Human-in-the-loop, Prompt nodes, Parallel execution, Doc Processing             | 30 min     | ⭐⭐       |
+| 4 — LLM Model Policies*(coming soon)*          | Fallback, load-balancing, and retry across multiple LLM providers               | 25 min     | ⭐⭐       |
+| 5 — Langflow Tools*(coming soon)*              | Build visual AI pipelines and import them as wxO tools                          | 30 min     | ⭐⭐       |
+| 6 — CI/CD & GitOps*(coming soon)*              | Deploy agents through GitHub Actions using a GitOps pipeline                    | 40 min     | ⭐⭐       |
 
 ---
 
