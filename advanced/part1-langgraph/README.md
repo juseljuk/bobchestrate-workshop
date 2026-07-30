@@ -165,7 +165,7 @@ agents/echo_agent/
 └── requirements.txt  ← pinned Python dependencies
 ```
 
-> 📂 The files are in [`agents/echo_agent/`](agents/echo_agent/).
+> 📂 The files are in `agents/echo_agent/`.
 
 ### The agent.yaml — key fields explained
 
@@ -593,4 +593,4 @@ orchestrate agents connect -n my_agent -a my_connection
 
 ---
 
-[← Back to Advanced Workshop Home](../README.md){ .md-button }
+[← Back to Advanced Workshop Home](../index.md){ .md-button }
