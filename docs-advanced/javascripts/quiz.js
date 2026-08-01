@@ -250,7 +250,9 @@
     var cardsHTML = QUIZ_REGISTRY.map(function (quiz) {
       var result = results[quiz.id];
       var available = AVAILABLE_QUIZZES.indexOf(quiz.id) !== -1;
-      var quizUrl = '../' + quiz.id + '/quiz/';
+      // quiz.id uses the 'adv-partN-*' prefix; strip 'adv-' to match the MkDocs folder name.
+      var folder = quiz.id.replace(/^adv-/, '');
+      var quizUrl = '../' + folder + '/quiz/';
       var scoreHTML, badgeHTML, dateHTML;
 
       if (result) {

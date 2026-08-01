@@ -1,7 +1,13 @@
 # Advanced Part 1: Building Custom LangGraph Agents for watsonx Orchestrate
 
+<p align="center">
+  <img src="images/BWS_langgraph.png" alt="Bobchestrate Advanced Workshop Logo" width="700">
+</p>
+
 **Duration:** 75–90 minutes
+
 **Difficulty:** ⭐⭐⭐ Advanced
+
 **Prerequisites:** wxO SaaS account, ADK CLI (`pip install ibm-watsonx-orchestrate`), Python 3.11+, `uv`, IBM Bob IDE, basic Python knowledge
 
 ---
@@ -842,4 +848,6 @@ orchestrate agents connect -n my_agent -a my_connection
 
 ---
 
+[Take the Quiz →](quiz.md){ .md-button .md-button--primary }
+[Exercises](exercises.md){ .md-button }
 [← Back to Advanced Workshop Home](../index.md){ .md-button }
