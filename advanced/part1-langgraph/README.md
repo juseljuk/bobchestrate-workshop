@@ -37,6 +37,27 @@ This part teaches you to build **fully custom LangGraph agents** that run native
 
 ---
 
+## Using Bob for this Lab
+
+Bob has a built-in **`wxo-langgraph` skill** pre-loaded in your workspace (from the config bundle). It gives Bob deep knowledge of the LangGraph-for-wxO entry point contract, platform constraints, credential patterns, checkpointers, the memory API, and common errors. The skill activates automatically when the topic matches — just ask naturally, no command needed.
+
+Bob also knows all 11 platform constraints (messages-only persistence, 50 MB package limit, uncompiled graph requirement, etc.) so any code it generates is platform-correct by default.
+
+### Example prompts — one per section
+
+| When you're on… | Ask Bob… |
+| --- | --- |
+| **Section 2 — Hello World** | `"Show me the minimal agent.yaml and create_agent structure for a wxO LangGraph import"` |
+| **Section 3 — Pure LangGraph** | `"Help me set up ChatOpenAI with a Groq backend using a wxO connection"` |
+| **Section 4 — ChatWxO** | `"Show me how to switch from ChatOpenAI to ChatWxO — what changes?"` |
+| **Section 5 — Tools** | `"What's the difference between lc_tool and wxO @tool? Show me a ReAct tool example"` |
+| **Section 6 — Credentials** | `"How do I read my news_api connection key inside the agent code?"` |
+| **Section 7 — Checkpointers** | `"When should I use SQLite vs PostgreSQL checkpointer on wxO?"` |
+| **Section 8 — Memory** | `"Show me how to read and write cross-session user memory with the Agentic SDK"` |
+| **Debugging** | `"My agent import fails with a 50 MB error — how do I fix the package size?"` |
+
+---
+
 ## wxO LangGraph Limitations (Read First)
 
 These are hard platform constraints — not bugs, not things to work around with hacks.

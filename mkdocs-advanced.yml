@@ -61,6 +61,8 @@ markdown_extensions:
 nav:
   - Home: index.md
   - "✅ Quiz Progress": quiz-progress/index.md
+  - Part 0 - Setup:
+      - Setup Guide: part0-setup/README.md
   - Part 1 - LangGraph Agents:
       - Overview: part1-langgraph/README.md
       - Exercises: part1-langgraph/exercises.md

@@ -27,6 +27,7 @@ Before starting any advanced part:
 
 | Part                                              | Topic                                                                           | Time       | Difficulty |
 | ------------------------------------------------- | ------------------------------------------------------------------------------- | ---------- | ---------- |
+| [0 — Setup & Environment](part0-setup/README.md)  | Get your environment ready: Bob IDE, MCP servers, wxO connection, API keys      | 15–20 min  | ⭐         |
 | [1 — LangGraph Agents](part1-langgraph/README.md) | Build, package, and deploy custom LangGraph agents with memory and tool-calling | 60–75 min | ⭐⭐⭐     |
 | 2 — Scheduling*(coming soon)*                  | Make agents and workflows run on a schedule via natural language                | 20 min     | ⭐         |
 | 3 — Advanced Workflow Nodes*(coming soon)*     | Human-in-the-loop, Prompt nodes, Parallel execution, Doc Processing             | 30 min     | ⭐⭐       |
@@ -58,4 +59,4 @@ Bob knows the wxO ADK rules and the platform limitations. Ask it to explain conc
 
 ---
 
-Let's go! → [Advanced Part 1: LangGraph Agents](part1-langgraph/README.md)
+Let's go! → [Part 0: Setup & Environment](part0-setup/README.md)
