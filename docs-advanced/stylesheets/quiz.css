@@ -378,3 +378,104 @@ a.quiz-badge-pending:hover { color: var(--quiz-text-muted); }
   .quiz-btn { width: 100%; text-align: center; }
 }
 
+
+/* ── Game unlock panel ───────────────────────────────────── */
+.game-unlock-panel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.4rem;
+  border-radius: var(--quiz-radius);
+  font-family: inherit;
+}
+
+.game-unlock-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.game-unlock-body {
+  flex: 1;
+}
+
+.game-unlock-title {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.game-unlock-desc {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--quiz-text-muted);
+}
+
+/* Locked state */
+.game-unlock-panel.locked {
+  border: 2px solid #7c5cd8;
+  background: rgba(101,31,255,0.06);
+}
+
+[data-md-color-scheme="slate"] .game-unlock-panel.locked {
+  background: rgba(101,31,255,0.12);
+  border-color: #b388ff;
+}
+
+.game-unlock-panel.locked .game-unlock-title {
+  color: #651fff;
+}
+
+[data-md-color-scheme="slate"] .game-unlock-panel.locked .game-unlock-title {
+  color: #b388ff;
+}
+
+/* Unlocked state */
+.game-unlock-panel.unlocked {
+  border: 2px solid #ffd700;
+  background: rgba(255,215,0,0.07);
+}
+
+[data-md-color-scheme="slate"] .game-unlock-panel.unlocked {
+  background: rgba(255,215,0,0.10);
+}
+
+.game-unlock-panel.unlocked .game-unlock-title {
+  color: #7a4800;
+}
+
+[data-md-color-scheme="slate"] .game-unlock-panel.unlocked .game-unlock-title {
+  color: #ffd700;
+}
+
+/* Play button */
+.game-unlock-btn {
+  display: inline-block;
+  flex-shrink: 0;
+  padding: 0.55rem 1.2rem;
+  background: #651fff;
+  color: #ffffff !important;
+  border-radius: var(--quiz-radius);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  white-space: nowrap;
+  animation: unlock-pulse 2s ease-in-out infinite;
+}
+
+.game-unlock-btn:hover {
+  background: #7c4dff;
+  text-decoration: none !important;
+}
+
+@keyframes unlock-pulse {
+  0%   { box-shadow: 0 0 0   0   rgba(101,31,255,0.5); }
+  50%  { box-shadow: 0 0 0   8px rgba(101,31,255,0);   }
+  100% { box-shadow: 0 0 0   0   rgba(101,31,255,0.5); }
+}
+
+@media (max-width: 600px) {
+  .game-unlock-panel { flex-wrap: wrap; }
+  .game-unlock-btn   { width: 100%; text-align: center; }
+}

@@ -7,6 +7,11 @@
 (function () {
   'use strict';
 
+  /* ── Game unlock URL ──────────────────────────────────── */
+  // Update this to the Code Engine URL after deploying game/index.html.
+  // This is the only line instructors need to change before each workshop run.
+  var GAME_URL = 'https://your-app.example.appdomain.cloud';
+
   /* ── Storage helpers ──────────────────────────────────── */
   var STORAGE_KEY = 'wxo_quiz_results_advanced';
 
@@ -38,6 +43,16 @@
     // Re-render any dashboard present on the page
     var dash = document.getElementById('quiz-dashboard');
     if (dash) renderDashboard('quiz-dashboard');
+  }
+
+  /* ── Game unlock check ────────────────────────────────── */
+  // Returns true when every quiz in AVAILABLE_QUIZZES has passed: true.
+  // Threshold rises automatically as new IDs are added to AVAILABLE_QUIZZES.
+  function checkGameUnlock() {
+    var results = loadResults();
+    return AVAILABLE_QUIZZES.every(function (id) {
+      return results[id] && results[id].passed === true;
+    });
   }
 
   /* ── Quiz registry (all modules) ─────────────────────── */
@@ -294,6 +309,35 @@
         clearResults();
       }
     });
+
+    /* ── Game unlock panel ──────────────────────────────── */
+    var unlocked = checkGameUnlock();
+    var panelHTML;
+    if (unlocked) {
+      panelHTML =
+        '<div class="game-unlock-panel unlocked">' +
+          '<div class="game-unlock-icon">🎮</div>' +
+          '<div class="game-unlock-body">' +
+            '<strong class="game-unlock-title">You unlocked Bobchestrate Coins!</strong>' +
+            '<p class="game-unlock-desc">All advanced quizzes passed. Your reward awaits.</p>' +
+          '</div>' +
+          '<a href="' + GAME_URL + '" target="_blank" rel="noopener" class="game-unlock-btn">Play now →</a>' +
+        '</div>';
+    } else {
+      var total    = AVAILABLE_QUIZZES.length;
+      var results2 = loadResults();
+      var done     = AVAILABLE_QUIZZES.filter(function(id) { return results2[id] && results2[id].passed; }).length;
+      panelHTML =
+        '<div class="game-unlock-panel locked">' +
+          '<div class="game-unlock-icon">🔒</div>' +
+          '<div class="game-unlock-body">' +
+            '<strong class="game-unlock-title">Bobchestrate Coins</strong>' +
+            '<p class="game-unlock-desc">Complete all advanced quizzes to unlock the arcade game! ' +
+              '(' + done + ' / ' + total + ' passed)</p>' +
+          '</div>' +
+        '</div>';
+    }
+    el.insertAdjacentHTML('beforeend', panelHTML);
   }
 
   /* ── Utilities ────────────────────────────────────────── */
