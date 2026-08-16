@@ -35,7 +35,26 @@ python --version
 python3 --version
 ```
 
-You need Python 3.11, 3.12, or 3.13. If Python is not installed, download it from [python.org/downloads](https://www.python.org/downloads/).
+You need Python **3.11, 3.12, or 3.13**. If Python is not installed:
+
+=== "Mac"
+    ```bash
+    # Using Homebrew (recommended)
+    brew install python@3.11
+
+    # Or download the installer from:
+    # https://www.python.org/downloads/
+    ```
+
+=== "Windows"
+    ```powershell
+    # Using winget
+    winget install Python.Python.3.11
+
+    # Or download the installer from:
+    # https://www.python.org/downloads/
+    # ⚠️ Check "Add Python to PATH" during installation
+    ```
 
 ---
 
@@ -45,11 +64,27 @@ You need Python 3.11, 3.12, or 3.13. If Python is not installed, download it fro
 uv --version
 ```
 
-If `uv` is not installed, run:
+If `uv` is not installed:
 
-```bash
-pip install uv
-```
+=== "Mac"
+    ```bash
+    # Using Homebrew
+    brew install uv
+
+    # Or using the official installer
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
+=== "Windows"
+    ```powershell
+    # Using winget
+    winget install astral-sh.uv
+
+    # Or using the official installer (PowerShell)
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    ```
+
+After installing, open a new terminal and run `uv --version` again to confirm.
 
 ---
 
