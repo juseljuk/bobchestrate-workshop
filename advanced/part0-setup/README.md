@@ -1,5 +1,9 @@
 # Part 0: Setup & Environment
 
+<p align="center">
+  <img src="images/image_setup_adv.png" alt="Bobchestrate Advanced Workshop Setup" width="700">
+</p>
+
 **Duration:** 15–20 minutes  
 **Objective:** Get your development environment ready for building advanced watsonx Orchestrate agents
 
