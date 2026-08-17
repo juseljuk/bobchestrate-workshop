@@ -4,11 +4,7 @@
   <img src="images/image_setup_adv.png" alt="Bobchestrate Advanced Workshop Setup" width="700">
 </p>
 
-**Duration:** 15–20 minutes  
-**Objective:** Get your development environment ready for building advanced watsonx Orchestrate agents
-
-> **Already done the foundation workshop?**  
-> If you completed the Bobchestrate Foundation Workshop on the same machine and still have that workspace open in Bob IDE, you only need Steps 7–10 and Step 13 (API keys). Skip everything else.
+**Duration:** 15–20 minutes**Objective:** Get your development environment ready for building advanced watsonx Orchestrate agents
 
 ---
 
@@ -103,7 +99,7 @@ This folder will become your workspace root. All agent code, tools, and configur
 
 ## Step 4: Open IBM Bob IDE and Login
 
-> **Download IBM Bob IDE:** If you haven't installed it yet, download from [bob.ibm.com/download](https://bob.ibm.com/download)  
+> **Download IBM Bob IDE:** If you haven't installed it yet, download from [bob.ibm.com/download](https://bob.ibm.com/download)
 > **Detailed install guide:** [bob.ibm.com/docs/ide/getting-started/install](https://bob.ibm.com/docs/ide/getting-started/install)
 
 Open Bob IDE and sign in with your IBM ID.
@@ -132,6 +128,7 @@ This extension is required — it provides the "Install MCP Servers" command you
 4. Reload Bob IDE if prompted
 
 The extension adds:
+
 - Syntax highlighting for agent YAML files
 - The ADK status indicator in the bottom status bar
 - The `watsonx Orchestrate: Install MCP Servers` command used in Step 8
@@ -143,24 +140,27 @@ The extension adds:
 This bundle pre-wires everything Bob needs for the advanced workshop — MCP servers, custom mode, workspace rule, and the `wxo-langgraph` skill — so you don't have to set them up manually.
 
 1. Download the bundle:
+
    - Navigate to: [`advanced/part0-setup/advanced-bob-config.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/advanced-bob-config.zip)
    - Click **Download raw file** (or use the direct link above)
-
 2. Unzip it **into your `bobchestrate-advanced` folder**:
 
    **Mac/Linux:**
+
    ```bash
    cd bobchestrate-advanced
    unzip ~/Downloads/advanced-bob-config.zip
    ```
 
    **Windows (PowerShell):**
+
    ```powershell
    cd bobchestrate-advanced
    Expand-Archive -Path "$env:USERPROFILE\Downloads\advanced-bob-config.zip" -DestinationPath .
    ```
 
    After unzipping, your workspace should contain:
+
    ```
    bobchestrate-advanced/
    └── advanced-bob-config/
@@ -172,16 +172,17 @@ This bundle pre-wires everything Bob needs for the advanced workshop — MCP ser
            └── skills/
                └── wxo-langgraph/
    ```
-
 3. Move the `.bob` folder to your workspace root:
 
    **Mac/Linux:**
+
    ```bash
    mv advanced-bob-config/.bob .
    rmdir advanced-bob-config
    ```
 
    **Windows (PowerShell):**
+
    ```powershell
    Move-Item advanced-bob-config\.bob .
    Remove-Item advanced-bob-config
@@ -190,6 +191,26 @@ This bundle pre-wires everything Bob needs for the advanced workshop — MCP ser
    Your workspace root should now have a `.bob` folder directly inside `bobchestrate-advanced/`.
 
 > **Note:** The `.bob` folder may be hidden in your file explorer (it starts with a dot). That's expected — Bob IDE will find it automatically.
+
+**What the bundle gives you:**
+
+| Component | What it does |
+| --- | --- |
+| **WXO Agent Architect mode** | A Bob chat mode specialised for watsonx Orchestrate development — automatically consults live wxO docs before answering and uses the ADK MCP server to inspect your environment |
+| **`wxo-dev-rule-enhanced`** | A workspace rule that loads IBM watsonx Orchestrate best practices into every Bob response — correct naming conventions, tool patterns, agent YAML structure, connection setup, and more |
+| **`watsonx-orchestrate-adk` MCP server** | Gives Bob direct access to your wxO environment — list agents, tools, connections, import artifacts, and chat with agents without leaving the IDE |
+| **`watsonx-orchestrate-adk-docs` MCP server** | Gives Bob real-time access to the full IBM watsonx Orchestrate ADK documentation — Bob searches it automatically when it needs to verify platform specifics |
+| **`wxo-langgraph` skill** | Deep LangGraph-for-wxO knowledge: entry point contract, platform constraints, credential patterns, checkpointers, cross-session memory API, and a troubleshooting reference — auto-activates when you work on Part 1 |
+
+These three layers work together and complement each other:
+
+- **Mode** — sets Bob's *persona and behaviour* for a session. The WXO Agent Architect mode tells Bob to think like a watsonx Orchestrate developer: consult the docs first, use the ADK MCP tools to inspect your live environment, and never add `ibm-watsonx-orchestrate` to `requirements.txt`. It's the "who Bob is" layer.
+
+- **Custom rule** — sets *always-on constraints* that apply to every response regardless of mode or topic. The `wxo-dev-rule-enhanced` rule enforces platform conventions (snake_case agent names, correct decorator imports, `key_value` connections, evaluation config format, etc.) so Bob never generates code that violates wxO best practices — even if you're chatting in a generic mode.
+
+- **Skill** — provides *deep, topic-specific knowledge* that Bob loads on demand. The `wxo-langgraph` skill is a compact reference covering every LangGraph-for-wxO pattern: the `create_agent` contract, platform constraints, credentials, checkpointers, memory API, and common errors. It activates automatically when the topic matches, so Bob answers LangGraph questions with platform-correct detail without you having to ask it to "remember the rules".
+
+Together: the **mode** shapes how Bob approaches problems, the **rule** keeps every answer platform-safe, and the **skill** supplies the deep domain knowledge for the specific topic you're working on.
 
 ---
 
@@ -247,12 +268,13 @@ You need your watsonx Orchestrate **API key** and **instance URL**. Your instruc
 ### OPTIONAL: Using your own watsonx Orchestrate SaaS instance
 
 **To get your API key:**
+
 1. In the wxO console, click your **profile icon** (top-right)
 2. Select **Settings** → **API details**
 3. Click **Generate API key**, then **Copy** immediately
 4. Store it securely — it is shown only once
 
-**To get your instance URL:**  
+**To get your instance URL:**
 Copy the **Service instance URL** from the API details page.
 
 ### Configure the ADK Environment
@@ -314,6 +336,7 @@ Used by the `research_agent` to fetch live news headlines.
 3. Register and copy your key
 
 > You'll set these as environment variables when running `import-all.sh` in Part 1:
+>
 > ```bash
 > export GROQ_API_KEY=gsk_your_key_here
 > export NEWS_API_KEY=your_news_key_here
@@ -355,16 +378,18 @@ Bob is your AI pair programmer. With the bundle installed, Bob has:
 
 ### Effective Bob prompts for the advanced workshop:
 
-✅ `"Bob, help me build a LangGraph agent that calls the Groq API using a wxO connection"`  
-✅ `"Bob, my agent import is failing — here's the error: [paste error]"`  
-✅ `"Bob, what's the correct way to add a checkpointer to a LangGraph agent on wxO?"`  
-✅ `"Bob, show me the minimal agent.yaml structure for a LangGraph package import"`  
+✅ `"Bob, help me build a LangGraph agent that calls the Groq API using a wxO connection"`
+✅ `"Bob, my agent import is failing — here's the error: [paste error]"`
+✅ `"Bob, what's the correct way to add a checkpointer to a LangGraph agent on wxO?"`
+✅ `"Bob, show me the minimal agent.yaml structure for a LangGraph package import"`
 
 ### Less effective:
-❌ `"Bob, fix this"` — too vague  
-❌ `"Bob, make it work"` — no context  
+
+❌ `"Bob, fix this"` — too vague
+❌ `"Bob, make it work"` — no context
 
 ### Managing Bob sessions:
+
 - **Continue the same session** when working on the same agent or related tasks
 - **Start a new task** (click "Start New Task" in Bob's chat) when switching to a completely different topic
 
