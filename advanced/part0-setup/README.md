@@ -214,12 +214,12 @@ Together: the **mode** shapes how Bob approaches problems, the **rule** keeps ev
 
 ---
 
-## Step 8: Run "Install MCP Servers" to Activate the Configuration
+## Step 8: Run "Install WXO MCP Servers" to Activate the Configuration
 
 The bundle ships with `WXO_MCP_WORKING_DIRECTORY` blank. Running the extension command once stamps your correct local workspace path into the configuration.
 
 1. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux)
-2. Type **"watsonx Orchestrate: Install MCP Servers"** and select it
+2. Type **"watsonx Orchestrate: Install WXO MCP Servers"** and select it
 3. Wait for the installation to complete — you'll see a confirmation message
 
 **Verify the MCP servers are running:**
