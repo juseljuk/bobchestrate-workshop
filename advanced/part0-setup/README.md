@@ -84,111 +84,45 @@ After installing, open a new terminal and run `uv --version` again to confirm.
 
 ---
 
-## Step 3: Create Your Workshop Folder
+## Step 3: Download and Extract the Workshop Folder
 
-Create a dedicated folder for the advanced workshop:
+The Bob config zip *is* your workspace folder — extracting it creates `bobchestrate-advanced/` with the `.bob/` configuration already in place. No need to create a folder manually.
 
-```bash
-mkdir bobchestrate-advanced
-cd bobchestrate-advanced
-```
+1. Download the zip:
 
-This folder will become your workspace root. All agent code, tools, and configuration will live here.
-
----
-
-## Step 4: Open IBM Bob IDE and Login
-
-> **Download IBM Bob IDE:** If you haven't installed it yet, download from [bob.ibm.com/download](https://bob.ibm.com/download)
-> **Detailed install guide:** [bob.ibm.com/docs/ide/getting-started/install](https://bob.ibm.com/docs/ide/getting-started/install)
-
-Open Bob IDE and sign in with your IBM ID.
-
-> ⚠️ **You must be logged in to use Bob's AI capabilities throughout the workshop.** If you encounter login issues, contact your instructor.
-
----
-
-## Step 5: Open Your Workshop Folder in Bob IDE
-
-1. In Bob IDE, click **File** → **Open Folder**
-2. Navigate to your `bobchestrate-advanced` folder and click **Open**
-3. Click **Yes, I trust the author** when prompted
-
-The empty workspace will open.
-
----
-
-## Step 6: Install the watsonx Orchestrate ADK VS Code Extension
-
-This extension is required — it provides the "Install MCP Servers" command you'll use in Step 8.
-
-1. Open the Extensions view (`Cmd+Shift+X` on Mac / `Ctrl+Shift+X` on Windows/Linux)
-2. Search for **"watsonx Orchestrate"**
-3. Click **Install** on the **IBM watsonx Orchestrate ADK** extension
-4. Reload Bob IDE if prompted
-
-The extension adds:
-
-- Syntax highlighting for agent YAML files
-- The ADK status indicator in the bottom status bar
-- The `watsonx Orchestrate: Install MCP Servers` command used in Step 8
-
----
-
-## Step 7: Download and Unzip the Bob Config Bundle
-
-This bundle pre-wires everything Bob needs for the advanced workshop — MCP servers, custom mode, workspace rule, and the `wxo-langgraph` skill — so you don't have to set them up manually.
-
-1. Download the bundle:
-
-   - Navigate to: [`advanced/part0-setup/advanced-bob-config.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/advanced-bob-config.zip)
+   - Navigate to: [`advanced/part0-setup/bobchestrate-advanced.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/bobchestrate-advanced.zip)
    - Click **Download raw file** (or use the direct link above)
-2. Unzip it **into your `bobchestrate-advanced` folder**:
+
+2. Extract it — **extract to your Desktop or a convenient location, not inside an existing folder**:
 
    **Mac/Linux:**
 
    ```bash
-   cd bobchestrate-advanced
-   unzip ~/Downloads/advanced-bob-config.zip
+   cd ~/Desktop
+   unzip ~/Downloads/bobchestrate-advanced.zip
+   # This creates: ~/Desktop/bobchestrate-advanced/
    ```
 
    **Windows (PowerShell):**
 
    ```powershell
-   cd bobchestrate-advanced
-   Expand-Archive -Path "$env:USERPROFILE\Downloads\advanced-bob-config.zip" -DestinationPath .
+   cd $env:USERPROFILE\Desktop
+   Expand-Archive -Path "$env:USERPROFILE\Downloads\bobchestrate-advanced.zip" -DestinationPath .
+   # This creates: Desktop\bobchestrate-advanced\
    ```
 
-   After unzipping, your workspace should contain:
+   After extracting, your `bobchestrate-advanced/` folder already contains:
 
    ```
    bobchestrate-advanced/
-   └── advanced-bob-config/
-       └── .bob/
-           ├── mcp.json
-           ├── custom_modes.yaml
-           ├── rules/
-           │   └── wxo-dev-rule-enhanced.md
-           └── skills/
-               └── wxo-langgraph/
+   └── .bob/
+       ├── mcp.json
+       ├── custom_modes.yaml
+       ├── rules/
+       │   └── wxo-dev-rule-enhanced.md
+       └── skills/
+           └── wxo-langgraph/
    ```
-3. Move the `.bob` folder to your workspace root:
-
-   **Mac/Linux:**
-
-   ```bash
-   mv advanced-bob-config/.bob .
-   rmdir advanced-bob-config
-   ```
-
-   **Windows (PowerShell):**
-
-   ```powershell
-   Move-Item advanced-bob-config\.bob .
-   Remove-Item advanced-bob-config
-   ```
-
-   Your workspace root should now have a `.bob` folder directly inside `bobchestrate-advanced/`.
 
 > **Note:** The `.bob` folder may be hidden in your file explorer (it starts with a dot). That's expected — Bob IDE will find it automatically.
 
@@ -211,6 +145,72 @@ These three layers work together and complement each other:
 - **Skill** — provides *deep, topic-specific knowledge* that Bob loads on demand. The `wxo-langgraph` skill is a compact reference covering every LangGraph-for-wxO pattern: the `create_agent` contract, platform constraints, credentials, checkpointers, memory API, and common errors. It activates automatically when the topic matches, so Bob answers LangGraph questions with platform-correct detail without you having to ask it to "remember the rules".
 
 Together: the **mode** shapes how Bob approaches problems, the **rule** keeps every answer platform-safe, and the **skill** supplies the deep domain knowledge for the specific topic you're working on.
+
+---
+
+## Step 4: Open IBM Bob IDE and Login
+
+> **Download IBM Bob IDE:** If you haven't installed it yet, download from [bob.ibm.com/download](https://bob.ibm.com/download)
+> **Detailed install guide:** [bob.ibm.com/docs/ide/getting-started/install](https://bob.ibm.com/docs/ide/getting-started/install)
+
+Open Bob IDE and sign in with your IBM ID.
+
+> ⚠️ **You must be logged in to use Bob's AI capabilities throughout the workshop.** If you encounter login issues, contact your instructor.
+
+---
+
+## Step 5: Open Your Workshop Folder in Bob IDE
+
+1. In Bob IDE, click **File** → **Open Folder**
+2. Navigate to the extracted `bobchestrate-advanced` folder and click **Open**
+3. Click **Yes, I trust the author** when prompted
+
+The workspace will open with the `.bob/` configuration already in place.
+
+---
+
+## Step 6: Create a Python Virtual Environment
+
+1. Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
+2. Type **"Python: Create Environment"** and select it
+3. Choose **Venv**
+4. Select Python 3.11, 3.12, or 3.13
+5. Wait for the environment to be created
+
+You'll see a `.venv` folder appear in your workspace. Bob IDE automatically activates it in all new terminals (you'll see `(.venv)` in your terminal prompt).
+
+---
+
+## Step 7: Install the watsonx Orchestrate ADK VS Code Extension
+
+> ⚠️ **If you already have the extension installed**, please reload the Bob IDE window first! This ensures the extension properly detects your new virtual environment. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux), type **"Developer: Reload Window"** and select it. The Bob IDE window reloads and the extension will restart. You can then proceed directly to Step 8. Do **NOT** use the extension to initialise the workspace!
+
+Install the watsonx Orchestrate extension for IBM Bob IDE:
+
+1. Open the Extensions view in IBM Bob IDE (click the Extensions icon in the Activity Bar or press `Cmd+Shift+X` on Mac / `Ctrl+Shift+X` on Windows/Linux)
+
+      <img src="images/image-2.png" alt="Extensions icon in the Activity Bar" width="50px">
+
+2. Search for **"watsonx Orchestrate"**
+
+      <img src="images/image-4.png" alt="Search results showing watsonx Orchestrate ADK extension" width="350px">
+
+3. Click **Install** on the **"watsonx Orchestrate ADK"** extension
+4. Wait for the installation to complete
+5. Reload Bob IDE if prompted
+6. You should now see the extension icon appear in the Activity Bar — you do **NOT** need to open it. If you do, do **NOT** initialize the workspace using it, as this can cause issues with the setup procedure:
+
+      <img src="images/image-3.png" alt="watsonx Orchestrate extension icon in Activity Bar" width="75px">
+
+The IBM watsonx Orchestrate ADK VS Code extension provides:
+
+- **Workspace Management** — automatically creates and initializes folder structures for agent development
+- **ADK Version Management** — install and update the watsonx Orchestrate ADK directly from VS Code
+- **Agent & Tool File Creation** — assists with creating agent and tool files
+- **Developer Edition Server Control** — start/stop the watsonx Orchestrate Developer Edition server from the UI
+- **Orchestrate AI Builder Assistant** — interactive AI assistant for building and refining agents
+
+> ⚠️ Do **NOT** open the extension itself — you just need it installed. Using the extension to initialise the workspace can cause issues!
 
 ---
 
@@ -240,19 +240,7 @@ Alternatively, check via Command Palette → **"MCP Servers"** — both servers 
 
 ---
 
-## Step 9: Create a Python Virtual Environment
-
-1. Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
-2. Type **"Python: Create Environment"** and select it
-3. Choose **Venv**
-4. Select Python 3.11, 3.12, or 3.13
-5. Wait for the environment to be created
-
-You'll see a `.venv` folder appear in your workspace. Bob IDE automatically activates it in all new terminals (you'll see `(.venv)` in your terminal prompt).
-
----
-
-## Step 10: Install the watsonx Orchestrate SDK
+## Step 9: Install the watsonx Orchestrate SDK
 
 1. Look at the status bar at the bottom of Bob IDE — you should see a red ❌ indicating the ADK is not installed in your new virtual environment
 2. Click the red ❌
@@ -261,7 +249,7 @@ You'll see a `.venv` folder appear in your workspace. Bob IDE automatically acti
 
 ---
 
-## Step 11: Connect to Your watsonx Orchestrate Environment
+## Step 10: Connect to Your watsonx Orchestrate Environment
 
 You need your watsonx Orchestrate **API key** and **instance URL**. Your instructor will provide these. If you're using your own instance, follow the optional section below.
 
@@ -314,7 +302,7 @@ If configured correctly, this lists any existing agents (or shows an empty list 
 
 ---
 
-## Step 12: Get Your Part 1 API Keys
+## Step 11: Get Your Part 1 API Keys
 
 Part 1 (LangGraph Agents) uses two external APIs. Get your free keys now so you have them ready.
 
@@ -344,7 +332,7 @@ Used by the `research_agent` to fetch live news headlines.
 
 ---
 
-## Step 13: Understand the Advanced Workshop Structure
+## Step 12: Understand the Advanced Workshop Structure
 
 After completing setup, your workspace will look like this:
 
@@ -416,7 +404,7 @@ orchestrate env activate my-advanced-wxo -a <your-api-key>
 ### Issue: Bob isn't responding or MCP servers show red
 
 1. Check the MCP server status via Command Palette → "MCP Servers"
-2. If servers show red, re-run "watsonx Orchestrate: Install MCP Servers"
+2. If servers show red, re-run "watsonx Orchestrate: Install WXO MCP Servers"
 3. If Bob is unresponsive, restart Bob IDE
 
 ### Issue: `.bob` folder not found / WXO Agent Architect mode missing
@@ -428,7 +416,7 @@ ls -la bobchestrate-advanced/
 # You should see: .bob/  .venv/
 ```
 
-If missing, redo Step 7.
+If missing, redo Step 3 (re-extract the zip into a fresh location).
 
 ---
 
