@@ -214,7 +214,16 @@ The IBM watsonx Orchestrate ADK VS Code extension provides:
 
 ---
 
-## Step 8: Run "Install WXO MCP Servers" to Activate the Configuration
+## Step 8: Install the watsonx Orchestrate SDK
+
+1. Look at the status bar at the bottom of Bob IDE — you should see a red ❌ indicating the ADK is not installed in your new virtual environment
+2. Click the red ❌
+3. Select the option to install the ADK
+4. Wait for installation to complete — the status bar will show a green ✅ with the version number
+
+---
+
+## Step 9: Run "Install WXO MCP Servers" to Activate the Configuration
 
 The bundle ships with `WXO_MCP_WORKING_DIRECTORY` blank. Running the extension command once stamps your correct local workspace path into the configuration.
 
@@ -237,15 +246,6 @@ Alternatively, check via Command Palette → **"MCP Servers"** — both servers 
 1. Click the mode selector in Bob's chat panel
 2. You should see **WXO Agent Architect** in the list
 3. Select it — ask Bob: `"What can you help me with in this mode?"`
-
----
-
-## Step 9: Install the watsonx Orchestrate SDK
-
-1. Look at the status bar at the bottom of Bob IDE — you should see a red ❌ indicating the ADK is not installed in your new virtual environment
-2. Click the red ❌
-3. Select the option to install the ADK
-4. Wait for installation to complete — the status bar will show a green ✅ with the version number
 
 ---
 

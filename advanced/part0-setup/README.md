@@ -92,7 +92,6 @@ The Bob config zip *is* your workspace folder — extracting it creates `bobches
 
    - Navigate to: [`advanced/part0-setup/bobchestrate-advanced.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/bobchestrate-advanced.zip)
    - Click **Download raw file** (or use the direct link above)
-
 2. Extract it — **extract to your Desktop or a convenient location, not inside an existing folder**:
 
    **Mac/Linux:**
@@ -128,20 +127,18 @@ The Bob config zip *is* your workspace folder — extracting it creates `bobches
 
 **What the bundle gives you:**
 
-| Component | What it does |
-| --- | --- |
-| **WXO Agent Architect mode** | A Bob chat mode specialised for watsonx Orchestrate development — automatically consults live wxO docs before answering and uses the ADK MCP server to inspect your environment |
-| **`wxo-dev-rule-enhanced`** | A workspace rule that loads IBM watsonx Orchestrate best practices into every Bob response — correct naming conventions, tool patterns, agent YAML structure, connection setup, and more |
-| **`watsonx-orchestrate-adk` MCP server** | Gives Bob direct access to your wxO environment — list agents, tools, connections, import artifacts, and chat with agents without leaving the IDE |
-| **`watsonx-orchestrate-adk-docs` MCP server** | Gives Bob real-time access to the full IBM watsonx Orchestrate ADK documentation — Bob searches it automatically when it needs to verify platform specifics |
-| **`wxo-langgraph` skill** | Deep LangGraph-for-wxO knowledge: entry point contract, platform constraints, credential patterns, checkpointers, cross-session memory API, and a troubleshooting reference — auto-activates when you work on Part 1 |
+| Component                                             | What it does                                                                                                                                                                                                          |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **WXO Agent Architect mode**                    | A Bob chat mode specialised for watsonx Orchestrate development — automatically consults live wxO docs before answering and uses the ADK MCP server to inspect your environment                                      |
+| **`wxo-dev-rule-enhanced`**                   | A workspace rule that loads IBM watsonx Orchestrate best practices into every Bob response — correct naming conventions, tool patterns, agent YAML structure, connection setup, and more                             |
+| **`watsonx-orchestrate-adk` MCP server**      | Gives Bob direct access to your wxO environment — list agents, tools, connections, import artifacts, and chat with agents without leaving the IDE                                                                    |
+| **`watsonx-orchestrate-adk-docs` MCP server** | Gives Bob real-time access to the full IBM watsonx Orchestrate ADK documentation — Bob searches it automatically when it needs to verify platform specifics                                                          |
+| **`wxo-langgraph` skill**                     | Deep LangGraph-for-wxO knowledge: entry point contract, platform constraints, credential patterns, checkpointers, cross-session memory API, and a troubleshooting reference — auto-activates when you work on Part 1 |
 
 These three layers work together and complement each other:
 
 - **Mode** — sets Bob's *persona and behaviour* for a session. The WXO Agent Architect mode tells Bob to think like a watsonx Orchestrate developer: consult the docs first, use the ADK MCP tools to inspect your live environment, and never add `ibm-watsonx-orchestrate` to `requirements.txt`. It's the "who Bob is" layer.
-
 - **Custom rule** — sets *always-on constraints* that apply to every response regardless of mode or topic. The `wxo-dev-rule-enhanced` rule enforces platform conventions (snake_case agent names, correct decorator imports, `key_value` connections, evaluation config format, etc.) so Bob never generates code that violates wxO best practices — even if you're chatting in a generic mode.
-
 - **Skill** — provides *deep, topic-specific knowledge* that Bob loads on demand. The `wxo-langgraph` skill is a compact reference covering every LangGraph-for-wxO pattern: the `create_agent` contract, platform constraints, credentials, checkpointers, memory API, and common errors. It activates automatically when the topic matches, so Bob answers LangGraph questions with platform-correct detail without you having to ask it to "remember the rules".
 
 Together: the **mode** shapes how Bob approaches problems, the **rule** keeps every answer platform-safe, and the **skill** supplies the deep domain knowledge for the specific topic you're working on.
@@ -189,18 +186,16 @@ Install the watsonx Orchestrate extension for IBM Bob IDE:
 
 1. Open the Extensions view in IBM Bob IDE (click the Extensions icon in the Activity Bar or press `Cmd+Shift+X` on Mac / `Ctrl+Shift+X` on Windows/Linux)
 
-      <img src="images/image-2.png" alt="Extensions icon in the Activity Bar" width="50px">
-
+   <img src="images/image-2.png" alt="Extensions icon in the Activity Bar" width="50px">
 2. Search for **"watsonx Orchestrate"**
 
-      <img src="images/image-4.png" alt="Search results showing watsonx Orchestrate ADK extension" width="350px">
-
+   <img src="images/image-4.png" alt="Search results showing watsonx Orchestrate ADK extension" width="350px">
 3. Click **Install** on the **"watsonx Orchestrate ADK"** extension
 4. Wait for the installation to complete
 5. Reload Bob IDE if prompted
 6. You should now see the extension icon appear in the Activity Bar — you do **NOT** need to open it. If you do, do **NOT** initialize the workspace using it, as this can cause issues with the setup procedure:
 
-      <img src="images/image-3.png" alt="watsonx Orchestrate extension icon in Activity Bar" width="75px">
+   <img src="images/image-3.png" alt="watsonx Orchestrate extension icon in Activity Bar" width="75px">
 
 The IBM watsonx Orchestrate ADK VS Code extension provides:
 
@@ -214,38 +209,39 @@ The IBM watsonx Orchestrate ADK VS Code extension provides:
 
 ---
 
-## Step 8: Run "Install WXO MCP Servers" to Activate the Configuration
+## Step 8: Install the watsonx Orchestrate SDK
 
-The bundle ships with `WXO_MCP_WORKING_DIRECTORY` blank. Running the extension command once stamps your correct local workspace path into the configuration.
+1. Look at the status bar at the bottom of Bob IDE — you should see a red ❌ indicating the ADK is not installed in your new virtual environment
+2. Click the red ❌
+3. Select the option to install the ADK
+4. Wait for installation to complete — the status bar will show a green ✅ with the version number
 
-1. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux)
-2. Type **"watsonx Orchestrate: Install WXO MCP Servers"** and select it
-3. Wait for the installation to complete — you'll see a confirmation message
+---
 
-**Verify the MCP servers are running:**
+## Step 9: Check that watsonx Orchestrate MCP servers and the WXO Agent Architect mode are available
 
-1. Open Bob's chat panel
-2. Ask Bob: `"What MCP servers are available?"`
-3. You should see both listed:
+As explained in Step 3, the zip file / extracted workspace directory already includes the needed MCP server and mode definitions. Now, let's test that they are registered correctly and Bob can use them.
+
+1. **Verify the MCP servers are running:**
+2. Open Bob's chat panel and select **Agent** or **Ask** mode
+3. Ask Bob: `"What MCP servers are available?"`
+4. You should see both listed:
+
    - `watsonx-orchestrate-adk` — tools for interacting with watsonx Orchestrate
    - `watsonx-orchestrate-adk-docs` — watsonx Orchestrate documentation
-
-Alternatively, check via Command Palette → **"MCP Servers"** — both servers should show a green indicator.
 
 **Verify the WXO Agent Architect mode is available:**
 
 1. Click the mode selector in Bob's chat panel
 2. You should see **WXO Agent Architect** in the list
 3. Select it — ask Bob: `"What can you help me with in this mode?"`
+4. You should see the main topics listed
 
----
+**Verify that the custom development rule is also active:**
 
-## Step 9: Install the watsonx Orchestrate SDK
-
-1. Look at the status bar at the bottom of Bob IDE — you should see a red ❌ indicating the ADK is not installed in your new virtual environment
-2. Click the red ❌
-3. Select the option to install the ADK
-4. Wait for installation to complete — the status bar will show a green ✅ with the version number
+1. Keep the **WXO Agent Architect** mode selected
+2. Ask Bob: `"What custom rules you can use and have access to?"`
+3. You should see the topics from the **wxo-dev-rule-ehanced.md** listed
 
 ---
 
