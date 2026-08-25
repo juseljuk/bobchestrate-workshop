@@ -8,7 +8,7 @@
 
 **Difficulty:** ⭐⭐⭐ Advanced
 
-**Prerequisites:** wxO SaaS account, ADK CLI (`pip install ibm-watsonx-orchestrate`), Python 3.11+, `uv`, IBM Bob IDE, basic Python knowledge
+**Prerequisites:** Part 0 - Setup & Environment done.
 
 ---
 
@@ -18,18 +18,18 @@ This part teaches you to build **fully custom LangGraph agents** that run native
 
 ### What You'll Build
 
-| Agent                          | What it demonstrates                                                          |
-| ------------------------------ | ----------------------------------------------------------------------------- |
-| **`echo_agent`**       | Minimal pipeline verification — no LLM, no SDK, pure LangGraph skeleton      |
+| Agent                          | What it demonstrates                                                               |
+| ------------------------------ | ---------------------------------------------------------------------------------- |
+| **`echo_agent`**       | Minimal pipeline verification — no LLM, no SDK, pure LangGraph skeleton           |
 | **`simple_llm_agent`** | Pure LangGraph with`ChatOpenAI` + Groq backend — no Agentic SDK, built with Bob |
-| **`research_agent`**   | Full production agent —`ChatWxO`, tools, connections, checkpointer, memory |
+| **`research_agent`**   | Full production agent —`ChatWxO`, tools, connections, checkpointer, memory      |
 
 ### Why LangGraph on wxO?
 
 | Use LangGraph when...                                                     | Use a native wxO agent when...                                            |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | You need custom graph topology (loops, complex branching, parallel nodes) | You want YAML-first authoring with tools, knowledge bases, and guidelines |
-| You're bringing an **existing LangGraph codebase** to wxO          | You need multi-agent orchestration with collaborator agents               |
+| You're bringing an**existing LangGraph codebase** to wxO            | You need multi-agent orchestration with collaborator agents               |
 | You need fine-grained control over the reasoning loop                     | Speed and cost matter — native agents are faster and cheaper             |
 | You have custom in-graph state logic that can't live in message history   | Agentic workflows cover your orchestration needs                          |
 
@@ -45,16 +45,16 @@ Bob also knows all 11 platform constraints (messages-only persistence, 50 MB pac
 
 ### Example prompts — one per section
 
-| When you're on… | Ask Bob… |
-| --- | --- |
-| **Section 2 — Hello World** | `"Show me the minimal agent.yaml and create_agent structure for a wxO LangGraph import"` |
-| **Section 3 — Pure LangGraph** | `"Help me set up ChatOpenAI with a Groq backend using a wxO connection"` |
-| **Section 4 — ChatWxO** | `"Show me how to switch from ChatOpenAI to ChatWxO — what changes?"` |
-| **Section 5 — Tools** | `"What's the difference between lc_tool and wxO @tool? Show me a ReAct tool example"` |
-| **Section 6 — Credentials** | `"How do I read my news_api connection key inside the agent code?"` |
-| **Section 7 — Checkpointers** | `"When should I use SQLite vs PostgreSQL checkpointer on wxO?"` |
-| **Section 8 — Memory** | `"Show me how to read and write cross-session user memory with the Agentic SDK"` |
-| **Debugging** | `"My agent import fails with a 50 MB error — how do I fix the package size?"` |
+| When you're on…                      | Ask Bob…                                                                                  |
+| ------------------------------------- | ------------------------------------------------------------------------------------------ |
+| **Section 2 — Hello World**    | `"Show me the minimal agent.yaml and create_agent structure for a wxO LangGraph import"` |
+| **Section 3 — Pure LangGraph** | `"Help me set up ChatOpenAI with a Groq backend using a wxO connection"`                 |
+| **Section 4 — ChatWxO**        | `"Show me how to switch from ChatOpenAI to ChatWxO — what changes?"`                    |
+| **Section 5 — Tools**          | `"What's the difference between lc_tool and wxO @tool? Show me a ReAct tool example"`    |
+| **Section 6 — Credentials**    | `"How do I read my news_api connection key inside the agent code?"`                      |
+| **Section 7 — Checkpointers**  | `"When should I use SQLite vs PostgreSQL checkpointer on wxO?"`                          |
+| **Section 8 — Memory**         | `"Show me how to read and write cross-session user memory with the Agentic SDK"`         |
+| **Debugging**                   | `"My agent import fails with a 50 MB error — how do I fix the package size?"`           |
 
 ---
 
@@ -485,13 +485,17 @@ Replace `ChatOpenAI` (pointed at Groq) with `ChatWxO` to route LLM calls through
 ### 💡 Pedagogical point — Section 3 → Section 4 is two lines
 
 In Section 3 you wrote:
+
 ```python
 llm = ChatOpenAI(model="llama-3.3-70b-versatile", base_url="https://api.groq.com/openai/v1", api_key=groq_key)
 ```
+
 In Section 4 you write:
+
 ```python
 llm = ChatWxO.from_runnable_config(config=config, model="groq/openai/gpt-oss-120b")
 ```
+
 The change is: swap the class, remove `base_url` and `api_key` (wxO handles auth via `RunnableConfig`). Your graph topology, `AgentState`, and all node logic are identical. This is the `base_url` abstraction paying off.
 
 ### Why ChatWxO over ChatOpenAI + base_url?
@@ -797,19 +801,19 @@ From the orchestrator's perspective, the LangGraph agent is indistinguishable fr
 
 ## Section 10 — Troubleshooting Reference
 
-| Problem                                 | Cause                         | Fix                                                                                              |
-| --------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| `Missing api_proxy_url`               | Wrong client initialisation   | Use`Client.from_runnable_config(config)` not `Client()`                                      |
-| Custom state resets each turn           | wxO only persists`messages` | Use SDK memory for cross-turn data                                                               |
-| Import fails: package too large         | Package > 50 MB               | Add`.venv/` to `.gitignore`, never include it in `--package-root`                          |
-| Import fails: entrypoint not found      | Wrong format                  | Must be`"module_name:function_name"` — no `.py` extension                                   |
-| Credentials missing in agent            | Connection not mapped         | Declare in`connections:` in `agent.yaml` or run `orchestrate agents connect`               |
-| `Invalid memory_type` error           | Wrong type string             | Use:`preference`, `profile_fact`, `conversational`, `outcome`, `tool`                  |
-| SQLite state lost after redeploy        | Pod restart clears SQLite     | Switch to PostgreSQL checkpointer for production                                                 |
-| `ChatWxO` authentication error        | Wrong SDK mode                | Inside`runs-on`: use `from_runnable_config`; outside wxO: use `from_instance_credentials`  |
-| LLM not calling tools                   | Tool descriptions unclear     | Write crisp, specific docstrings — the LLM reads them to decide when to call each tool          |
-| `groq_connection_api_key` not found   | Connection not configured     | Run`orchestrate connections set-credentials` and verify `agent.yaml` declares the connection |
-| Native agent behaves unexpectedly (v2.13+) | Using deprecated style  | Replace`style: default`, `style: react`, or `style: planner` with `style: react_core`      |
+| Problem                                    | Cause                         | Fix                                                                                              |
+| ------------------------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| `Missing api_proxy_url`                  | Wrong client initialisation   | Use`Client.from_runnable_config(config)` not `Client()`                                      |
+| Custom state resets each turn              | wxO only persists`messages` | Use SDK memory for cross-turn data                                                               |
+| Import fails: package too large            | Package > 50 MB               | Add`.venv/` to `.gitignore`, never include it in `--package-root`                          |
+| Import fails: entrypoint not found         | Wrong format                  | Must be`"module_name:function_name"` — no `.py` extension                                   |
+| Credentials missing in agent               | Connection not mapped         | Declare in`connections:` in `agent.yaml` or run `orchestrate agents connect`               |
+| `Invalid memory_type` error              | Wrong type string             | Use:`preference`, `profile_fact`, `conversational`, `outcome`, `tool`                  |
+| SQLite state lost after redeploy           | Pod restart clears SQLite     | Switch to PostgreSQL checkpointer for production                                                 |
+| `ChatWxO` authentication error           | Wrong SDK mode                | Inside`runs-on`: use `from_runnable_config`; outside wxO: use `from_instance_credentials`  |
+| LLM not calling tools                      | Tool descriptions unclear     | Write crisp, specific docstrings — the LLM reads them to decide when to call each tool          |
+| `groq_connection_api_key` not found      | Connection not configured     | Run`orchestrate connections set-credentials` and verify `agent.yaml` declares the connection |
+| Native agent behaves unexpectedly (v2.13+) | Using deprecated style        | Replace`style: default`, `style: react`, or `style: planner` with `style: react_core`    |
 
 ---
 
