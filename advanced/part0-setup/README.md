@@ -286,15 +286,16 @@ You should see: `[INFO] Environment 'my-advanced-wxo' is now active`
    ```
    Create a simple shell script to add and activate a new watsonx Orchestrate SaaS environment for the ADK. I have the environment URL and API key ready.
    ```
-3. Follow Bob's steps — it will create and run a script that sets up your environment
+3. Follow Bob's steps — it will create and run a script that sets up your environment - Bob will probably ask permissions to use the wxo-documentation MCP server, write the script and make it executable for you - **grant access** to Bob to all of these things ir order to proceed with the task
+4. When done, Bob will show also instructions how to use the scrip - follow them to add and activate your wxO SaaS environment to your ADK
 
-**Verify the connection:**
+**Verify the connection in terminal:**
 
 ```bash
 orchestrate agents list
 ```
 
-If configured correctly, this lists any existing agents (or shows an empty list if none exist yet). Any output without an error means you're connected.
+Open terminal to Bob IDE from the main menu: **Terminal --> New Terminal**. If configured correctly, the command lists any existing agents (or shows an empty list if none exist yet). Any output without an error means you're connected.
 
 ---
 
