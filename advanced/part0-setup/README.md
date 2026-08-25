@@ -364,8 +364,11 @@ Bob is your AI pair programmer. With the bundle installed, Bob has:
 ### Effective Bob prompts for the advanced workshop:
 
 ✅ `"Bob, help me build a LangGraph agent that calls the Groq API using a wxO connection"`
+
 ✅ `"Bob, my agent import is failing — here's the error: [paste error]"`
+
 ✅ `"Bob, what's the correct way to add a checkpointer to a LangGraph agent on wxO?"`
+
 ✅ `"Bob, show me the minimal agent.yaml structure for a LangGraph package import"`
 
 ### Less effective:
