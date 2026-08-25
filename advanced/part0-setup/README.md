@@ -374,6 +374,7 @@ Bob is your AI pair programmer. With the bundle installed, Bob has:
 ### Less effective:
 
 ❌ `"Bob, fix this"` — too vague
+
 ❌ `"Bob, make it work"` — no context
 
 ### Managing Bob sessions:
