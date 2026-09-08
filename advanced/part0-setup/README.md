@@ -182,18 +182,15 @@ You'll see a `.venv` folder appear in your workspace. Bob IDE automatically acti
 Install the watsonx Orchestrate extension for IBM Bob IDE:
 
 1. Open the Extensions view in IBM Bob IDE (click the Extensions icon in the Activity Bar or press `Cmd+Shift+X` on Mac / `Ctrl+Shift+X` on Windows/Linux)
-
       <br><img src="images/image-2.png" alt="Extensions icon in the Activity Bar" width="50px">
 
 2. Search for **"watsonx Orchestrate"**
-
       <br><img src="images/image-4.png" alt="Search results showing watsonx Orchestrate ADK extension" width="350px">
 
 3. Click **Install** on the **"watsonx Orchestrate ADK"** extension
 4. Wait for the installation to complete
 5. Reload Bob IDE if prompted
 6. You should now see the extension icon appear in the Activity Bar — you do **NOT** need to open it. If you do, do **NOT** initialize the workspace using it, as this can cause issues with the setup procedure:
-
       <br><img src="images/image-3.png" alt="watsonx Orchestrate extension icon in Activity Bar" width="75px">
 
 The IBM watsonx Orchestrate ADK VS Code extension provides:
