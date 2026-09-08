@@ -89,7 +89,7 @@ After installing, open a new terminal and run `uv --version` again to confirm.
 The Bob config zip *is* your workspace folder — extracting it creates `bobchestrate-advanced/` with the `.bob/` configuration already in place. No need to create a folder manually.
 
 1. Download the zip: [`advanced/part0-setup/bobchestrate-advanced.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/bobchestrate-advanced.zip)
-2. Extract it — **extract to your Desktop or a convenient location**:
+2. Extract it — **extract to your Desktop or a convenient location**
 
    **Mac/Linux:**
 
@@ -184,9 +184,11 @@ Install the watsonx Orchestrate extension for IBM Bob IDE:
 1. Open the Extensions view in IBM Bob IDE (click the Extensions icon in the Activity Bar or press `Cmd+Shift+X` on Mac / `Ctrl+Shift+X` on Windows/Linux)
 
    <img src="images/image-2.png" alt="Extensions icon in the Activity Bar" width="50px">
+
 2. Search for **"watsonx Orchestrate"**
 
    <img src="images/image-4.png" alt="Search results showing watsonx Orchestrate ADK extension" width="350px">
+   
 3. Click **Install** on the **"watsonx Orchestrate ADK"** extension
 4. Wait for the installation to complete
 5. Reload Bob IDE if prompted
