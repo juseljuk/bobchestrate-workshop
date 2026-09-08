@@ -89,7 +89,7 @@ After installing, open a new terminal and run `uv --version` again to confirm.
 The Bob config zip *is* your workspace folder — extracting it creates `bobchestrate-advanced/` with the `.bob/` configuration already in place. No need to create a folder manually.
 
 1. Download the zip: [`advanced/part0-setup/bobchestrate-advanced.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/bobchestrate-advanced.zip)
-2. Extract it — **extract to your Desktop or a convenient location, not inside an existing folder**:
+2. Extract it — **extract to your Desktop or a convenient location**:
 
    **Mac/Linux:**
 
