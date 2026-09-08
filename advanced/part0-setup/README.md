@@ -188,7 +188,7 @@ Install the watsonx Orchestrate extension for IBM Bob IDE:
 2. Search for **"watsonx Orchestrate"**
 
    <img src="images/image-4.png" alt="Search results showing watsonx Orchestrate ADK extension" width="350px">
-   
+
 3. Click **Install** on the **"watsonx Orchestrate ADK"** extension
 4. Wait for the installation to complete
 5. Reload Bob IDE if prompted
