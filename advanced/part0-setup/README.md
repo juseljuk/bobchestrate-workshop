@@ -90,8 +90,7 @@ The Bob config zip *is* your workspace folder — extracting it creates `bobches
 
 1. Download the zip:
 
-   - Navigate to: [`advanced/part0-setup/bobchestrate-advanced.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/bobchestrate-advanced.zip)
-   - Click **Download raw file** (or use the direct link above)
+   - Click **Download raw file**: [`advanced/part0-setup/bobchestrate-advanced.zip`](https://github.com/juseljuk/bobchestrate-workshop/raw/main/advanced/part0-setup/bobchestrate-advanced.zip)
 2. Extract it — **extract to your Desktop or a convenient location, not inside an existing folder**:
 
    **Mac/Linux:**
