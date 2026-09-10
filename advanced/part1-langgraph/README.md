@@ -384,7 +384,7 @@ This sets up Section 4 directly: `ChatWxO` is wxO's own OpenAI-compatible endpoi
 
 ### Get a Groq API key (free, no credit card)
 
-This section uses Groq's free inference tier. Groq provides **free API access** — no credit card required.
+This section uses Groq's free inference tier. Groq provides **free API access** — no credit card required. If you did the Part 0: Setup & Environment, you should have the key already. If you do not have it, follow the instructions to get yours.
 
 **Create your key:**
 
