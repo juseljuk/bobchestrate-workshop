@@ -313,13 +313,27 @@ deployment:
 
 ```bash
 cd agents/echo_agent
+pip install -r requirements.txt
 python agent.py
 # Expected: [Echo @ HH:MM:SS UTC] You said: "Hello from local test!"
 ```
 
+### Rename the agent to avoid conflicts
+
+> ⚠️ **Important:** Because multiple participants share the same watsonx Orchestrate instance, you **must add your initials** as a postfix to the agent name in `agents/echo_agent/agent.yaml` before importing to prevent overwriting each other's agents.
+>
+> Open `agents/echo_agent/agent.yaml` and update the `name` field (e.g., if your initials are `JKJ`, change `name: echo_agent` to `name: echo_agent_JKJ`):
+>
+> ```yaml
+> spec_version: v1
+> kind: agent
+> name: echo_agent_<your_initials>
+> title: Echo Agent
+> ```
+
 ### Import to wxO
 
-From the `advanced/part1-langgraph/` directory:
+From your workspace root directory run:
 
 ```bash
 orchestrate agents import \
@@ -330,10 +344,10 @@ orchestrate agents import \
 Verify:
 
 ```bash
-orchestrate agents list | grep echo_agent
+orchestrate agents list | grep echo_agent_<your_initials>
 ```
 
-Then open the wxO Chat UI and send any message to `echo_agent`. You should see a timestamped echo.
+Then open the wxO Chat UI and send any message to `echo_agent_<your_initials>`. You should see a timestamped echo.
 
 ### What you learned
 

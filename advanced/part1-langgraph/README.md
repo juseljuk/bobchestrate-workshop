@@ -71,7 +71,7 @@ These are hard platform constraints — not bugs, not things to work around with
 | **No direct database access**                | Persistent state across restarts needs PostgreSQL via a wxO connection                                        |
 | **SQLite resets on pod restart**             | Use PostgreSQL for production persistence                                                                     |
 
-> ⚠️ **ADK v2.13 — Native agent style deprecation:** The `style: default`, `style: react`, and `style: planner` values for **native** wxO agents are deprecated as of ADK v2.13.0. Use `style: react_core` in all native agent YAML files going forward. This does **not** affect LangGraph agents — they use `kind: agent` + `framework: langgraph` and have no `style` field. See [Migrating to ReAct Core](https://developer.watson-orchestrate.ibm.com/agents/agent_styles_migration) for details.
+> ⚠️ Starting from **ADK v2.13 — Native agent style deprecation:** The `style: default`, `style: react`, and `style: planner` values for **native** wxO agents are deprecated as of ADK v2.13.0. Use `style: react_core` in all native agent YAML files going forward. This does **not** affect LangGraph agents — they use `kind: agent` + `framework: langgraph` and have no `style` field. See [Migrating to ReAct Core](https://developer.watson-orchestrate.ibm.com/agents/agent_styles_migration) for details.
 
 ---
 
@@ -275,7 +275,7 @@ llm = ChatWxO.from_runnable_config(config=config, model="groq/openai/gpt-oss-120
 
 Build the simplest possible agent to verify the end-to-end pipeline before adding any complexity. **No LLM, no SDK, no external calls** — just the scaffolding.
 
-> 💡 **Bob prompt to get started:**
+> 💡 **Run this Bob prompt to get started:**
 >
 > ```
 > Bob, create a minimal LangGraph agent that echoes the user's message
@@ -313,13 +313,27 @@ deployment:
 
 ```bash
 cd agents/echo_agent
+pip install -r requirements.txt
 python agent.py
 # Expected: [Echo @ HH:MM:SS UTC] You said: "Hello from local test!"
 ```
 
+### Rename the agent to avoid conflicts
+
+> ⚠️ **Important:** Because multiple participants share the same watsonx Orchestrate instance, you **must add your initials** as a postfix to the agent name in `agents/echo_agent/agent.yaml` before importing to prevent overwriting each other's agents.
+>
+> Open `agents/echo_agent/agent.yaml` and update the `name` field (e.g., if your initials are `JKJ`, change `name: echo_agent` to `name: echo_agent_JKJ`):
+>
+> ```yaml
+> spec_version: v1
+> kind: agent
+> name: echo_agent_<your_initials>
+> title: Echo Agent
+> ```
+
 ### Import to wxO
 
-From the `advanced/part1-langgraph/` directory:
+From your workspace root directory run:
 
 ```bash
 orchestrate agents import \
@@ -330,10 +344,10 @@ orchestrate agents import \
 Verify:
 
 ```bash
-orchestrate agents list | grep echo_agent
+orchestrate agents list | grep echo_agent_<your_initials>
 ```
 
-Then open the wxO Chat UI and send any message to `echo_agent`. You should see a timestamped echo.
+Then open the wxO Chat UI and send any message to `echo_agent_<your_initials>`. You should see a timestamped echo.
 
 ### What you learned
 
