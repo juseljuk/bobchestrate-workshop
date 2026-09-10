@@ -221,7 +221,8 @@ As explained in Step 3, the zip file / extracted workspace directory already inc
 1. **Verify the MCP servers are running:**
 2. Open Bob's chat panel and select **Agent** or **Ask** mode
 3. Ask Bob: `"What MCP servers are available?"`
-4. You should see both listed:
+4. Bob might ask you for permission, select "Approve for task"
+5. You should see both listed:
 
    - `watsonx-orchestrate-adk` — tools for interacting with watsonx Orchestrate
    - `watsonx-orchestrate-adk-docs` — watsonx Orchestrate documentation
@@ -316,7 +317,7 @@ Used by the `research_agent` to fetch live news headlines.
 2. Click **Get API Key** (free tier)
 3. Register and copy your key
 
-> You'll set these as environment variables when running `import-all.sh` in Part 1:
+> You'll set these as environment variables later in Part 1:
 >
 > ```bash
 > export GROQ_API_KEY=gsk_your_key_here
