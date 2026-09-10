@@ -407,7 +407,7 @@ export GROQ_API_KEY=gsk_...
 
 ### Use IBM Bob to build it
 
-Open Bob and use this prompt:
+Open Bob and use this prompt (replace `<your_initials>` with your actual initials, e.g. `JKJ` in the 3. step):
 
 ```
 Bob, create a LangGraph agent for watsonx Orchestrate with these requirements:
@@ -415,22 +415,22 @@ Bob, create a LangGraph agent for watsonx Orchestrate with these requirements:
 1. File: agents/simple_llm_agent/agent.py
 2. Use ChatOpenAI (langchain-openai) with base_url="https://api.groq.com/openai/v1"
    and model="llama-3.3-70b-versatile" — NOT the Agentic SDK ChatWxO
-3. Read the Groq API key from os.environ.get("groq_connection_api_key")
-   (injected at runtime by a wxO Connection named "groq_connection")
+3. Read the Groq API key from os.environ.get("groq_connection_<your_initials>_api_key")
+   (injected at runtime by a wxO Connection named "groq_connection_<your_initials>")
 4. If the key is missing, return a helpful error message as an AIMessage
 5. System prompt: "You are a helpful assistant. Answer concisely and accurately."
 6. Prepend the system prompt only if not already present in messages
 7. Required entry point: create_agent(config: RunnableConfig) -> StateGraph
 8. Include a local test block (if __name__ == "__main__") that maps
-   GROQ_API_KEY → groq_connection_api_key for local testing
-9. Also create agent.yaml with kind: agent, framework: langgraph,
-   entrypoint: "agent:create_agent", and the groq_connection declared
+   GROQ_API_KEY → groq_connection_<your_initials>_api_key for local testing
+9. Also create agent.yaml with kind: agent, name: simple_llm_agent_<your_initials>, framework: langgraph,
+   entrypoint: "agent:create_agent", and the groq_connection_<your_initials> declared
    under connections.global_requirements.required_app_ids
 10. Create requirements.txt with: langgraph==1.1.10, langchain-core==1.3.3,
     langchain-openai==0.3.22, langgraph-checkpoint==4.0.3
 ```
 
-> 📂 The completed reference files are in `agents/simple_llm_agent/`.
+> 📂 The completed reference files are in `agents/simple_llm_agent/`. If you use the reference files, make sure to update the connection name and agent name to include your initials!
 
 ### What Bob will generate
 
@@ -453,25 +453,60 @@ Notice that `requirements.txt` still lists `langchain-openai` — not a Groq-spe
 
 ### Set up the wxO Connection
 
-The agent reads its API key from the env var `groq_connection_api_key`. This naming convention — `<connection_app_id>_api_key` — is how wxO maps connection credentials to env vars at runtime.
+> ⚠️ **Important:** Because multiple participants share the same watsonx Orchestrate instance, you **must add your initials** to the connection name (e.g. `groq_connection_JKJ`). The agent code must read from the corresponding environment variable: `groq_connection_<your_initials>_api_key`.
+>
+> wxO automatically maps connection credentials to environment variables at runtime following the naming convention: `<connection_app_id>_<credential_key>`.
+> For a connection `groq_connection_JKJ` with key `api_key`, the env var is `groq_connection_JKJ_api_key`.
+
+Create and configure your connection in wxO (replace `<your_initials>` with your actual initials):
 
 ```bash
-orchestrate connections add -a groq_connection
-orchestrate connections configure -a groq_connection --env draft -t team -k key_value
-orchestrate connections set-credentials -a groq_connection --env draft \
+orchestrate connections add -a groq_connection_<your_initials>
+orchestrate connections configure -a groq_connection_<your_initials> --env draft -t team -k key_value
+orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft \
   -e api_key=$GROQ_API_KEY
+```
+
+### Rename the agent to avoid conflicts
+
+Before importing, confirm that your `agents/simple_llm_agent/agent.yaml` has your initials in the `name` and in the connection reference:
+
+```yaml
+spec_version: v1
+kind: agent
+name: simple_llm_agent_<your_initials>
+title: Simple LLM Agent
+framework: langgraph
+
+deployment:
+  code_bundle:
+    entrypoint: "agent:create_agent"
+
+connections:
+  global_requirements:
+    required_app_ids:
+      - groq_connection_<your_initials>
+```
+
+And in `agents/simple_llm_agent/agent.py`, ensure the environment variable lookup matches:
+
+```python
+api_key = os.environ.get("groq_connection_<your_initials>_api_key", "")
 ```
 
 ### Test locally
 
 ```bash
 cd agents/simple_llm_agent
+pip install -r requirements.txt
 export GROQ_API_KEY=gsk_...
 python agent.py
 # Expected: "LangGraph is a library for building stateful, graph-based agent workflows..."
 ```
 
 ### Import to wxO
+
+From your workspace root directory run:
 
 ```bash
 orchestrate agents import \
