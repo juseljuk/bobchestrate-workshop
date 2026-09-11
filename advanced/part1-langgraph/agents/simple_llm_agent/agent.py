@@ -11,12 +11,12 @@ is needed. This shows that LangChain's provider coupling is shallow: base_url is
 all it takes to swap the backend. The same pattern applies to Ollama, Azure,
 and wxO's own AI Gateway (Section 4).
 
-The API key is injected at runtime via a wxO Connection — no hardcoded secrets.
+The API key is injected at runtime via a wxO Connection into RunnableConfig.
 """
 import os
 from typing import Annotated, List, TypedDict
 
-from langchain_core.messages import BaseMessage, SystemMessage
+from langchain_core.messages import AIMessage, BaseMessage, SystemMessage
 from langchain_core.runnables.config import RunnableConfig
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, StateGraph
@@ -49,13 +49,12 @@ def llm_node(state: AgentState, config: RunnableConfig) -> AgentState:
     """Call the LLM with the current message history.
 
     Uses ChatOpenAI with base_url pointed at Groq's API.
-    Connection app_id = "groq_connection", credential key = "api_key"
-    → injected by wxO as env var: groq_connection_api_key
+    Connection credentials injected by wxO via RunnableConfig:
+    config["configurable"]["credentials"]["<connection_app_id>_api_key"]
     """
-    # Read the API key from the wxO Connection environment variable.
-    api_key = os.environ.get("groq_connection_api_key", "")
+    credentials = config.get("configurable", {}).get("credentials", {})
+    api_key = credentials.get("groq_connection_api_key", "")
     if not api_key:
-        from langchain_core.messages import AIMessage
         return {"messages": [AIMessage(
             content="⚠️ Groq API key not found. "
                     "Make sure the 'groq_connection' wxO Connection is configured."
@@ -90,8 +89,8 @@ def create_agent(config: RunnableConfig) -> StateGraph:
     The only wxO-specific element is this function signature itself.
 
     Args:
-        config: Runtime configuration injected by the wxO runtime.
-                Not used here — credentials come from env vars instead.
+        config: Runtime configuration injected by the wxO runtime containing
+                injected connection credentials under config['configurable']['credentials'].
 
     Returns:
         StateGraph: The uncompiled agent graph.
@@ -112,15 +111,21 @@ if __name__ == "__main__":
     import sys
     from langchain_core.messages import HumanMessage
 
-    # For local testing, set GROQ_API_KEY env var and map it to the
-    # connection variable name the agent expects inside wxO.
+    # For local testing, pass GROQ_API_KEY inside the RunnableConfig structure
     raw_key = os.environ.get("GROQ_API_KEY", "")
     if not raw_key:
         print("Set GROQ_API_KEY to run local test.")
         sys.exit(1)
-    os.environ["groq_connection_api_key"] = raw_key
 
-    app = create_agent({}).compile()
+    test_config = {
+        "configurable": {
+            "credentials": {
+                "groq_connection_api_key": raw_key
+            }
+        }
+    }
+
+    app = create_agent(test_config).compile()
     result = app.invoke({
         "messages": [HumanMessage(content="What is LangGraph in one sentence?")]
     })

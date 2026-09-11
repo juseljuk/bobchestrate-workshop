@@ -34,15 +34,10 @@ GROQ_MODEL = "llama-3.3-70b-versatile"
 
 
 def llm_node(state: AgentState, config: RunnableConfig) -> AgentState:
-    # Two equivalent ways to read injected credentials:
-    #
-    # Option A — os.environ (simple):
-    api_key = os.environ.get("groq_connection_api_key", "")
-    #
-    # Option B — via config (official IBM docs pattern):
-    # credentials = config.get("configurable", {}).get("credentials", {})
-    # api_key = credentials.get("groq_connection_api_key")
-    #
+    # Standard IBM docs preferred pattern — read credentials from RunnableConfig:
+    credentials = config.get("configurable", {}).get("credentials", {})
+    api_key = credentials.get("groq_connection_api_key", "")
+
     # Convention: {app_id}_{credential_type}
     # e.g. app_id="groq_connection", credential_type="api_key" → "groq_connection_api_key"
 
@@ -83,8 +78,16 @@ if __name__ == "__main__":
     if not raw_key:
         print("Set GROQ_API_KEY to run local test.")
         sys.exit(1)
-    os.environ["groq_connection_api_key"] = raw_key   # simulate wxO Connection injection
 
-    app = create_agent({}).compile()
+    # Simulate wxO Connection credentials injection in RunnableConfig
+    test_config = {
+        "configurable": {
+            "credentials": {
+                "groq_connection_api_key": raw_key
+            }
+        }
+    }
+
+    app = create_agent(test_config).compile()
     result = app.invoke({"messages": [HumanMessage(content="What is LangGraph in one sentence?")]})
     print(result["messages"][-1].content)

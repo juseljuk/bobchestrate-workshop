@@ -393,11 +393,10 @@ This section uses Groq's free inference tier. Groq provides **free API access** 
 3. Give it a name (e.g. `bobchestrate-workshop`), click **Submit**
 4. **Copy the key immediately** — it won't be shown again
 
-**Store it and set it as your environment variable to your terminal. You need it when we configure the llm connection and the other variable for testing your agent locally!**
+**Store it and set it as your environment variable in your terminal:**
 
 ```bash
 export GROQ_API_KEY=gsk_...
-export groq_connection_api_key=$GROQ_API_KEY
 ```
 
 > ⚠️ Never paste your API key directly into agent code or commit it to git. The wxO Connection in the next step is the secure way to supply it at runtime.
@@ -413,25 +412,25 @@ Bob, create a LangGraph agent for watsonx Orchestrate with these requirements:
 
 1. File: agents/simple_llm_agent/agent.py
 2. Use ChatOpenAI (langchain-openai) with base_url="https://api.groq.com/openai/v1"
-   and model="openai/gpt-oss-120b" — NOT the Agentic SDK ChatWxO
-3. Read the Groq API key from os.environ.get("groq_connection_<your_initials>_api_key")
-   (injected at runtime by a wxO Connection named "groq_connection_<your_initials>")
+   and model="llama-3.3-70b-versatile" — NOT the Agentic SDK ChatWxO
+3. Read the Groq API key from config.get("configurable", {}).get("credentials", {}).get("groq_connection_<your_initials>_api_key", "")
+   (injected at runtime via RunnableConfig by a wxO Connection named "groq_connection_<your_initials>")
 4. If the key is missing, return a helpful error message as an AIMessage
 5. System prompt: "You are a helpful assistant. Answer concisely and accurately."
 6. Prepend the system prompt only if not already present in messages
 7. Required entry point: create_agent(config: RunnableConfig) -> StateGraph
-8. Include a local test block (if __name__ == "__main__") that maps
-   GROQ_API_KEY → groq_connection_<your_initials>_api_key for local testing
+8. Include a local test block (if __name__ == "__main__") that passes
+   GROQ_API_KEY inside config["configurable"]["credentials"]["groq_connection_<your_initials>_api_key"]
 9. Also create agent.yaml with kind: agent, name: simple_llm_agent_<your_initials>, framework: langgraph,
    entrypoint: "agent:create_agent", and the groq_connection_<your_initials> declared
    under connections.global_requirements.required_app_ids
 10. Create requirements.txt with: langgraph==1.1.10, langchain-core==1.3.3,
-    langchain-openai==1.0.0, langgraph-checkpoint==4.0.3
+    langchain-openai==0.3.22, langgraph-checkpoint==4.0.3
 ```
 
 ### What Bob will generate
 
-Bob will produce `agent.py` — the only wxO-specific element is the function signature:
+Bob will produce `agent.py` — the only wxO-specific element is the function signature and credentials extraction:
 
 ```python
 def create_agent(config: RunnableConfig) -> StateGraph:
@@ -442,7 +441,14 @@ def create_agent(config: RunnableConfig) -> StateGraph:
     return graph   # ← return UNCOMPILED
 ```
 
-Everything else (`ChatOpenAI`, `AgentState`, the `llm_node` function) is standard LangGraph — the exact same code would run in any LangGraph environment.
+Inside the node function, credentials are read from `config`:
+
+```python
+credentials = config.get("configurable", {}).get("credentials", {})
+api_key = credentials.get("groq_connection_<your_initials>_api_key", "")
+```
+
+Everything else (`ChatOpenAI`, `AgentState`, the graph structure) is standard LangGraph — the exact same code would run in any LangGraph environment.
 
 ### 💡 Pedagogical point 2 — `requirements.txt` is unchanged
 
@@ -450,10 +456,10 @@ Notice that `requirements.txt` still lists `langchain-openai` — not a Groq-spe
 
 ### Set up the wxO Connection
 
-> ⚠️ **Important:** Because multiple participants share the same watsonx Orchestrate instance, you **must add your initials** to the connection name (e.g. `groq_connection_JKJ`). The agent code must read from the corresponding environment variable: `groq_connection_<your_initials>_api_key`.
+> ⚠️ **Important:** Because multiple participants share the same watsonx Orchestrate instance, you **must add your initials** to the connection name (e.g. `groq_connection_JKJ`). The agent code must read from the corresponding connection key in `RunnableConfig`: `config.get("configurable", {}).get("credentials", {}).get("groq_connection_<your_initials>_api_key", "")`.
 >
-> wxO automatically maps connection credentials to environment variables at runtime following the naming convention: `<connection_app_id>_<credential_key>`.
-> For a connection `groq_connection_JKJ` with key `api_key`, the env var is `groq_connection_JKJ_api_key`.
+> wxO automatically maps connection credentials to `config["configurable"]["credentials"]` following the naming convention: `<connection_app_id>_<credential_key>`.
+> For a connection `groq_connection_JKJ` with key `api_key`, the key is `groq_connection_JKJ_api_key`.
 
 Create and configure your connection in wxO (replace `<your_initials>` with your actual initials):
 
@@ -485,10 +491,11 @@ connections:
       - groq_connection_<your_initials>
 ```
 
-And in `agents/simple_llm_agent/agent.py` (under llm_node), ensure the environment variable lookup matches:
+And in `agents/simple_llm_agent/agent.py` (under llm_node), ensure the credentials lookup matches:
 
 ```python
-api_key = os.environ.get("groq_connection_<your_initials>_api_key", "")
+credentials = config.get("configurable", {}).get("credentials", {})
+api_key = credentials.get("groq_connection_<your_initials>_api_key", "")
 ```
 
 ### Test locally
@@ -518,7 +525,7 @@ Chat with it in the wxO UI — it will hold a multi-turn conversation using `Cha
 - **`ChatOpenAI` is provider-agnostic** — `base_url` is all it takes to point it at any OpenAI-compatible API (Groq, Ollama, Azure, wxO's AI Gateway…)
 - **`requirements.txt` is unchanged** — you're not swapping libraries, just configuring the endpoint
 - The Agentic SDK (`ibm_watsonx_orchestrate_sdk`) is **optional** — use it for wxO-managed LLMs and platform features, not for basic operation
-- wxO Connections inject credentials as env vars — your agent code just reads `os.environ`
+- wxO Connections inject credentials via `RunnableConfig` — your agent code reads `config["configurable"]["credentials"]`
 - IBM Bob can generate the complete agent, YAML, and requirements from a single prompt
 
 ---

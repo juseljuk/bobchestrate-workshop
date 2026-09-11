@@ -23,7 +23,7 @@ These are hard runtime limits that apply to every answer. Never generate code or
 | Using Groq, Ollama, Azure, or any OpenAI-compatible API (no SDK) | show `patterns/external-llm.py` |
 | wxO-managed LLMs via `ChatWxO` | `ref/agent-yaml.md` §ChatWxO |
 | Adding tools, tool-calling, ReAct loop, `ToolNode`, `lc_tool` | `ref/agent-yaml.md` + `patterns/production-agent.py` (tools section) |
-| API keys, credentials, connections, `os.environ` | `ref/agent-yaml.md` §connections |
+| API keys, credentials, connections, `RunnableConfig` | `ref/agent-yaml.md` §connections |
 | In-session state persistence, checkpointers, SQLite, PostgreSQL | `ref/agent-yaml.md` §checkpointer |
 | Cross-session memory, `client.memory`, personalisation | `ref/agent-yaml.md` §memory + `patterns/production-agent.py` (memory section) |
 | Token limits, context compression, `client.context.compress` | `patterns/production-agent.py` (compression section) |
@@ -51,7 +51,7 @@ These are hard runtime limits that apply to every answer. Never generate code or
 Check that generated code and YAML do not violate any constraint. Common mistakes to catch:
 - `.compile()` called inside `create_agent()` instead of only in `__main__`
 - `kind: native` instead of `kind: agent` in agent.yaml
-- Hardcoded API keys instead of `os.environ.get()`
+- Hardcoded API keys instead of `config.get("configurable", {}).get("credentials", {})`
 - wxO `@tool` imported instead of `lc_tool` from `langchain_core.tools`
 - `ibm-watsonx-orchestrate` included in `requirements.txt`
 </Step>

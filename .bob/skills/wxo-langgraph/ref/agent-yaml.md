@@ -145,25 +145,17 @@ Examples:
 
 `api_key` · `basic` · `bearer` · `key_value` · `oauth_auth_client_credentials_flow` · `oauth_auth_code_flow` · `oauth_auth_implicit_flow` · `oauth_auth_on_behalf_of_flow` · `oauth_auth_password_flow`
 
-### Two ways to read credentials in agent code
+### Reading credentials in agent code
 
-**Option A — via `os.environ` (simple, works for any credential type):**
+**Standard IBM docs preferred pattern (via `RunnableConfig`):**
 ```python
-import os
-api_key = os.environ.get("my_api_api_key", "")
+credentials = config.get("configurable", {}).get("credentials", {})
+api_key = credentials.get("my_api_api_key", "")
 if not api_key:
     return {"messages": [AIMessage(content="⚠️ my_api connection not configured.")]}
 ```
 
-**Option B — via `config` (official IBM docs pattern, same values):**
-```python
-credentials = config.get("configurable", {}).get("credentials", {})
-api_key = credentials.get("my_api_api_key")
-if not api_key:
-    raise ValueError("my_api connection not configured.")
-```
-
-Both patterns access the same injected values. Use whichever fits your code style.
+Credentials from wxO Connections declared in `agent.yaml` are injected into `config["configurable"]["credentials"]` using the naming convention `<connection_app_id>_<credential_key>` (e.g. `groq_connection_api_key`).
 
 ### Setup commands (for `key_value` credential type)
 ```bash
