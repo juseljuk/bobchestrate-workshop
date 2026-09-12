@@ -412,7 +412,7 @@ Bob, create a LangGraph agent for watsonx Orchestrate with these requirements:
 
 1. File: agents/simple_llm_agent/agent.py
 2. Use ChatOpenAI (langchain-openai) with base_url="https://api.groq.com/openai/v1"
-   and model="llama-3.3-70b-versatile" — NOT the Agentic SDK ChatWxO
+   and model="openai/gpt-oss-120b" — NOT the Agentic SDK ChatWxO
 3. Read the Groq API key from config.get("configurable", {}).get("credentials", {}).get("groq_connection_<your_initials>_api_key", "")
    (injected at runtime via RunnableConfig by a wxO Connection named "groq_connection_<your_initials>")
 4. If the key is missing, return a helpful error message as an AIMessage
@@ -425,7 +425,7 @@ Bob, create a LangGraph agent for watsonx Orchestrate with these requirements:
    entrypoint: "agent:create_agent", and the groq_connection_<your_initials> declared
    under connections.global_requirements.required_app_ids
 10. Create requirements.txt with: langgraph==1.1.10, langchain-core==1.3.3,
-    langchain-openai==0.3.22, langgraph-checkpoint==4.0.3
+    langchain-openai==1.0.0, langgraph-checkpoint==4.0.3
 ```
 
 ### What Bob will generate
