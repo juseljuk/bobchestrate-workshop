@@ -465,9 +465,8 @@ Create and configure your connection in wxO (replace `<your_initials>` with your
 
 ```bash
 orchestrate connections add -a groq_connection_<your_initials>
-orchestrate connections configure -a groq_connection_<your_initials> --env draft -t team -k key_value
-orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft \
-  -e api_key=$GROQ_API_KEY
+orchestrate connections configure -a groq_connection_<your_initials> --env draft -t team -k api_key
+orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft --api-key=$GROQ_API_KEY
 ```
 
 ### Rename the agent to avoid conflicts
