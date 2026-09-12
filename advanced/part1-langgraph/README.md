@@ -461,15 +461,7 @@ Notice that `requirements.txt` still lists `langchain-openai` — not a Groq-spe
 > wxO automatically maps connection credentials to `config["configurable"]["credentials"]` following the naming convention: `<connection_app_id>_<credential_key>`.
 > For a connection `groq_connection_JKJ` with key `api_key`, the key is `groq_connection_JKJ_api_key`.
 
-Create and configure your connection in wxO (replace `<your_initials>` with your actual initials):
-
-```bash
-orchestrate connections add -a groq_connection_<your_initials>
-orchestrate connections configure -a groq_connection_<your_initials> --env draft -t team -k api_key
-orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft --api-key=$GROQ_API_KEY
-```
-
-### Rename the agent to avoid conflicts
+Create and configure your connection in wxO (replace `<your_initials>` with your actual initials)Rename the agent to avoid conflicts
 
 Before importing, confirm that your `agents/simple_llm_agent/agent.yaml` has your initials in the `name` and in the `connection` reference:
 
@@ -538,7 +530,7 @@ Replace `ChatOpenAI` (pointed at Groq) with `ChatWxO` to route LLM calls through
 In Section 3 you wrote:
 
 ```python
-llm = ChatOpenAI(model="llama-3.3-70b-versatile", base_url="https://api.groq.com/openai/v1", api_key=groq_key)
+llm = ChatOpenAI(model="openai/gpt-oss-120b", base_url="https://api.groq.com/openai/v1", api_key=groq_key)
 ```
 
 In Section 4 you write:
@@ -556,18 +548,65 @@ The change is: swap the class, remove `base_url` and `api_key` (wxO handles auth
 - Tracks token usage and costs in wxO observability
 - Drop-in replacement for `ChatOpenAI` — identical invoke/stream API surface
 
-### Add to your agent node
+### Update your agent code
+
+#### Step 1: Add the `ChatWxO` import
+
+At the top of `agents/simple_llm_agent/agent.py`, add the `ChatWxO` import from the Agentic SDK:
 
 ```python
 from ibm_watsonx_orchestrate_sdk.langchain import ChatWxO
+```
 
-def agent_node(state: AgentState, config: RunnableConfig) -> AgentState:
+#### Step 2: Replace `llm_node` with new one that uses `ChatWxO`
+
+Replace your existing `llm_node` function completely with the following simplified version (no manual connection lookup or API key checks needed):
+
+```python
+def llm_node(state: AgentState, config: RunnableConfig) -> AgentState:
+    """Call the LLM using ChatWxO routed through wxO AI Gateway."""
     llm = ChatWxO.from_runnable_config(
         config=config,
         model="groq/openai/gpt-oss-120b",   # model ID from orchestrate models list
     )
-    response = llm.invoke(state["messages"])
+
+    # Prepend system message if not already present
+    messages = state["messages"]
+    if not messages or not isinstance(messages[0], SystemMessage):
+        messages = [SystemMessage(content=SYSTEM_PROMPT)] + list(messages)
+
+    response = llm.invoke(messages)
     return {"messages": [response]}
+```
+
+#### Step 3: Update `requirements.txt`
+
+Because your agent now uses `ChatWxO` from the Agentic SDK, you must add `ibm-watsonx-orchestrate-sdk` to `agents/simple_llm_agent/requirements.txt`(**NOTE**: make sure the `langchain-core` and the `langchain-openai` version match with shown below):
+
+```text
+langgraph==1.1.10
+langgraph-checkpoint==4.0.3
+langchain-core==1.6.3
+langchain-openai==1.6.2
+ibm-watsonx-orchestrate-sdk
+```
+
+#### Step 4: Re-import the agent to wxO
+
+From your workspace root directory, re-import the updated agent package:
+
+```bash
+orchestrate agents import \
+  --package-root agents/simple_llm_agent \
+  --config-file agents/simple_llm_agent/agent.yaml
+```
+
+#### Step 5: Test with the CLI
+
+Test your agent using `orchestrate chat ask` (replace `<your_initials>` with your actual initials):
+
+```bash
+orchestrate chat ask --agent-name simple_llm_agent_<your_initials> "What is LangGraph and how does it work with watsonx Orchestrate?"
 ```
 
 ### ChatWxO supported operations
@@ -638,8 +677,6 @@ graph.add_conditional_edges("agent", should_continue, {"tools": "tools", "end": 
 graph.add_edge("tools", "agent")   # Loop back after tool execution
 ```
 
-> See the full implementation in [`agents/research_agent/agent.py`](agents/research_agent/agent.py).
-
 ---
 
 ## Section 6 — Injecting Credentials with wxO Connections (10 min)
@@ -654,7 +691,7 @@ Never hardcode API keys in agent code. Use wxO Connections — credentials are i
 
 Example: connection `app_id = news_api`, `credential_type = api_key` → env var: `news_api_api_key`
 
-### Set up the connection
+### Set up the connection for News API
 
 ```bash
 # 1. Create the connection
