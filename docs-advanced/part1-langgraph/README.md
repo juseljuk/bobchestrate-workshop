@@ -460,18 +460,19 @@ Notice that `requirements.txt` still lists `langchain-openai` — not a Groq-spe
 
 ### Set up the wxO Connection
 
-> ⚠️ **Important:** Because multiple participants share the same watsonx Orchestrate instance, you **must add your initials** to the connection name (e.g. `groq_connection_JKJ`). The agent code must read from the corresponding connection key in `RunnableConfig`: `config.get("configurable", {}).get("credentials", {}).get("groq_connection_<your_initials>_api_key", "")`.
->
-> wxO automatically maps connection credentials to `config["configurable"]["credentials"]` following the naming convention: `<connection_app_id>_<credential_key>`.
-> For a connection `groq_connection_JKJ` with key `api_key`, the key is `groq_connection_JKJ_api_key`.
+> ⚠️ **Shared environment:** Because multiple participants share the same watsonx Orchestrate instance, you **must add your initials** to the connection name (e.g. `groq_connection_jkj`). wxO automatically maps credentials into `config["configurable"]["credentials"]` using the naming convention `<connection_app_id>_<credential_key>` — so a connection named `groq_connection_jkj` with key `api_key` is read as `groq_connection_jkj_api_key`.
 
-Create and configure your connection in wxO (replace `<your_initials>` with your actual initials):
+Run the following commands to create and configure the connection (replace `<your_initials>` with your actual initials and make sure `GROQ_API_KEY` is exported in your shell):
 
 ```bash
+# 1. Create the connection
 orchestrate connections add -a groq_connection_<your_initials>
-orchestrate connections configure -a groq_connection_<your_initials> --env draft -t team -k key_value
-orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft \
-  -e api_key=$GROQ_API_KEY
+
+# 2. Configure it as api_key kind
+orchestrate connections configure -a groq_connection_<your_initials> --env draft -t team -k api_key
+
+# 3. Set the credential
+orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft --api-key "$GROQ_API_KEY"
 ```
 
 ### Rename the agent to avoid conflicts
@@ -643,51 +644,145 @@ Run `orchestrate models list` to see all available models in your environment.
 
 ---
 
-## Section 5 — Adding Tools to the Graph (10 min)
+## Section 5 — Adding Tools to the Graph (15 min)
 
 ### LangChain `@tool` vs wxO `@tool`
 
-|         | LangChain`@tool`                                         | wxO`@tool`                                                     |
-| ------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
-| Import  | `from langchain_core.tools import tool`                  | `from ibm_watsonx_orchestrate.agent_builder.tools import tool` |
-| Purpose | Defines a tool callable by an LLM inside a LangGraph graph | Defines a standalone tool imported into wxO for native agents    |
-| Lives   | Inside your agent package, called by the graph             | Imported separately with`orchestrate tools import`             |
+|         | LangChain `@tool`                                          | wxO `@tool`                                                    |
+| ------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
+| Import  | `from langchain_core.tools import tool as lc_tool`          | `from ibm_watsonx_orchestrate.agent_builder.tools import tool` |
+| Purpose | Defines a tool callable by an LLM inside a LangGraph graph | Defines a standalone tool imported into wxO for native agents  |
+| Lives   | Inside your agent package, called by the graph             | Imported separately with `orchestrate tools import`            |
 
-Use **LangChain** `@tool` for tools inside your LangGraph agent.
+Use **LangChain** `@tool` for tools inside your LangGraph agent. Because they live directly in your Python code bundle, no separate `orchestrate tools import` is needed.
 
-### The standard ReAct node pattern
+> ⚠️ **Important Platform Clarification:**
+> There is **no direct mechanism** in the watsonx Orchestrate Agentic SDK or `ChatWxO` to automatically discover, bind, or execute tools already deployed in the wxO environment catalog (`orchestrate tools list`).
+> - **In Native Agents (`kind: native`)**: The wxO platform runtime automatically executes catalog tools declared in `agent.yaml`.
+> - **In LangGraph Agents (`kind: agent`)**: LangGraph is the execution engine. Tools must be declared as LangChain `@lc_tool` functions within your agent's code bundle, bound with `llm.bind_tools()`, and executed by LangGraph's `ToolNode`. If you need to access a deployed enterprise service, your `@lc_tool` must make an HTTP/API call to that service directly.
 
-```python
-from langchain_core.tools import tool as lc_tool
-from langgraph.prebuilt import ToolNode
+### The ReAct Pattern in LangGraph
 
-@lc_tool
-def my_tool(query: str) -> str:
-    """Tool description — the LLM reads this to decide when to call it."""
-    return "result"
+In a ReAct (Reason + Act) loop, the LLM decides whether to call a tool or reply to the user:
 
-TOOLS = [my_tool]
-
-def agent_node(state, config):
-    llm = ChatWxO.from_runnable_config(config=config, model="groq/openai/gpt-oss-120b")
-    llm_with_tools = llm.bind_tools(TOOLS)
-    response = llm_with_tools.invoke(state["messages"])
-    return {"messages": [response]}
-
-def should_continue(state) -> Literal["tools", "end"]:
-    last = state["messages"][-1]
-    if hasattr(last, "tool_calls") and last.tool_calls:
-        return "tools"
-    return "end"
-
-# In create_agent():
-graph.add_node("agent", lambda state: agent_node(state, config))
-graph.add_node("tools", ToolNode(TOOLS))
-graph.add_conditional_edges("agent", should_continue, {"tools": "tools", "end": END})
-graph.add_edge("tools", "agent")   # Loop back after tool execution
+```
+          ┌────────────────────────────────────────┐
+          │                                        ▼
+START ──► llm ──► [should_continue?] ──(tools)──► tools
+                    │
+                 (__end__)
+                    │
+                    ▼
+                   END
 ```
 
-> See the full implementation in [`agents/research_agent/agent.py`](agents/research_agent/agent.py).
+Let's enhance your `simple_llm_agent` with a built-in Python tool `get_current_utc_time` using the Python standard library.
+
+### Hands-on: Add a tool to `simple_llm_agent`
+
+#### Step 1: Update `agents/simple_llm_agent/agent.py`
+
+Open `agents/simple_llm_agent/agent.py` and apply the following changes:
+
+1. **Add the required imports** at the top of the file:
+
+```python
+from datetime import datetime, timezone
+from typing import Annotated, List, Literal, TypedDict
+from langchain_core.tools import tool as lc_tool
+from langgraph.prebuilt import ToolNode
+```
+
+2. **Define the tool and the tools list**:
+
+```python
+@lc_tool
+def get_current_utc_time() -> str:
+    """Get the current live date and time in UTC.
+    
+    Use this tool whenever the user asks for the current time, date, day of the week,
+    or needs time-sensitive calculations.
+    """
+    now = datetime.now(timezone.utc)
+    return now.strftime("%Y-%m-%d %H:%M:%S UTC (%A)")
+
+TOOLS = [get_current_utc_time]
+```
+
+3. **Update `llm_node` to bind the tools to `ChatWxO`**:
+
+```python
+def llm_node(state: AgentState, config: RunnableConfig) -> AgentState:
+    """Call the LLM with tools bound using ChatWxO."""
+    llm = ChatWxO.from_runnable_config(
+        config=config,
+        model="groq/openai/gpt-oss-120b",
+    )
+    llm_with_tools = llm.bind_tools(TOOLS)
+
+    messages = state["messages"]
+    if not messages or not isinstance(messages[0], SystemMessage):
+        messages = [SystemMessage(content=SYSTEM_PROMPT)] + list(messages)
+
+    response = llm_with_tools.invoke(messages)
+    return {"messages": [response]}
+```
+
+4. **Add the `should_continue` routing function and update `create_agent()` graph**:
+
+```python
+def should_continue(state: AgentState) -> Literal["tools", "__end__"]:
+    """Route to 'tools' if the LLM generated tool calls, otherwise finish."""
+    last_message = state["messages"][-1]
+    if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+        return "tools"
+    return "__end__"
+
+
+def create_agent(config: RunnableConfig) -> StateGraph:
+    """Factory function creating the ReAct agent graph."""
+    graph = StateGraph(AgentState)
+
+    graph.add_node("llm", lambda state: llm_node(state, config))
+    graph.add_node("tools", ToolNode(TOOLS))
+
+    graph.add_edge(START, "llm")
+    graph.add_conditional_edges(
+        "llm",
+        should_continue,
+        {"tools": "tools", "__end__": END}
+    )
+    graph.add_edge("tools", "llm")   # Loop back to LLM after tool execution
+
+    return graph
+```
+
+#### Step 2: Re-import the agent to wxO
+
+From your workspace root directory:
+
+```bash
+orchestrate agents import \
+  --package-root agents/simple_llm_agent \
+  --config-file agents/simple_llm_agent/agent.yaml
+```
+
+#### Step 3: Test with the CLI
+
+Ask the agent for the current date and time (replace `<your_initials>` with your actual initials):
+
+```bash
+orchestrate chat ask --agent-name simple_llm_agent_<your_initials> "What is the exact current date, time, and day of the week in UTC?"
+```
+
+The LLM will automatically invoke the `get_current_utc_time` tool, receive the exact live timestamp, and synthesize a clear response for you.
+
+### What you learned
+
+- **`llm.bind_tools(TOOLS)`** binds LangChain tool definitions directly to `ChatWxO` so the model knows their schemas and when to call them
+- **`ToolNode(TOOLS)`** from `langgraph.prebuilt` automatically handles executing the requested tool calls and returning `ToolMessage` objects
+- **ReAct cycle (`tools -> llm`)**: allows the model to receive the tool results and form a natural language answer
+- LangChain tools run directly inside the agent container — no external tool registrations needed
 
 ---
 
@@ -701,20 +796,29 @@ Never hardcode API keys in agent code. Use wxO Connections — credentials are i
 {app_id}_{credential_type}
 ```
 
-Example: connection `app_id = news_api`, `credential_type = api_key` → env var: `news_api_api_key`
+Example: connection `app_id = news_api_abc`, `credential_type = api_key` → env var: `news_api_abc_api_key`
 
-### Set up the connection
+### Set up the connection for News API
+
+> ⚠️ **Shared environment:** All workshop participants use the same wxO instance. **Suffix every connection name with your initials** (e.g. `news_api_abc`) so your connection does not collide with anyone else's.
 
 ```bash
+# Replace <your_initials> with your own initials throughout (e.g. news_api_abc)
+
 # 1. Create the connection
-orchestrate connections add -a news_api
+orchestrate connections add -a news_api_<your_initials>
 
-# 2. Configure it as key_value (supports arbitrary key=value pairs)
-orchestrate connections configure -a news_api --env draft -t team -k key_value
+# 2. Configure it as api_key kind
+orchestrate connections configure -a news_api_<your_initials> --env draft -t team -k api_key
 
-# 3. Set the credential (reads from your local env var)
-orchestrate connections set-credentials -a news_api --env draft -e api_key=$NEWS_API_KEY
+# 3. Set the credential (your News API key is already provided)
+orchestrate connections set-credentials -a news_api_<your_initials> --env draft --api-key "$NEWS_API_KEY"
 ```
+
+> **Workshop note:** Your News API key is already provided. Export it in your shell before running step 3:
+> ```bash
+> export NEWS_API_KEY=your_key_here
+> ```
 
 ### Declare it in agent.yaml (auto-maps on import, ADK 2.11.0+)
 
@@ -722,24 +826,139 @@ orchestrate connections set-credentials -a news_api --env draft -e api_key=$NEWS
 connections:
   global_requirements:
     required_app_ids:
-      - news_api
+      - news_api_<your_initials>
 ```
 
 ### Read it inside the agent
 
-```python
-import os
+The preferred pattern reads credentials from the `RunnableConfig` — the same object wxO injects into `create_agent()`. Pass it into your tool so the lookup is explicit and testable:
 
-api_key = os.environ.get("news_api_api_key", "")
+```python
+credentials = config.get("configurable", {}).get("credentials", {})
+api_key = credentials.get("news_api_<your_initials>_api_key", "")
 if not api_key:
-    return "Connection not configured."
+    return "News API connection is not configured."
 ```
 
 ### Manual association (if not declared in agent.yaml)
 
 ```bash
-orchestrate agents connect -n research_agent -a news_api
+orchestrate agents connect -n research_agent -a news_api_<your_initials>
 ```
+
+---
+
+### Hands-on: Add a News search tool to `simple_llm_agent`
+
+Now wire everything together — add a `search_news` LangChain tool that reads the injected credential and calls the [NewsAPI `/v2/everything` endpoint](https://newsapi.org/docs/endpoints/everything).
+
+#### Step 1: Add `requests` to `requirements.txt`
+
+Open `agents/simple_llm_agent/requirements.txt` and add:
+
+```
+requests
+```
+
+#### Step 2: Add the `search_news` tool to `agent.py`
+
+Open `agents/simple_llm_agent/agent.py` and make the following changes:
+
+1. **Add the `requests` import** at the top of the file alongside the existing imports:
+
+```python
+import requests
+```
+
+2. **Define the `search_news` tool** (add it next to the existing `get_current_utc_time` tool).
+
+   The tool accepts `config` as a second argument so it can read the injected credential directly from the `RunnableConfig`, which is the preferred pattern on wxO:
+
+```python
+@lc_tool
+def search_news(query: str, config: RunnableConfig) -> str:
+    """Search for recent news articles on a given topic using NewsAPI.
+
+    Use this tool when the user asks about recent events, news, or
+    anything that requires up-to-date information from the web.
+
+    Args:
+        query: The search query, e.g. "AI regulation Europe"
+    """
+    credentials = config.get("configurable", {}).get("credentials", {})
+    api_key = credentials.get("news_api_<your_initials>_api_key", "")
+    if not api_key:
+        return "News API connection is not configured."
+
+    url = "https://newsapi.org/v2/everything"
+    params = {
+        "q": query,
+        "sortBy": "publishedAt",
+        "pageSize": 5,
+        "language": "en",
+    }
+    headers = {"X-Api-Key": api_key}
+
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        response.raise_for_status()
+        articles = response.json().get("articles", [])
+        if not articles:
+            return f"No articles found for '{query}'."
+        lines = []
+        for a in articles:
+            lines.append(
+                f"- **{a['title']}** ({a['source']['name']}, {a['publishedAt'][:10]})\n  {a['url']}"
+            )
+        return "\n".join(lines)
+    except requests.RequestException as e:
+        return f"Failed to fetch news: {e}"
+```
+
+> **How `config` reaches the tool:** LangGraph's `ToolNode` automatically forwards the current `RunnableConfig` to any `@lc_tool` that declares a `config: RunnableConfig` parameter — no manual wiring needed.
+
+3. **Register the tool** — add `search_news` to the `TOOLS` list:
+
+```python
+TOOLS = [get_current_utc_time, search_news]
+```
+
+No other changes to `llm_node`, `should_continue`, or `create_agent` are needed — the new tool is automatically picked up because the LLM is already bound with `llm.bind_tools(TOOLS)` and the graph already contains a `ToolNode(TOOLS)`.
+
+#### Step 3: Update `agent.yaml` to declare the connection
+
+Add the `connections` block so wxO automatically injects the `news_api_<your_initials>` credential at import time:
+
+```yaml
+connections:
+  global_requirements:
+    required_app_ids:
+      - news_api_<your_initials>
+```
+
+#### Step 4: Re-import the agent to wxO
+
+```bash
+orchestrate agents import \
+  --package-root agents/simple_llm_agent \
+  --config-file agents/simple_llm_agent/agent.yaml
+```
+
+#### Step 5: Test with the CLI
+
+```bash
+orchestrate chat ask --agent-name simple_llm_agent_<your_initials> "What are the latest news about AI regulation?"
+```
+
+The agent will invoke `search_news`, retrieve the five most recent matching articles from NewsAPI, and summarise them for you.
+
+### What you learned
+
+- wxO **Connections** decouple secrets from code — credentials are injected into `config["configurable"]["credentials"]` at runtime, never hardcoded or stored in env vars you manage
+- Reading via `config.get("configurable", {}).get("credentials", {})` is the preferred pattern — it keeps credential access explicit, testable, and consistent with how `ChatWxO` and the Agentic SDK work
+- Declaring `connections.global_requirements.required_app_ids` in `agent.yaml` automates the binding step on every `agents import`
+- LangGraph's `ToolNode` forwards `RunnableConfig` automatically to any `@lc_tool` that declares `config: RunnableConfig` — no extra plumbing required
+- Adding a new LangChain `@lc_tool` only requires: define the function → append to `TOOLS` — the rest of the graph (`llm_node`, `ToolNode`, routing) is unchanged
 
 ---
 
