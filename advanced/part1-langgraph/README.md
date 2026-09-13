@@ -1079,7 +1079,9 @@ The agent should correctly answer **"Your name is Alex."** — proving the check
 
 ## Section 8 — Cross-Session Memory with the Agentic SDK (10 min)
 
-Checkpointers handle within-session state. For facts that must survive across completely separate conversations, use the **Agentic SDK memory API**. This is user-scoped semantic memory — not graph state.
+Checkpointers handle within-session state. For facts that must survive across completely separate conversations, use the **Agentic SDK memory API**. This is **user-scoped semantic memory** — not graph state.
+
+> 💡 **What "user-scoped" means:** Memories are stored against the **user's identity**, not against any particular agent. This is intentional — it means a user's preferences, profile facts, and past outcomes are available to *every* agent they interact with, enabling personalisation that travels with the user across your entire wxO deployment. Agent A can write a memory; Agent B (talking to the same user) can read it. The flip side is that `delete_all()` wipes the *entire* memory store for that user — across all agents — so use it with care.
 
 ### How it works
 
@@ -1125,7 +1127,7 @@ if results.results:
 | `outcome`        | Task results, decisions made               |
 | `tool`           | Tool usage patterns, procedures            |
 
-> ⚠️ **Memory is user-scoped, not agent-scoped.** One user's memories are shared across all agents. `delete_all()` deletes ALL memory for that user.
+> ⚠️ **`delete_all()` deletes ALL memory for that user across every agent** — not just the agent that calls it. Because memories are user-scoped and shared, this is a destructive operation. Prefer filtering by `memory_type` for targeted cleanup.
 
 ### Context compression (bonus)
 
