@@ -499,7 +499,7 @@ api_key = credentials.get("groq_connection_<your_initials>_api_key", "")
 
 ### Test locally
 
-Run from the workspace root. ⚠️ **Important:** make sure that the agent.py is executable (ask Bob to help if you need to
+Run from the workspace root. ⚠️ **Important:** make sure that the agent.py is executable (ask Bob to help if you need to).
 
 ```bash
 cd agents/simple_llm_agent
@@ -599,7 +599,15 @@ langchain-openai==1.6.2
 ibm-watsonx-orchestrate-sdk
 ```
 
-#### Step 4: Re-import the agent to wxO
+#### Step 4: Install the SDK in your local environment
+
+The `ibm-watsonx-orchestrate-sdk` package needs to be available locally so that the import resolves all the requirements:
+
+```bash
+pip install ibm-watsonx-orchestrate-sdk
+```
+
+#### Step 5: Re-import the agent to wxO
 
 From your workspace root directory, re-import the updated agent package:
 
@@ -609,7 +617,7 @@ orchestrate agents import \
   --config-file agents/simple_llm_agent/agent.yaml
 ```
 
-#### Step 5: Test with the CLI
+#### Step 6: Test with the CLI
 
 Test your agent using `orchestrate chat ask` (replace `<your_initials>` with your actual initials):
 

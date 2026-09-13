@@ -602,7 +602,15 @@ langchain-openai==0.3.22
 ibm-watsonx-orchestrate-sdk
 ```
 
-#### Step 4: Re-import the agent to wxO
+#### Step 4: Install the SDK in your local environment
+
+The `ibm-watsonx-orchestrate-sdk` package needs to be available locally so that the import resolves when you run or test the agent outside of wxO:
+
+```bash
+pip install ibm-watsonx-orchestrate-sdk
+```
+
+#### Step 5: Re-import the agent to wxO
 
 From your workspace root directory, re-import the updated agent package:
 
@@ -612,7 +620,7 @@ orchestrate agents import \
   --config-file agents/simple_llm_agent/agent.yaml
 ```
 
-#### Step 5: Test with the CLI
+#### Step 6: Test with the CLI
 
 Test your agent using `orchestrate chat ask` (replace `<your_initials>` with your actual initials):
 
