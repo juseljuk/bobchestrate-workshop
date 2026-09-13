@@ -871,7 +871,7 @@ import requests
 
 2. **Define the `search_news` tool** (add it next to the existing `get_current_utc_time` tool).
 
-   The tool accepts `config` as a second argument so it can read the injected credential directly from the `RunnableConfig`, which is the preferred pattern on wxO:
+   The tool accepts `config` as a second argument so it can read the injected credential directly from the `RunnableConfig`, which is the preferred pattern on wxO (**NOTE**: Remember to replace your initials to <your_initials> in the code):
 
 ```python
 @lc_tool
@@ -924,18 +924,7 @@ TOOLS = [get_current_utc_time, search_news]
 
 No other changes to `llm_node`, `should_continue`, or `create_agent` are needed — the new tool is automatically picked up because the LLM is already bound with `llm.bind_tools(TOOLS)` and the graph already contains a `ToolNode(TOOLS)`.
 
-#### Step 3: Update `agent.yaml` to declare the connection
-
-Add the `connections` block so wxO automatically injects the `news_api_<your_initials>` credential at import time:
-
-```yaml
-connections:
-  global_requirements:
-    required_app_ids:
-      - news_api_<your_initials>
-```
-
-#### Step 4: Re-import the agent to wxO
+#### Step 3: Re-import the agent to wxO
 
 ```bash
 orchestrate agents import \
@@ -943,7 +932,7 @@ orchestrate agents import \
   --config-file agents/simple_llm_agent/agent.yaml
 ```
 
-#### Step 5: Test with the CLI
+#### Step 4: Test with the CLI
 
 ```bash
 orchestrate chat ask --agent-name simple_llm_agent_<your_initials> "What are the latest news about AI regulation?"
@@ -974,7 +963,7 @@ Checkpointers persist the `messages` state between turns **within a single sessi
 | `postgres` | ✅ Yes                       | `langgraph-checkpoint-postgres` | Production              |
 | *(none)*   | ❌                           | None                              | Fully stateless agents  |
 
-### Configure in agent.yaml
+### How to configure in agent.yaml
 
 ```yaml
 # Memory (development)
@@ -991,7 +980,7 @@ checkpointer:
   connection_string_key: db_connection_string
 ```
 
-### PostgreSQL setup
+### How to do PostgreSQL setup
 
 ```bash
 # Create a key_value connection for the DB connection string
@@ -1015,6 +1004,76 @@ connections:
 ```
 
 > ⚠️ **Reminder:** The `messages`-only limitation still applies. Checkpointers persist `messages` across turns, but your own custom state fields still reset on every new invocation from wxO.
+
+---
+
+### Hands-on: Enable multi-turn memory in `simple_llm_agent`
+
+The `memory` checkpointer requires **no extra dependencies and no connection setup** — it's the fastest way to prove that state persistence works.
+
+#### Step 1: Add the checkpointer to `agent.yaml`
+
+Open `agents/simple_llm_agent/agent.yaml` and add the `checkpointer` block:
+
+```yaml
+checkpointer:
+  type: memory
+```
+
+The full `agent.yaml` should now look like this:
+
+```yaml
+spec_version: v1
+kind: agent
+name: simple_llm_agent_<your_initials>
+title: Simple LLM Agent
+framework: langgraph
+
+deployment:
+  code_bundle:
+    entrypoint: "agent:create_agent"
+
+checkpointer:
+  type: memory
+
+connections:
+  global_requirements:
+    required_app_ids:
+      - groq_connection_<your_initials>
+      - news_api_<your_initials>
+```
+
+#### Step 2: Re-import the agent to wxO
+
+```bash
+orchestrate agents import \
+  --package-root agents/simple_llm_agent \
+  --config-file agents/simple_llm_agent/agent.yaml
+```
+
+#### Step 3: Test multi-turn memory with the CLI
+
+Use `orchestrate chat` (interactive mode) — it automatically creates and maintains a thread across all your messages in the session:
+
+```bash
+orchestrate chat ask --agent-name simple_llm_agent_<your_initials>
+```
+
+Then in the interactive prompt, send these two messages one after the other:
+
+```
+You: Hi, my name is Alex.
+You: What is my name?
+```
+
+The agent should correctly answer **"Your name is Alex."** — proving the checkpointer remembered the previous turn. Start a new `orchestrate chat` session and ask again to see a fresh thread that has no memory of Alex.
+
+### What you learned
+
+- Adding `checkpointer: type: memory` to `agent.yaml` is all that's needed — no code changes required
+- wxO manages the checkpointer lifecycle; your `create_agent()` function stays unchanged
+- `orchestrate chat` (interactive mode) automatically maintains a thread across all turns in the session
+- `memory` checkpointer is sufficient for workshop testing; swap to `sqlite` or `postgres` for production use without any agent code changes
 
 ---
 
