@@ -468,7 +468,7 @@ orchestrate connections add -a groq_connection_<your_initials>
 orchestrate connections configure -a groq_connection_<your_initials> --env draft -t team -k api_key
 
 # 3. Set the credential
-orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft --api-key "$GROQ_API_KEY"
+orchestrate connections set-credentials -a groq_connection_<your_initials> --env draft --api-key=$GROQ_API_KEY
 ```
 
 Before importing, confirm that your `agents/simple_llm_agent/agent.yaml` has your initials in the `name` and in the `connection` reference:
@@ -794,7 +794,7 @@ Never hardcode API keys in agent code. Use wxO Connections — credentials are i
 {app_id}_{credential_type}
 ```
 
-Example: connection `app_id = news_api_abc`, `credential_type = api_key` → env var: `news_api_abc_api_key`
+Example: connection `app_id = news_api_jkj`, `credential_type = api_key` → env var: `news_api_jkj_api_key`
 
 ### Set up the connection for News API
 
@@ -810,7 +810,7 @@ orchestrate connections add -a news_api_<your_initials>
 orchestrate connections configure -a news_api_<your_initials> --env draft -t team -k api_key
 
 # 3. Set the credential (your News API key is already provided)
-orchestrate connections set-credentials -a news_api_<your_initials> --env draft --api-key "$NEWS_API_KEY"
+orchestrate connections set-credentials -a news_api_<your_initials> --env draft --api-key=$NEWS_API_KEY
 ```
 
 > **Workshop note:** Your News API key is already provided. Export it in your shell before running step 3:
