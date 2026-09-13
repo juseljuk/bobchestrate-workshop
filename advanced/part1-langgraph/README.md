@@ -1204,21 +1204,6 @@ From the orchestrator's perspective, the LangGraph agent is indistinguishable fr
 
 ---
 
-## Exercises
-
-See [`exercises.md`](exercises.md) for stretch challenges.
-
----
-
-## Import Everything
-
-```bash
-cd advanced/part1-langgraph
-bash import-all.sh
-```
-
----
-
 ## Key Commands Reference
 
 ```bash
