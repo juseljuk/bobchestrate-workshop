@@ -10,7 +10,7 @@
   /* ── Game unlock URL ──────────────────────────────────── */
   // Update this to the Code Engine URL after deploying game/index.html.
   // This is the only line instructors need to change before each workshop run.
-  var GAME_URL = 'https://your-app.example.appdomain.cloud';
+  var GAME_URL = 'https://bobchestrate-coins.27bat83a6dow.eu-de.codeengine.appdomain.cloud';
 
   /* ── Storage helpers ──────────────────────────────────── */
   var STORAGE_KEY = 'wxo_quiz_results_advanced';
@@ -145,11 +145,13 @@
       }
 
       var scoreBannerHTML = '';
+      var gameUnlockHTML = '';
       if (state.submitted) {
         var score = state.answers.reduce(function (acc, ans, idx) {
           return acc + (ans === questions[idx].correctIdx ? 1 : 0);
         }, 0);
         var passed = score >= Math.ceil(questions.length * 0.8);
+        var perfect = score === questions.length;
         var quizEntry = QUIZ_REGISTRY.find(function (r) { return r.id === config.id; });
         var quizLabel = quizEntry ? quizEntry.label : config.id;
         var bCls = passed ? 'quiz-score-banner pass show' : 'quiz-score-banner retry show';
@@ -163,6 +165,18 @@
           '<div class="quiz-score-banner-title">' + bTitle + '</div>' +
           '<div class="quiz-score-banner-body">' + bBody + '</div>' +
           '</div>';
+
+        if (perfect) {
+          gameUnlockHTML =
+            '<div class="game-unlock-panel unlocked">' +
+              '<div class="game-unlock-icon">🎮</div>' +
+              '<div class="game-unlock-body">' +
+                '<strong class="game-unlock-title">Perfect score! You unlocked Bobchestrate Coins!</strong>' +
+                '<p class="game-unlock-desc">5 out of 5 — flawless. Your arcade reward awaits.</p>' +
+              '</div>' +
+              '<a href="' + GAME_URL + '" target="_blank" rel="noopener" class="game-unlock-btn">Play now →</a>' +
+            '</div>';
+        }
       }
 
       var navDisabled = !revealed ? ' disabled' : '';
@@ -206,6 +220,7 @@
         '</div>' +
         '<div class="quiz-actions">' + actionBtns + '</div>' +
         scoreBannerHTML +
+        gameUnlockHTML +
         '</div>';
     }
 

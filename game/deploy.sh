@@ -13,6 +13,7 @@
 #   CE_PROJECT    Code Engine project name       (default: bobchestrate-workshop)
 #   CE_APP_NAME   Code Engine app name           (default: bobchestrate-coins)
 #   CE_REGION     IBM Cloud region               (default: eu-de)
+#   CE_RESOURCE_GROUP  IBM Cloud resource group  (default: showcase-ai-assistants)
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
@@ -23,6 +24,7 @@ IMAGE_NAME="${IMAGE_NAME:-bobchestrate-coins}"
 CE_PROJECT="${CE_PROJECT:-bobchestrate-workshop}"
 CE_APP_NAME="${CE_APP_NAME:-bobchestrate-coins}"
 CE_REGION="${CE_REGION:-eu-de}"
+CE_RESOURCE_GROUP="${CE_RESOURCE_GROUP:-showcase-ai-assistants}"
 IBMCLOUD_API_KEY="${IBMCLOUD_API_KEY:?ERROR: IBMCLOUD_API_KEY env var is required}"
 
 FULL_IMAGE="${ICR_REGION}/${ICR_NAMESPACE}/${IMAGE_NAME}:latest"
@@ -38,11 +40,12 @@ echo "  Image    : ${IMAGE_NAME}:latest"
 echo "  Project  : ${CE_PROJECT}"
 echo "  App      : ${CE_APP_NAME}"
 echo "  Region   : ${CE_REGION}"
+echo "  Res Group: ${CE_RESOURCE_GROUP}"
 echo ""
 
 # ── Step 1: IBM Cloud login ───────────────────────────────────────────────────
 echo "▶  Logging in to IBM Cloud (${CE_REGION})..."
-ibmcloud login --apikey "${IBMCLOUD_API_KEY}" -r "${CE_REGION}" -q
+ibmcloud login --apikey "${IBMCLOUD_API_KEY}" -r "${CE_REGION}" -g "${CE_RESOURCE_GROUP}" -q
 
 # ── Step 2: Container Registry login ─────────────────────────────────────────
 echo "▶  Setting Container Registry region to ${CE_REGION}..."
@@ -51,15 +54,30 @@ echo "▶  Logging in to Container Registry..."
 ibmcloud cr login
 
 # ── Step 3: Build and push image ──────────────────────────────────────────────
-echo "▶  Building Docker image..."
-docker build -t "${FULL_IMAGE}" "${SCRIPT_DIR}"
-
-echo "▶  Pushing image to ${ICR_REGION}..."
-docker push "${FULL_IMAGE}"
+echo "▶  Building and pushing Docker image (linux/amd64)..."
+docker buildx build \
+  --platform linux/amd64 \
+  --push \
+  -t "${FULL_IMAGE}" \
+  "${SCRIPT_DIR}"
 
 # ── Step 4: Target Code Engine project ────────────────────────────────────────
 echo "▶  Targeting Code Engine project '${CE_PROJECT}'..."
 ibmcloud ce project select --name "${CE_PROJECT}"
+
+# ── Step 4b: Ensure ICR pull secret exists in the CE project ─────────────────
+CE_REGISTRY_SECRET="${CE_REGISTRY_SECRET:-icr-pull-secret}"
+echo "▶  Ensuring registry pull secret '${CE_REGISTRY_SECRET}'..."
+if ! ibmcloud ce registry get --name "${CE_REGISTRY_SECRET}" > /dev/null 2>&1; then
+  echo "   Secret not found — creating from current API key..."
+  ibmcloud ce registry create \
+    --name "${CE_REGISTRY_SECRET}" \
+    --server "${ICR_REGION}" \
+    --username "iamapikey" \
+    --password "${IBMCLOUD_API_KEY}"
+else
+  echo "   Secret already exists — skipping creation."
+fi
 
 # ── Step 5: Create or update Code Engine application ─────────────────────────
 echo "▶  Deploying application '${CE_APP_NAME}'..."
@@ -69,20 +87,56 @@ if ibmcloud ce application get --name "${CE_APP_NAME}" > /dev/null 2>&1; then
   ibmcloud ce application update \
     --name "${CE_APP_NAME}" \
     --image "${FULL_IMAGE}" \
+    --registry-secret "${CE_REGISTRY_SECRET}" \
     --min-scale 0 \
     --max-scale 3 \
-    --port 8080 \
-    --wait
+    --port 8080
 else
   echo "   Application does not exist — creating..."
   ibmcloud ce application create \
     --name "${CE_APP_NAME}" \
     --image "${FULL_IMAGE}" \
+    --registry-secret "${CE_REGISTRY_SECRET}" \
     --min-scale 0 \
     --max-scale 3 \
-    --port 8080 \
-    --wait
+    --port 8080
 fi
+
+# ── Wait for ready (with timeout) ─────────────────────────────────────────────
+echo "▶  Waiting for application to become ready..."
+TIMEOUT=120
+ELAPSED=0
+INTERVAL=5
+while true; do
+  STATUS=$(ibmcloud ce application get --name "${CE_APP_NAME}" --output json 2>/dev/null \
+    | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+conditions = d.get('status', {}).get('conditions', [])
+ready = next((c for c in conditions if c.get('type') == 'Ready'), {})
+print(ready.get('status', 'Unknown'))
+" 2>/dev/null || echo "Unknown")
+
+  if [ "${STATUS}" = "True" ]; then
+    echo "   ✅  Application is ready."
+    break
+  elif [ "${STATUS}" = "False" ]; then
+    echo "   ❌  Application failed to become ready. Run:"
+    echo "       ibmcloud ce application get -n ${CE_APP_NAME}"
+    echo "       ibmcloud ce application logs -n ${CE_APP_NAME}"
+    exit 1
+  fi
+
+  if [ "${ELAPSED}" -ge "${TIMEOUT}" ]; then
+    echo "   ⚠️   Timed out after ${TIMEOUT}s. Check status manually:"
+    echo "       ibmcloud ce application get -n ${CE_APP_NAME}"
+    break
+  fi
+
+  echo "   ... still waiting (${ELAPSED}s elapsed, status: ${STATUS})"
+  sleep "${INTERVAL}"
+  ELAPSED=$((ELAPSED + INTERVAL))
+done
 
 # ── Step 6: Print the public URL ──────────────────────────────────────────────
 echo ""
