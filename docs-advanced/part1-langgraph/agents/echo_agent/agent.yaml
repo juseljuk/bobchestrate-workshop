@@ -1,0 +1,25 @@
+spec_version: v1
+kind: agent
+name: echo_agent
+title: Echo Agent
+description: |
+  A minimal LangGraph agent that echoes the user's message with a timestamp.
+  Used to verify the LangGraph packaging and import pipeline end to end.
+
+# The LangGraph framework identifier — required for all LangGraph package imports
+framework: langgraph
+
+deployment:
+  code_bundle:
+    # Format: "module_filename:factory_function_name"
+    # module_filename = agent.py (without .py)
+    # factory_function_name = create_agent
+    entrypoint: "agent:create_agent"
+
+# No checkpointer — stateless agent resets on every turn.
+# Add checkpointer: { type: memory } to persist state within a session.
+
+# Connections required by this agent (none for the echo agent)
+# connections:
+#   global_requirements:
+#     required_app_ids: []

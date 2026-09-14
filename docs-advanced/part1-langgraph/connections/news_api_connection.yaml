@@ -1,0 +1,6 @@
+spec_version: v1
+kind: connection
+name: news_api
+description: |
+  API key connection for the external news service used by the research agent.
+  Credentials are injected at runtime as the environment variable: news_api_api_key

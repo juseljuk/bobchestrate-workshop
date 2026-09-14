@@ -1,14 +1,85 @@
 # Advanced Part 2: Event-Driven AI Agents with Confluent Cloud
 
 <p align="center">
-  <img src="../BWS_Advanced.png" alt="Bobchestrate Advanced Workshop Logo" width="700">
+  <img src="images/bobchestrate-confluent.png" alt="Bobchestrate Advanced Workshop Logo" width="700">
 </p>
 
 **Duration:** 75–90 minutes
 
 **Difficulty:** ⭐⭐⭐⭐ Advanced
 
-**Prerequisites:** Completed [Advanced Part 0 (Setup)](../part0-setup/README.md), wxO SaaS account active, ADK CLI working, Python 3.11+, `uv`, IBM Bob IDE. A **Confluent Cloud account** is required — [sign up for a free trial](https://www.confluent.io/confluent-cloud/tryfree/) before starting.
+---
+
+## Prerequisites Check
+
+Before starting, ensure you have:
+
+- [ ] Python 3.11–3.13 installed
+- [ ] `uv` installed
+- [ ] IBM Bob IDE installed
+- [ ] watsonx Orchestrate SaaS access (your instructor will provide environment/access information)
+- [ ] Confluent Cloud access (your instructor will provide environment/access information)
+
+### Step 1: Verify Python Installation
+
+Open a terminal and run:
+
+```bash
+python --version
+# or
+python3 --version
+```
+
+You need Python **3.11, 3.12, or 3.13**. If Python is not installed:
+
+=== "Mac"
+    ```bash
+    # Using Homebrew (recommended)
+    brew install python@3.11
+
+    # Or download the installer from:
+    # https://www.python.org/downloads/
+    ```
+
+=== "Windows"
+    ```powershell
+    # Using winget
+    winget install Python.Python.3.11
+
+    # Or download the installer from:
+    # https://www.python.org/downloads/
+    # ⚠️ Check "Add Python to PATH" during installation
+    ```
+
+---
+
+### Step 2: Verify uv Installation
+
+```bash
+uv --version
+```
+
+If `uv` is not installed:
+
+=== "Mac"
+    ```bash
+    # Using Homebrew
+    brew install uv
+
+    # Or using the official installer
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
+=== "Windows"
+    ```powershell
+    # Using winget
+    winget install astral-sh.uv
+
+    # Or using the official installer (PowerShell)
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    ```
+
+After installing, open a new terminal and run `uv --version` again to confirm.
 
 ---
 
@@ -22,19 +93,21 @@ Download [`bobchestrate-confluent.zip`](https://github.com/juseljuk/bobchestrate
 
 ### Step 2: Extract the zip
 
-=== "Mac / Linux"
-    ```bash
-    cd ~/Desktop
-    unzip ~/Downloads/bobchestrate-confluent.zip
-    # This creates: ~/Desktop/bobchestrate-confluent/
-    ```
+**Mac/Linux:**
 
-=== "Windows (PowerShell)"
-    ```powershell
-    cd $env:USERPROFILE\Desktop
-    Expand-Archive -Path "$env:USERPROFILE\Downloads\bobchestrate-confluent.zip" -DestinationPath .
-    # This creates: Desktop\bobchestrate-confluent\
-    ```
+```bash
+cd ~/Desktop
+unzip ~/Downloads/bobchestrate-confluent.zip
+# This creates: ~/Desktop/bobchestrate-confluent/
+```
+
+**Windows (PowerShell):**
+
+```powershell
+cd $env:USERPROFILE\Desktop
+Expand-Archive -Path "$env:USERPROFILE\Downloads\bobchestrate-confluent.zip" -DestinationPath .
+# This creates: Desktop\bobchestrate-confluent\
+```
 
 After extracting you will have:
 
@@ -56,8 +129,7 @@ bobchestrate-confluent/
         └── inventory-alert-demo-knowledge/   # Knowledge base documents
 ```
 
-!!! note
-    The `.bob` folder may appear hidden in your file explorer — that's expected. Bob IDE finds it automatically.
+> **Note:** The `.bob` folder may appear hidden in your file explorer — that's expected. Bob IDE finds it automatically.
 
 ### Step 3: Open the folder in Bob IDE
 
@@ -81,8 +153,7 @@ This installs `confluent-kafka`, `ibm-watsonx-orchestrate`, `python-dotenv`, and
 
 ### Step 5: Install the watsonx Orchestrate ADK VS Code Extension
 
-!!! warning
-    If you already have the extension installed, please reload the Bob IDE window first! This ensures the extension properly detects your new virtual environment. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux), type **"Developer: Reload Window"** and select it. The Bob IDE window reloads and the extension will restart. You can then proceed directly to Step 6. Do **NOT** use the extension to initialise the workspace!
+> ⚠️ **If you already have the extension installed**, please reload the Bob IDE window first! This ensures the extension properly detects your new virtual environment. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux), type **"Developer: Reload Window"** and select it. The Bob IDE window reloads and the extension will restart. You can then proceed directly to Step 6. Do **NOT** use the extension to initialise the workspace!
 
 1. Open the Extensions view in Bob IDE (`Cmd+Shift+X` on Mac / `Ctrl+Shift+X` on Windows/Linux)
 2. Search for **"watsonx Orchestrate"**
@@ -109,7 +180,7 @@ Leave all values as placeholders for now — you'll fill them in during the lab 
 
 ### Step 8: Verify your wxO ADK connection
 
-If you haven't connected the ADK to your wxO environment yet, do it now:
+If you haven't connected the ADK to your wxO environment yet, do it now (**NOTE**: your instructor will provide the needed instance URL and API Key):
 
 ```bash
 orchestrate env add -n confluent-lab -u <your-wxo-instance-url>
@@ -119,12 +190,13 @@ orchestrate agents list
 
 Any output (even an empty list) without an error means you're connected.
 
-!!! tip "Ready to start when:"
-    - [ ] `bobchestrate-confluent/` is open in Bob IDE and **WXO Agent Architect** mode appears in the mode selector
-    - [ ] `uv sync --locked` completed without errors
-    - [ ] `.env` file exists in `fashion-inventory-consumer/`
-    - [ ] `orchestrate agents list` returns without error
-    - [ ] You have a Confluent Cloud account (free trial is fine)
+### ✅ Ready to start when:
+
+- [ ] `bobchestrate-confluent/` is open in Bob IDE and **WXO Agent Architect** mode appears in the mode selector
+- [ ] `uv sync --locked` completed without errors
+- [ ] `.env` file exists in `fashion-inventory-consumer/`
+- [ ] `orchestrate agents list` returns without error
+- [ ] You have a Confluent Cloud account (free trial is fine)
 
 ---
 
@@ -136,23 +208,23 @@ The business scenario: a fashion retailer needs to detect when a product is sell
 
 ### What You'll Build
 
-| Component | Technology | What it does |
-|---|---|---|
-| **Kafka topics** | Confluent Cloud | Carry raw inventory events and velocity alerts |
-| **Velocity spike detector** | Flink SQL | Identifies products selling 3× faster than baseline |
-| **Python consumer** | confluent-kafka + httpx | Reads alerts, calls the wxO agent, publishes decisions |
-| **Inventory analysis agent** | watsonx Orchestrate | Reasons about urgency, recommends actions, outputs schema-valid JSON |
-| **Knowledge base** | wxO KB | Gives the agent decision rules, product history, and guardrails |
+| Component                          | Technology              | What it does                                                         |
+| ---------------------------------- | ----------------------- | -------------------------------------------------------------------- |
+| **Kafka topics**             | Confluent Cloud         | Carry raw inventory events and velocity alerts                       |
+| **Velocity spike detector**  | Flink SQL               | Identifies products selling 3× faster than baseline                 |
+| **Python consumer**          | confluent-kafka + httpx | Reads alerts, calls the wxO agent, publishes decisions               |
+| **Inventory analysis agent** | watsonx Orchestrate     | Reasons about urgency, recommends actions, outputs schema-valid JSON |
+| **Knowledge base**           | wxO KB                  | Gives the agent decision rules, product history, and guardrails      |
 
 All Python code is **pre-built** in `retail-inventory-optimization/`. Your job is to wire it together, configure the platforms, and use Bob to create the agent.
 
 ### Why This Pattern Matters
 
-| Use event-driven AI when... | Use a chat agent when... |
-|---|---|
-| Events happen continuously and at volume | A human initiates each request |
-| Decisions must be made in near-real-time | Response latency of seconds is acceptable |
-| AI enrichment feeds a downstream system | Output is for a human to read |
+| Use event-driven AI when...                | Use a chat agent when...                  |
+| ------------------------------------------ | ----------------------------------------- |
+| Events happen continuously and at volume   | A human initiates each request            |
+| Decisions must be made in near-real-time   | Response latency of seconds is acceptable |
+| AI enrichment feeds a downstream system    | Output is for a human to read             |
 | You need audit trails of every AI decision | Conversation context is the primary state |
 
 ---
@@ -161,15 +233,15 @@ All Python code is **pre-built** in `retail-inventory-optimization/`. Your job i
 
 Bob (in **WXO Agent Architect mode**) handles the watsonx Orchestrate side — creating tools, a knowledge base, and the agent. The prompts in Section 4 are written to be copy-pasted directly.
 
-| When you're on… | Ask Bob… |
-|---|---|
-| **Section 4.1 — Store Location Tool** | Copy-paste the prompt block provided in the section |
-| **Section 4.2 — Weather Forecast Tool** | Copy-paste the prompt block provided in the section |
-| **Section 4.3 — Knowledge Base** | Copy-paste the prompt block provided in the section |
-| **Section 4.4 — Agent** | Copy-paste the prompt block provided in the section |
-| **Section 5 — Consumer config** | `"Show me which environment variables the orchestrate_client.py needs"` |
-| **Debugging auth errors** | `"My WXO_API_KEY is correct but I get 401 — what could cause this?"` |
-| **Debugging schema validation** | `"The agent response is failing validation on reasoning — what does the schema require?"` |
+| When you're on…                               | Ask Bob…                                                                                    |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Section 4.1 — Store Location Tool**   | Copy-paste the prompt block provided in the section                                          |
+| **Section 4.2 — Weather Forecast Tool** | Copy-paste the prompt block provided in the section                                          |
+| **Section 4.3 — Knowledge Base**        | Copy-paste the prompt block provided in the section                                          |
+| **Section 4.4 — Agent**                 | Copy-paste the prompt block provided in the section                                          |
+| **Section 5 — Consumer config**         | `"Show me which environment variables the orchestrate_client.py needs"`                    |
+| **Debugging auth errors**                | `"My WXO_API_KEY is correct but I get 401 — what could cause this?"`                      |
+| **Debugging schema validation**          | `"The agent response is failing validation on reasoning — what does the schema require?"` |
 
 ---
 
@@ -195,6 +267,7 @@ This unlocks AI automation at scale. Inventory spikes, fraud signals, equipment 
 **Bridge (Python consumer)** — Connects the two worlds. Reads Kafka alerts, calls the agent synchronously, validates the response against a JSON schema, and publishes the enriched result to a new Kafka topic.
 
 ### What you learned
+
 - Event-driven AI separates fast pattern detection from slow AI reasoning
 - A Python bridge connects streaming infrastructure to an AI agent
 - Schema validation at the output boundary is essential for downstream reliability
@@ -244,11 +317,11 @@ This unlocks AI automation at scale. Inventory spikes, fraud signals, equipment 
 
 ### Three Kafka topics
 
-| Topic | Producer | Consumer | Contents |
-|---|---|---|---|
-| `fashion.inventory.events` | Python test producer | Flink SQL | Raw POS sale events |
-| `fashion.velocity.anomalies` | Flink SQL | Python consumer | Velocity spike alerts |
-| `fashion.agent.responses` | Python consumer | Downstream systems | AI-enriched decisions |
+| Topic                          | Producer             | Consumer           | Contents              |
+| ------------------------------ | -------------------- | ------------------ | --------------------- |
+| `fashion.inventory.events`   | Python test producer | Flink SQL          | Raw POS sale events   |
+| `fashion.velocity.anomalies` | Flink SQL            | Python consumer    | Velocity spike alerts |
+| `fashion.agent.responses`    | Python consumer      | Downstream systems | AI-enriched decisions |
 
 ### Key files in `retail-inventory-optimization/`
 
@@ -298,21 +371,21 @@ You need a Confluent Cloud environment with three topics, a Schema Registry, and
 
 In your cluster, navigate to **Topics** → **Add topic**. Create all three:
 
-| Topic name | Partitions |
-|---|---|
-| `fashion.inventory.events` | 3 |
-| `fashion.velocity.anomalies` | 3 |
-| `fashion.agent.responses` | 3 |
+| Topic name                     | Partitions |
+| ------------------------------ | ---------- |
+| `fashion.inventory.events`   | 3          |
+| `fashion.velocity.anomalies` | 3          |
+| `fashion.agent.responses`    | 3          |
 
 ### 2.3 Register JSON Schemas
 
 For each topic, attach the corresponding schema from `retail-inventory-optimization/fashion-inventory-setup/schemas/`:
 
-| Topic | Schema file |
-|---|---|
-| `fashion.inventory.events` | `fashion-inventory-event.schema.json` |
-| `fashion.velocity.anomalies` | `velocity-anomaly-alert.schema.json` |
-| `fashion.agent.responses` | `agent-response.schema.json` |
+| Topic                          | Schema file                             |
+| ------------------------------ | --------------------------------------- |
+| `fashion.inventory.events`   | `fashion-inventory-event.schema.json` |
+| `fashion.velocity.anomalies` | `velocity-anomaly-alert.schema.json`  |
+| `fashion.agent.responses`    | `agent-response.schema.json`          |
 
 **Steps for each topic:** click the topic → **Schema** tab → **Add schema** → paste the JSON content.
 
@@ -324,7 +397,7 @@ For each topic, attach the corresponding schema from `retail-inventory-optimizat
 
 ### 2.5 Deploy the velocity spike detector
 
-In the Flink SQL workspace, paste and run the query from [`retail-inventory-optimization/fashion-inventory-setup/sql/velocity_anomaly_detection.sql`](../../retail-inventory-optimization/fashion-inventory-setup/sql/velocity_anomaly_detection.sql).
+In the Flink SQL workspace, paste and run the query from `retail-inventory-optimization/fashion-inventory-setup/sql/velocity_anomaly_detection.sql`.
 
 The query monitors `fashion.inventory.events` and writes to `fashion.velocity.anomalies` whenever a SALE event removes 5 or more units:
 
@@ -352,16 +425,19 @@ WHERE eventType = 'SALE'
 You need **two sets** of API keys:
 
 **Kafka API key:**
+
 1. In your cluster → **API Keys** → **Create key** → Scope: `Global access`
 2. Save the **Key** and **Secret** — these are `KAFKA_API_KEY` / `KAFKA_API_SECRET`
 
 **Schema Registry API key:**
+
 1. In your environment (not cluster) → **Schema Registry** → **API credentials** → **Create key**
 2. Save the **Key** and **Secret** — these are `SCHEMA_REGISTRY_API_KEY` / `SCHEMA_REGISTRY_API_SECRET`
 
 Also note your **Schema Registry URL** from the Schema Registry panel — this is `SCHEMA_REGISTRY_URL`.
 
 ### What you learned
+
 - Confluent Cloud organises resources into environments → clusters → topics
 - Schema Registry enforces data contracts at the topic level
 - Flink SQL runs continuously as a deployed job — it's not a one-shot query
@@ -419,6 +495,7 @@ You should see velocity alert messages printed to stdout. Verify that `severity`
 If you see alerts flowing — **the Flink pipeline is working**. Stop the consumer with `Ctrl+C` and move to Section 4.
 
 ### What you learned
+
 - Flink SQL runs as a persistent job; events flow through as soon as they arrive on the input topic
 - The test CSV provides reproducible spike data to validate detection logic
 - Separating "does Flink work?" from "does the agent work?" makes debugging much easier
@@ -430,6 +507,7 @@ If you see alerts flowing — **the Flink pipeline is working**. Stop the consum
 This is the Bob-driven section. You'll create two tools, a knowledge base, and the agent — all by pasting prompts into Bob.
 
 **Switch to WXO Agent Architect mode before starting:**
+
 1. In Bob's chat panel, click the mode selector
 2. Select **WXO Agent Architect**
 
@@ -705,6 +783,7 @@ Get the agent ID for the "Fashion Inventory Alert Processor" agent. I need this 
 Copy the returned agent ID — this is your `WXO_AGENT_ID_OR_NAME` value for the next section.
 
 ### What you learned
+
 - Bob creates watsonx Orchestrate artifacts (tools, knowledge bases, agents) programmatically via the ADK MCP server
 - The `get_store_location` tool reads a CSV — no external API needed; data lives in the package root
 - The `get_weather_forecast` tool uses the free Open-Meteo API — no credentials needed
@@ -733,18 +812,19 @@ AGENT_RESPONSE_TOPIC=fashion.agent.responses
 
 **Where to find these values:**
 
-| Variable | Where to get it |
-|---|---|
-| `WXO_INSTANCE_URL` | wxO console → profile icon → Settings → API details → Service Instance URL |
-| `WXO_AGENT_ID_OR_NAME` | Returned by Bob in Section 4.6 |
-| `WXO_INSTANCE_CLOUD` | `ibmcloud` for TechZone/IBM Cloud instances; `aws` for AWS-deployed instances |
-| `WXO_API_KEY` | wxO console → Settings → API details → Generate API key |
+| Variable                 | Where to get it                                                                   |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `WXO_INSTANCE_URL`     | wxO console → profile icon → Settings → API details → Service Instance URL    |
+| `WXO_AGENT_ID_OR_NAME` | Returned by Bob in Section 4.6                                                    |
+| `WXO_INSTANCE_CLOUD`   | `ibmcloud` for TechZone/IBM Cloud instances; `aws` for AWS-deployed instances |
+| `WXO_API_KEY`          | wxO console → Settings → API details → Generate API key                        |
 
 ### 5.2 How the consumer uses these credentials
 
-[`orchestrate_client.py`](../../retail-inventory-optimization/fashion-inventory-consumer/orchestrate_client.py) exchanges your API key for a short-lived bearer token before each agent call (with caching to avoid unnecessary round-trips). It supports both IBM Cloud IAM (`iam.cloud.ibm.com`) and AWS IAM (`iam.platform.saas.ibm.com`) token endpoints, selected automatically based on `WXO_INSTANCE_CLOUD`.
+`orchestrate_client.py` exchanges your API key for a short-lived bearer token before each agent call (with caching to avoid unnecessary round-trips). It supports both IBM Cloud IAM (`iam.cloud.ibm.com`) and AWS IAM (`iam.platform.saas.ibm.com`) token endpoints, selected automatically based on `WXO_INSTANCE_CLOUD`.
 
 ### What you learned
+
 - The Python consumer does not use the ADK CLI — it calls the wxO REST API directly
 - `WXO_INSTANCE_CLOUD` controls which IAM endpoint the client uses for token exchange
 - Bearer tokens are cached and refreshed automatically; you don't need to manage expiry manually
@@ -809,13 +889,12 @@ Status        : Published successfully
 ------------------------------------------------
 ```
 
-Each stage maps to a phase in the pipeline: receive → invoke → validate → publish.
-
 ### 6.4 Verify in Confluent Cloud
 
 In the Confluent Cloud console, click `fashion.agent.responses` → **Messages**. You should see structured JSON messages appearing with the full agent decision payload.
 
 ### What you learned
+
 - The consumer processes one alert at a time, synchronously — agent latency is the bottleneck
 - Log output clearly separates the four pipeline stages, making debugging straightforward
 - Kafka offset commit happens only after the full pipeline (agent + validate + publish) succeeds
@@ -828,13 +907,13 @@ Now that the pipeline is running, let's look inside the Python code to understan
 
 ### 7.1 Alert → Agent request transformation
 
-[`agent_payload_builder.py`](../../retail-inventory-optimization/fashion-inventory-consumer/agent_payload_builder.py) transforms the raw Kafka alert into a structured dict the agent expects. It normalises timestamps (epoch ms → ISO 8601), handles missing fields with sensible defaults, and groups related fields into sub-objects (`velocityAnalysis`, `stockAnalysis`, `productDetails`).
+`agent_payload_builder.py` transforms the raw Kafka alert into a structured dict the agent expects. It normalises timestamps (epoch ms → ISO 8601), handles missing fields with sensible defaults, and groups related fields into sub-objects (`velocityAnalysis`, `stockAnalysis`, `productDetails`).
 
 The builder sets some fields to sentinel values like `"ACCELERATING"` or `None` — these are placeholders the agent is expected to refine using its knowledge base and tools.
 
 ### 7.2 Token management and response parsing
 
-[`orchestrate_client.py`](../../retail-inventory-optimization/fashion-inventory-consumer/orchestrate_client.py) does three important things:
+`orchestrate_client.py` does three important things:
 
 1. **Token caching** — bearer tokens are expensive to fetch; the client caches them and only refreshes when close to expiry (`TOKEN_EXPIRY_SKEW_SECONDS = 30`)
 2. **Markdown fence stripping** — LLMs sometimes wrap JSON in triple-backtick code blocks. `_strip_markdown_fence()` handles this silently
@@ -844,13 +923,13 @@ These three patterns make the integration robust to common LLM output quirks.
 
 ### 7.3 Schema validation
 
-[`response_validator.py`](../../retail-inventory-optimization/fashion-inventory-consumer/response_validator.py) validates every agent response against `agent-response.schema.json` using the `jsonschema` library (Draft 7). If validation fails, the exception propagates to the main loop — the Kafka offset is **not committed**, so the message will be reprocessed on the next run.
+`response_validator.py` validates every agent response against `agent-response.schema.json` using the `jsonschema` library (Draft 7). If validation fails, the exception propagates to the main loop — the Kafka offset is **not committed**, so the message will be reprocessed on the next run.
 
 This is intentional: a schema violation means the agent produced an unreliable decision. It's safer to retry than to publish bad data downstream.
 
 ### 7.4 Manual offset commit pattern
 
-[`consume_velocity_alerts_with_agent.py`](../../retail-inventory-optimization/fashion-inventory-consumer/consume_velocity_alerts_with_agent.py) sets `"enable.auto.commit": False`. Offsets are committed explicitly only after all four steps succeed:
+`consume_velocity_alerts_with_agent.py` sets `"enable.auto.commit": False`. Offsets are committed explicitly only after all four steps succeed:
 
 ```
 read alert → call agent → validate response → publish to Kafka → commit offset
@@ -862,7 +941,7 @@ If any step throws, the offset is not committed, and the message is reprocessed.
 
 ### 7.5 The agent response schema
 
-The [`agent-response.schema.json`](../../retail-inventory-optimization/fashion-inventory-setup/schemas/agent-response.schema.json) defines strict rules the agent must follow:
+The `agent-response.schema.json` defines strict rules the agent must follow:
 
 - `agentDecision.reasoning` — **array of strings** (not a single string — this is the most common validation failure)
 - `agentDecision.urgencyScore` — **integer 0–10** (not a float, not a string)
@@ -872,6 +951,7 @@ The [`agent-response.schema.json`](../../retail-inventory-optimization/fashion-i
 The schema is also registered in Confluent Schema Registry for the `fashion.agent.responses` topic, so downstream consumers get the same validation guarantee.
 
 ### What you learned
+
 - The payload builder normalises messy Kafka data into a clean agent request
 - Token caching and markdown-fence stripping are essential for production reliability
 - Schema validation at the output boundary protects downstream consumers
@@ -892,11 +972,11 @@ The schema is also registered in Confluent Schema Registry for the `fashion.agen
 
 The most common causes:
 
-| Error | Cause | Fix |
-|---|---|---|
-| `agentDecision.reasoning: ... is not of type 'array'` | Agent returned reasoning as a plain string | Check agent instructions — `reasoning` must be an array |
-| `agentDecision.urgencyScore: ... is not of type 'integer'` | Agent returned `9.0` (float) instead of `9` | Prompt constraint is correct; this may resolve on retry |
-| `Additional properties are not allowed` | Agent added a field not in the schema | Review agent instructions; confirm `additionalProperties: false` is respected |
+| Error                                                        | Cause                                          | Fix                                                                            |
+| ------------------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------ |
+| `agentDecision.reasoning: ... is not of type 'array'`      | Agent returned reasoning as a plain string     | Check agent instructions —`reasoning` must be an array                      |
+| `agentDecision.urgencyScore: ... is not of type 'integer'` | Agent returned`9.0` (float) instead of `9` | Prompt constraint is correct; this may resolve on retry                        |
+| `Additional properties are not allowed`                    | Agent added a field not in the schema          | Review agent instructions; confirm`additionalProperties: false` is respected |
 
 ### Confluent connection errors
 
@@ -909,6 +989,23 @@ The most common causes:
 - Confirm the Flink query is running (status = `Running` in the SQL workspace)
 - Confirm `fashion.inventory.events` topic has messages (check Messages tab)
 - Verify the Flink query uses the correct topic names including the backtick quoting
+
+---
+
+## Exercises
+
+See [`exercises.md`](exercises.md) for stretch challenges.
+
+---
+
+## Import Everything
+
+Run the verification script after completing Section 4 to confirm your wxO setup:
+
+```bash
+cd advanced/part2-confluent
+bash import-all.sh
+```
 
 ---
 
@@ -947,8 +1044,6 @@ orchestrate knowledge-bases list
 - [Open-Meteo API](https://open-meteo.com/en/docs) — free weather API used by the tool
 - [watsonx Orchestrate ADK Documentation](https://developer.watson-orchestrate.ibm.com/)
 - [ADK Docs — Knowledge Bases](https://developer.watson-orchestrate.ibm.com/knowledge_bases/knowledge_bases_intro)
-- [Confluent Python client (confluent-kafka)](https://github.com/confluentinc/confluent-kafka-python)
-- [jsonschema library](https://python-jsonschema.readthedocs.io/)
 
 ---
 

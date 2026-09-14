@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+        "watsonx-orchestrate-adk-docs": {
+            "url": "https://developer.watson-orchestrate.ibm.com/mcp",
+            "timeout": 120000,
+            "disabled": false
+        },
+        "watsonx-orchestrate-adk": {
+            "command": "uvx",
+            "args": [
+                "ibm-watsonx-orchestrate-mcp-server"
+            ],
+            "env": {
+                "WXO_MCP_WORKING_DIRECTORY": "",
+                "WXO_MCP_DEBUG": ""
+            },
+            "timeout": 120000
+        }
+    }
+}

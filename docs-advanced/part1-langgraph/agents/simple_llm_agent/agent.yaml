@@ -1,0 +1,25 @@
+spec_version: v1
+kind: agent
+name: simple_llm_agent
+title: Simple LLM Agent
+description: |
+  A plain LangGraph agent using ChatOpenAI pointed at Groq's free API via base_url.
+  No Agentic SDK code — demonstrates that existing LangGraph agents can be imported
+  into wxO with minimal changes. Only the create_agent() entry point is required.
+  Uses langchain-openai (not langchain-groq): shows that provider coupling is shallow.
+
+# The LangGraph framework identifier — required for all LangGraph package imports
+framework: langgraph
+
+deployment:
+  code_bundle:
+    # Format: "module_filename:factory_function_name"
+    entrypoint: "agent:create_agent"
+
+# The Groq API key is injected from this connection as the env var:
+# groq_connection_api_key
+# (wxO naming convention: <connection_app_id>_api_key)
+connections:
+  global_requirements:
+    required_app_ids:
+      - groq_connection
