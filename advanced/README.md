@@ -25,15 +25,16 @@ Before starting any advanced part:
 
 ## Advanced Topics
 
-| Part                                              | Topic                                                                           | Time       | Difficulty |
-| ------------------------------------------------- | ------------------------------------------------------------------------------- | ---------- | ---------- |
-| [0 — Setup & Environment](part0-setup/README.md)  | Get your environment ready: Bob IDE, MCP servers, wxO connection, API keys      | 15–20 min  | ⭐         |
-| [1 — LangGraph Agents](part1-langgraph/README.md) | Build, package, and deploy custom LangGraph agents with memory and tool-calling | 60–75 min | ⭐⭐⭐     |
-| 2 — Scheduling*(coming soon)*                  | Make agents and workflows run on a schedule via natural language                | 20 min     | ⭐         |
-| 3 — Advanced Workflow Nodes*(coming soon)*     | Human-in-the-loop, Prompt nodes, Parallel execution, Doc Processing             | 30 min     | ⭐⭐       |
-| 4 — LLM Model Policies*(coming soon)*          | Fallback, load-balancing, and retry across multiple LLM providers               | 25 min     | ⭐⭐       |
-| 5 — Langflow Tools*(coming soon)*              | Build visual AI pipelines and import them as wxO tools                          | 30 min     | ⭐⭐       |
-| 6 — CI/CD & GitOps*(coming soon)*              | Deploy agents through GitHub Actions using a GitOps pipeline                    | 40 min     | ⭐⭐       |
+| Part                                                                    | Topic                                                                                        | Time       | Difficulty |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------- | ---------- |
+| [0 — Setup & Environment](part0-setup/README.md)                        | Get your environment ready: Bob IDE, MCP servers, wxO connection, API keys                   | 15–20 min  | ⭐         |
+| [1 — LangGraph Agents](part1-langgraph/README.md)                       | Build, package, and deploy custom LangGraph agents with memory and tool-calling              | 60–75 min  | ⭐⭐⭐     |
+| [2 — Event-Driven AI Agents](part2-confluent/README.md)                 | Confluent Cloud + Flink SQL + watsonx Orchestrate agent — real-time inventory intelligence   | 75–90 min  | ⭐⭐⭐⭐   |
+| 3 — Scheduling *(coming soon)*                                          | Make agents and workflows run on a schedule via natural language                             | 20 min     | ⭐         |
+| 4 — Advanced Workflow Nodes *(coming soon)*                             | Human-in-the-loop, Prompt nodes, Parallel execution, Doc Processing                         | 30 min     | ⭐⭐       |
+| 5 — LLM Model Policies *(coming soon)*                                  | Fallback, load-balancing, and retry across multiple LLM providers                           | 25 min     | ⭐⭐       |
+| 6 — Langflow Tools *(coming soon)*                                      | Build visual AI pipelines and import them as wxO tools                                      | 30 min     | ⭐⭐       |
+| 7 — CI/CD & GitOps *(coming soon)*                                      | Deploy agents through GitHub Actions using a GitOps pipeline                                | 40 min     | ⭐⭐       |
 
 ---
 
@@ -60,3 +61,11 @@ Bob knows the wxO ADK rules and the platform limitations. Ask it to explain conc
 ---
 
 Let's go! → [Part 0: Setup & Environment](part0-setup/README.md)
+
+---
+
+## Navigation
+
+- [Part 0 — Setup & Environment](part0-setup/README.md)
+- [Part 1 — LangGraph Agents](part1-langgraph/README.md)
+- [Part 2 — Event-Driven AI Agents](part2-confluent/README.md)
