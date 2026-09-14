@@ -2,10 +2,6 @@
 
 Work through these after completing the main lab. They're designed to push your understanding of event-driven AI patterns further.
 
-See the full exercise descriptions in the docs site:
-
-👉 [Advanced Part 2 Exercises](../../docs-advanced/part2-confluent/exercises.md)
-
 ---
 
 ## Exercise 1 — Detect LOW_STOCK Events in Flink SQL

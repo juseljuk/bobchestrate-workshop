@@ -1049,4 +1049,4 @@ orchestrate knowledge-bases list
 
 [Take the Quiz →](quiz.md){ .md-button .md-button--primary }
 [Exercises](exercises.md){ .md-button }
-[← Back to Advanced Workshop Home](../README.md){ .md-button }
+[← Back to Advanced Workshop Home](../index.md){ .md-button }
