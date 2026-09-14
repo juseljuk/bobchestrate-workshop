@@ -1,0 +1,11 @@
+storeId,storeName,city,state,country,latitude,longitude,timezone
+STORE-NYC-001,Manhattan Flagship,New York,NY,USA,40.7580,-73.9855,America/New_York
+STORE-LA-001,Beverly Hills Store,Los Angeles,CA,USA,34.0736,-118.4004,America/Los_Angeles
+STORE-CHI-001,Michigan Avenue,Chicago,IL,USA,41.8781,-87.6298,America/Chicago
+STORE-MIA-001,South Beach,Miami,FL,USA,25.7907,-80.1300,America/New_York
+STORE-SF-001,Union Square,San Francisco,CA,USA,37.7879,-122.4074,America/Los_Angeles
+STORE-BOS-001,Newbury Street,Boston,MA,USA,42.3505,-71.0826,America/New_York
+STORE-SEA-001,Pike Place,Seattle,WA,USA,47.6097,-122.3331,America/Los_Angeles
+STORE-ATL-001,Peachtree Center,Atlanta,GA,USA,33.7590,-84.3880,America/New_York
+STORE-DEN-001,Cherry Creek,Denver,CO,USA,39.7155,-104.9547,America/Denver
+STORE-PHX-001,Scottsdale Fashion,Phoenix,AZ,USA,33.4942,-111.9261,America/Phoenix

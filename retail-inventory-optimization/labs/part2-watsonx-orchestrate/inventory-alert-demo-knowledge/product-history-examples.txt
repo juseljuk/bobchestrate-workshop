@@ -1,0 +1,334 @@
+PRODUCT HISTORY EXAMPLES
+========================
+
+METADATA
+--------
+Purpose: Provide concrete examples of product history for agent training
+Total Examples: 5
+Scenarios Covered:
+  - Normal steady demand
+  - Seasonal spike
+  - Weather-driven surge
+  - Stockout recovery
+  - Trending product
+
+================================================================================
+EXAMPLE 1: Winter Jacket - Cold Snap Velocity Spike
+================================================================================
+Example ID: EX001
+SKU: WJ-2024-BLK-L
+Product Name: Winter Jacket Black Large
+
+HISTORICAL CONTEXT
+------------------
+Baseline Velocity: 2.1 units/hour
+Typical Stock: 150 units
+Last 30 Days Pattern: Steady 2 units/hour, slight increase on weekends
+
+Previous Spikes:
+  - Date: 2024-01-05
+    Trigger: Cold snap
+    Peak Velocity: 8.5 units/hour
+    Duration: 18 hours
+    Outcome: Successful reorder, no stockout
+
+CURRENT ALERT
+-------------
+Timestamp: 2024-01-15T14:30:00Z
+Current Velocity: 25.0 units/hour
+Velocity Ratio: 11.9x baseline
+Current Stock: 75 units
+Hours to Stockout: 3.0 hours
+Estimated Value: $6,749.25
+Severity: CRITICAL
+
+CONTEXTUAL FACTORS
+------------------
+Weather: Cold snap, temperature dropped 20°F overnight
+Regional Demand: High across all stores in region
+Competitor Status: Major competitor reported stockout
+Social Media: Trending on local weather discussions
+Inventory Position: Regional warehouse has 2,000 units available
+
+RECOMMENDED ACTION
+------------------
+Urgency: CRITICAL
+Reorder Quantity: 1,800 units
+Reorder Priority: RUSH_EXPEDITED
+Price Adjustment: +15%
+Transfer Recommendation: Request 200 units from nearby stores immediately
+Notifications: buying_team, store_manager, regional_manager
+Rationale: Velocity spike 11.9x baseline due to weather event. Stockout in 3 hours. High-value product with strong regional demand. Competitor stockout increases urgency.
+
+AGENT EXPLANATION
+-----------------
+This alert is CRITICAL urgency. The winter jacket normally sells 2.1 units per hour, but current velocity is 25 units per hour (11.9x baseline). Weather data shows a cold snap in the region. Current stock of 75 units will deplete in 3 hours at current velocity. Product value is $6,749. Competitor stockout increases demand. Recommend immediate rush reorder of 1,800 units, apply 15% surge pricing, and request emergency stock transfer from nearby stores.
+
+================================================================================
+EXAMPLE 2: Summer Dress - Normal Seasonal Pattern
+================================================================================
+Example ID: EX002
+SKU: SD-2024-BLU-M
+Product Name: Summer Dress Blue Medium
+
+HISTORICAL CONTEXT
+------------------
+Baseline Velocity: 3.2 units/hour
+Typical Stock: 200 units
+Last 30 Days Pattern: Steady increase as summer approaches, peak on weekends
+
+Previous Spikes:
+  - Date: 2024-06-15
+    Trigger: Weekend + heat wave
+    Peak Velocity: 12.5 units/hour
+    Duration: 48 hours
+    Outcome: Standard reorder handled demand
+
+CURRENT ALERT
+-------------
+Timestamp: 2024-06-20T11:00:00Z
+Current Velocity: 11.2 units/hour
+Velocity Ratio: 3.5x baseline
+Current Stock: 180 units
+Hours to Stockout: 16.1 hours
+Estimated Value: $10,798.20
+Severity: HIGH
+
+CONTEXTUAL FACTORS
+------------------
+Weather: Heat wave, temperatures in 90s
+Regional Demand: Moderate increase across region
+Competitor Status: Normal inventory levels
+Social Media: Summer fashion trending
+Inventory Position: Adequate warehouse stock
+
+RECOMMENDED ACTION
+------------------
+Urgency: HIGH
+Reorder Quantity: 600 units
+Reorder Priority: STANDARD_PRIORITY
+Price Adjustment: +5%
+Transfer Recommendation: Monitor, transfer not urgent
+Notifications: buying_team, store_manager
+Rationale: Velocity increase within expected range for summer apparel. Sufficient time to reorder. Standard priority adequate.
+
+AGENT EXPLANATION
+-----------------
+This alert is HIGH urgency. The summer dress normally sells 3.2 units per hour, but current velocity is 11.2 units per hour (3.5x baseline). This velocity increase is consistent with warm weather patterns and heat wave conditions. Current stock of 180 units provides 16 hours of supply. Recommend standard priority reorder of 600 units with modest 5% price adjustment to optimize margin during peak demand.
+
+================================================================================
+EXAMPLE 3: Regular Jeans - Steady All-Season Demand
+================================================================================
+Example ID: EX003
+SKU: RJ-2024-DEN-32
+Product Name: Regular Jeans Denim 32
+
+HISTORICAL CONTEXT
+------------------
+Baseline Velocity: 4.5 units/hour
+Typical Stock: 300 units
+Last 30 Days Pattern: Very consistent, minimal variation
+
+Previous Spikes:
+  - Date: 2024-01-02
+    Trigger: Post-holiday returns/exchanges
+    Peak Velocity: 8.9 units/hour
+    Duration: 12 hours
+    Outcome: No action needed, returned to baseline
+
+CURRENT ALERT
+-------------
+Timestamp: 2024-01-20T09:00:00Z
+Current Velocity: 14.5 units/hour
+Velocity Ratio: 3.2x baseline
+Current Stock: 285 units
+Hours to Stockout: 19.7 hours
+Estimated Value: $22,797.15
+Severity: MEDIUM
+
+CONTEXTUAL FACTORS
+------------------
+Weather: Normal conditions
+Regional Demand: Slight increase, likely weekend shopping
+Competitor Status: Normal inventory levels
+Social Media: No trending activity
+Inventory Position: Strong warehouse stock
+
+RECOMMENDED ACTION
+------------------
+Urgency: MEDIUM
+Reorder Quantity: 800 units
+Reorder Priority: STANDARD
+Price Adjustment: 0%
+Transfer Recommendation: Not needed
+Notifications: buying_team
+Rationale: Modest velocity increase, likely weekend pattern. Ample stock and time to reorder. Standard process adequate.
+
+AGENT EXPLANATION
+-----------------
+This alert is MEDIUM urgency. Regular jeans normally sell 4.5 units per hour, current velocity is 14.5 units per hour (3.2x baseline). This appears to be normal weekend shopping behavior for this high-volume staple item. Current stock of 285 units provides nearly 20 hours of supply. Recommend standard reorder of 800 units through normal procurement cycle. No pricing adjustment needed.
+
+================================================================================
+EXAMPLE 4: Sneakers - Post-Stockout Recovery
+================================================================================
+Example ID: EX004
+SKU: SN-2024-BLK-10
+Product Name: Sneakers Black Size 10
+
+HISTORICAL CONTEXT
+------------------
+Baseline Velocity: 2.1 units/hour
+Typical Stock: 140 units
+Last 30 Days Pattern: Steady with one stockout incident
+
+Previous Spikes:
+  - Date: 2024-01-08
+    Trigger: Stockout, pent-up demand
+    Peak Velocity: 6.8 units/hour
+    Duration: 24 hours
+    Outcome: Stockout for 18 hours, lost sales estimated at 120 units
+
+CURRENT ALERT
+-------------
+Timestamp: 2024-01-22T16:00:00Z
+Current Velocity: 8.5 units/hour
+Velocity Ratio: 4.0x baseline
+Current Stock: 95 units
+Hours to Stockout: 11.2 hours
+Estimated Value: $12,349.05
+Severity: HIGH
+
+CONTEXTUAL FACTORS
+------------------
+Weather: Normal conditions
+Regional Demand: Elevated due to recent stockout
+Competitor Status: Normal inventory levels
+Social Media: Product back in stock announcement
+Inventory Position: Limited warehouse stock (300 units)
+
+RECOMMENDED ACTION
+------------------
+Urgency: HIGH
+Reorder Quantity: 600 units
+Reorder Priority: RUSH
+Price Adjustment: +10%
+Transfer Recommendation: Request 100 units from regional warehouse
+Notifications: buying_team, store_manager
+Rationale: Post-stockout demand surge. Need to rebuild safety stock and capture pent-up demand. Previous stockout resulted in lost sales.
+
+AGENT EXPLANATION
+-----------------
+This alert is HIGH urgency. Sneakers normally sell 2.1 units per hour, current velocity is 8.5 units per hour (4.0x baseline). This follows a recent stockout incident where we lost approximately 120 units of sales. Current elevated demand likely includes pent-up customer demand. Stock of 95 units provides 11 hours of supply. Recommend rush reorder of 600 units to rebuild safety stock and apply 10% surge pricing to optimize margin during recovery period.
+
+================================================================================
+EXAMPLE 5: T-Shirt - Social Media Trending Spike
+================================================================================
+Example ID: EX005
+SKU: TS-2024-WHT-L
+Product Name: T-Shirt White Large
+
+HISTORICAL CONTEXT
+------------------
+Baseline Velocity: 6.2 units/hour
+Typical Stock: 400 units
+Last 30 Days Pattern: High steady volume, reliable staple item
+
+Previous Spikes:
+  - Date: 2024-01-10
+    Trigger: Influencer mention
+    Peak Velocity: 15.8 units/hour
+    Duration: 36 hours
+    Outcome: Successfully managed with existing stock
+
+CURRENT ALERT
+-------------
+Timestamp: 2024-01-25T13:30:00Z
+Current Velocity: 22.5 units/hour
+Velocity Ratio: 3.6x baseline
+Current Stock: 390 units
+Hours to Stockout: 17.3 hours
+Estimated Value: $7,796.10
+Severity: HIGH
+
+CONTEXTUAL FACTORS
+------------------
+Weather: Normal conditions
+Regional Demand: Spike across multiple stores
+Competitor Status: Similar trending activity reported
+Social Media: Viral TikTok video featuring product
+Inventory Position: Strong warehouse stock (5,000 units)
+
+RECOMMENDED ACTION
+------------------
+Urgency: HIGH
+Reorder Quantity: 1,000 units
+Reorder Priority: STANDARD_PRIORITY
+Price Adjustment: +8%
+Transfer Recommendation: Prepare for multi-store distribution
+Notifications: buying_team, store_manager, marketing_team
+Rationale: Social media driven spike. Fast-moving staple with short lead time. Opportunity to capitalize on viral trend with adequate supply.
+
+AGENT EXPLANATION
+-----------------
+This alert is HIGH urgency. White t-shirt normally sells 6.2 units per hour, current velocity is 22.5 units per hour (3.6x baseline). Social media monitoring shows viral TikTok video featuring this product. Similar spikes reported across multiple stores. Current stock of 390 units provides 17 hours of supply. With 24-hour lead time and strong warehouse inventory, recommend standard priority reorder of 1,000 units. Apply 8% surge pricing to optimize margin during viral trend. Notify marketing team to amplify social media presence.
+
+================================================================================
+PATTERN RECOGNITION GUIDE
+================================================================================
+
+WEATHER-DRIVEN SPIKES
+---------------------
+Characteristics:
+  - Sudden velocity increase (> 5x)
+  - Seasonal product alignment
+  - Regional concentration
+  - Short duration (12-48 hours)
+Typical Response: Rush reorder, surge pricing, regional transfers
+
+SEASONAL PATTERNS
+-----------------
+Characteristics:
+  - Gradual velocity increase (2-4x)
+  - Predictable timing
+  - Extended duration (weeks)
+  - Category-wide trend
+Typical Response: Standard priority reorder, modest pricing adjustment
+
+SOCIAL MEDIA TRENDS
+-------------------
+Characteristics:
+  - Rapid velocity spike (3-6x)
+  - Multi-location impact
+  - Unpredictable timing
+  - Variable duration (days to weeks)
+Typical Response: Fast reorder, moderate surge pricing, marketing coordination
+
+POST-STOCKOUT RECOVERY
+----------------------
+Characteristics:
+  - Elevated velocity (3-5x)
+  - Follows stockout incident
+  - Pent-up demand
+  - Gradual return to baseline
+Typical Response: Rush reorder, rebuild safety stock, premium pricing
+
+NORMAL FLUCTUATIONS
+-------------------
+Characteristics:
+  - Modest velocity increase (< 3x)
+  - Weekend/holiday patterns
+  - Adequate stock levels
+  - Predictable behavior
+Typical Response: Standard reorder, no pricing change, monitor
+
+================================================================================
+USAGE INSTRUCTIONS
+================================================================================
+
+For Agent Training: Use these examples to understand typical alert scenarios and appropriate responses
+
+For Baseline Comparison: Compare incoming alerts against these patterns to assess urgency
+
+For Explanation Generation: Reference similar examples when explaining recommendations
+
+For Edge Case Handling: Escalate alerts that don't match any known pattern

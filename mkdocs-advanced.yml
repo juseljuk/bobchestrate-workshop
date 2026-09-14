@@ -67,6 +67,10 @@ nav:
       - Overview: part1-langgraph/README.md
       - Exercises: part1-langgraph/exercises.md
       - Quiz: part1-langgraph/quiz.md
+  - Part 2 - Event-Driven AI Agents:
+      - Overview: part2-confluent/README.md
+      - Exercises: part2-confluent/exercises.md
+      - Quiz: part2-confluent/quiz.md
 
 plugins:
   - search

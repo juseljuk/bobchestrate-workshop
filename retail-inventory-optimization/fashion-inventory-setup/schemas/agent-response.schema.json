@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VelocityAnomalyAgentResponse",
+  "description": "Schema for Fashion Inventory Alert Processor agent response from watsonx Orchestrate",
+  "type": "object",
+  "required": [
+    "alertId",
+    "productId",
+    "sku",
+    "storeId",
+    "processedAt",
+    "agentDecision"
+  ],
+  "properties": {
+    "alertId": {
+      "type": "string",
+      "description": "Original alert ID"
+    },
+    "productId": {
+      "type": "string",
+      "description": "Product identifier"
+    },
+    "sku": {
+      "type": "string",
+      "description": "Full SKU"
+    },
+    "storeId": {
+      "type": "string",
+      "description": "Store identifier"
+    },
+    "processedAt": {
+      "type": "string",
+      "description": "Agent processing timestamp in ISO 8601 format"
+    },
+    "productDetails": {
+      "type": "object",
+      "properties": {
+        "productName": {"type": "string"},
+        "category": {"type": "string"},
+        "brand": {"type": "string"},
+        "size": {"type": "string"},
+        "color": {"type": "string"},
+        "unitPrice": {"type": "number"}
+      }
+    },
+    "velocityAnalysis": {
+      "type": "object",
+      "properties": {
+        "baselineVelocity": {"type": "number"},
+        "currentVelocity": {"type": "number"},
+        "velocityRatio": {"type": "number"},
+        "velocityTrend": {"type": "string"},
+        "durationHours": {"type": "number"},
+        "triggerType": {"type": "string"}
+      }
+    },
+    "stockAnalysis": {
+      "type": "object",
+      "properties": {
+        "currentStock": {"type": "integer"},
+        "hoursToStockout": {"type": "number"},
+        "estimatedValue": {"type": "number"},
+        "reorderPoint": {"type": ["integer", "null"]},
+        "typicalStock": {"type": ["integer", "null"]}
+      }
+    },
+    "productHistorySummary": {
+      "type": "object",
+      "properties": {
+        "baselineVelocity": {"type": "number"},
+        "last30DaysSales": {"type": "integer"},
+        "stockoutCount": {"type": "integer"},
+        "peakVelocityRecorded": {"type": "number"},
+        "seasonalPattern": {"type": "string"},
+        "historyNote": {"type": ["string", "null"]}
+      }
+    },
+    "agentDecision": {
+      "type": "object",
+      "required": ["urgencyLevel", "urgencyScore", "reasoning", "recommendedActions", "actionRationale"],
+      "properties": {
+        "urgencyLevel": {
+          "type": "string",
+          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+        },
+        "urgencyScore": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "reasoning": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "recommendedActions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "actionRationale": {
+          "type": "string"
+        },
+        "analystSummary": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "reorderRecommendation": {
+      "type": "object",
+      "properties": {
+        "shouldReorder": {"type": "boolean"},
+        "reorderQuantity": {"type": "integer"},
+        "reorderPriority": {"type": "string"},
+        "estimatedLeadTimeHours": {"type": "integer"},
+        "estimatedCost": {"type": "number"},
+        "vendorNotes": {"type": ["string", "null"]}
+      }
+    },
+    "pricingRecommendation": {
+      "type": "object",
+      "properties": {
+        "shouldAdjustPrice": {"type": "boolean"},
+        "priceAdjustmentPercent": {"type": "number"},
+        "adjustmentRationale": {"type": "string"},
+        "expectedDuration": {"type": ["string", "null"]}
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "properties": {
+        "notifyTeams": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "escalationRequired": {"type": "boolean"},
+        "escalationReason": {"type": ["string", "null"]}
+      }
+    },
+    "processingTime": {
+      "type": "number",
+      "description": "Total processing time in seconds"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

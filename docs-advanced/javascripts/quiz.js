@@ -58,11 +58,12 @@
   /* ── Quiz registry (all modules) ─────────────────────── */
   // id must match the folder-name convention used in quiz.md pages
   var QUIZ_REGISTRY = [
-    { id: 'adv-part1-langgraph',           label: 'Advanced Part 1 — LangGraph Agents' }
+    { id: 'adv-part1-langgraph',           label: 'Advanced Part 1 — LangGraph Agents' },
+    { id: 'adv-part2-confluent',            label: 'Advanced Part 2 — Event-Driven AI Agents' }
   ];
 
   // IDs that have a quiz.md page ready
-  var AVAILABLE_QUIZZES = ['adv-part1-langgraph'];
+  var AVAILABLE_QUIZZES = ['adv-part1-langgraph', 'adv-part2-confluent'];
 
   /* ── Shuffle utility ──────────────────────────────────── */
   function shuffle(arr) {
@@ -448,6 +449,69 @@
        This file serves the advanced workshop only. */
 
     // placeholder — future advanced quizzes go here
+
+    ,
+
+    'quiz-adv-part2-confluent': {
+      id: 'adv-part2-confluent',
+      questions: [
+        {
+          text: 'The Flink SQL query in this lab uses a hardcoded baseline velocity of 2.0 units/hour. Why is this a demo simplification and what would a production implementation use instead?',
+          options: [
+            'It is a real limitation of Flink SQL — Flink cannot compute averages from historical data',
+            'It is intentional: 2.0 is the industry standard baseline for fashion retail',
+            'It removes the warm-up period that a real rolling window requires; production would use a windowed aggregation (TUMBLE or HOP window) to compute a per-SKU rolling average over recent history',
+            'The baseline should be read from a database lookup table, which Flink does not support'
+          ],
+          correctIndex: 2,
+          hint: 'A fixed baseline makes the demo deterministic and avoids the need for historical data to warm up a window. In production you would use a TUMBLE or HOP window over the last 7 days of SALE events per SKU to derive a genuine rolling average, then compute `currentVelocity / rollingAverage` as the ratio.'
+        },
+        {
+          text: 'The Python consumer sets `"enable.auto.commit": False` and commits Kafka offsets manually. What delivery guarantee does this create, and what is the key trade-off?',
+          options: [
+            'Exactly-once delivery — each alert is processed exactly once regardless of failures',
+            'At-most-once delivery — if the consumer crashes after processing but before committing, the alert is lost',
+            'At-least-once delivery — if any pipeline step fails, the offset is not committed and the alert is reprocessed; the trade-off is that the same alert may be processed twice on retry',
+            'No delivery guarantee — manual commit is unreliable compared to auto-commit'
+          ],
+          correctIndex: 2,
+          hint: 'Manual offset commit after the full pipeline (agent call + schema validation + Kafka publish) gives at-least-once semantics. If any step throws, the offset stays uncommitted and the message is redelivered on the next consumer start. For inventory decisions this is the right default — missing an alert is worse than processing one twice.'
+        },
+        {
+          text: 'The response_validator.py raises a ValueError when the agent response fails JSON schema validation, and the consumer does NOT commit the Kafka offset. What happens to that Kafka message?',
+          options: [
+            'It is permanently deleted from the topic',
+            'It is moved to a dead-letter topic automatically by Confluent Cloud',
+            'It remains uncommitted so the consumer will re-read and reprocess it on the next run or restart',
+            'It is skipped and a warning is logged, then the offset is committed anyway'
+          ],
+          correctIndex: 2,
+          hint: 'Because `enable.auto.commit` is False and the consumer only commits after successful processing, a validation failure leaves the offset uncommitted. The next time the consumer starts (or polls past its current position), it will re-read the same message and try again. This is the at-least-once guarantee in action.'
+        },
+        {
+          text: 'The agent sets triggerType to "WEATHER_EVENT" when certain conditions are met. Which combination correctly triggers this classification?',
+          options: [
+            'Any product velocity spike above 3x baseline, regardless of weather',
+            'Cold weather forecast + outerwear category spike, OR hot weather + summer items, OR rain/snow + related categories',
+            'Only when the weather forecast shows precipitation — temperature alone is not sufficient',
+            'WEATHER_EVENT is set by the get_weather_forecast tool directly — the agent does not decide'
+          ],
+          correctIndex: 1,
+          hint: 'The agent instructions define WEATHER_EVENT as a qualitative match between the weather forecast data (from get_weather_forecast) and the product category. Cold + outerwear, hot + summer items, and rain/snow + related categories all qualify. The agent reasons about this match — the weather tool just supplies the raw forecast data.'
+        },
+        {
+          text: 'The orchestrate_client.py contains a _strip_markdown_fence() function and a _extract_first_json_object() function. Why are both needed for a production-grade agent integration?',
+          options: [
+            'They are only needed for streaming responses — synchronous calls always return clean JSON',
+            'LLMs sometimes wrap JSON in triple-backtick code blocks or add surrounding text; these functions silently handle both cases so schema validation receives a clean JSON string regardless of how the model formatted its output',
+            'They are legacy code from an older API version — modern watsonx Orchestrate always returns clean JSON',
+            'They are required by the Confluent Schema Registry to validate messages before publishing'
+          ],
+          correctIndex: 1,
+          hint: 'LLMs are not guaranteed to return a bare JSON object — they sometimes add markdown fences (```json ... ```) or introductory text. _strip_markdown_fence() removes the outer fence, and _extract_first_json_object() finds the first valid {…} block if surrounding text remains. Together they make the client robust to common LLM output quirks without needing to change the agent instructions.'
+        }
+      ]
+    }
 
   };
 

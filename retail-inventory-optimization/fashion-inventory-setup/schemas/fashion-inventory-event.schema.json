@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FashionInventoryEvent",
+  "description": "Schema for fashion inventory events including sales, returns, and stock updates",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "eventTime",
+    "storeId",
+    "productId",
+    "sku",
+    "size",
+    "color",
+    "category",
+    "quantityBefore",
+    "quantityAfter",
+    "quantityChange",
+    "unitPrice"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "description": "Unique identifier for this inventory event"
+    },
+    "eventType": {
+      "type": "string",
+      "enum": ["SALE", "RETURN", "TRANSFER_IN", "TRANSFER_OUT", "ADJUSTMENT", "RECEIVING", "DAMAGE"],
+      "description": "Type of inventory event"
+    },
+    "eventTime": {
+      "type": "integer",
+      "description": "Event timestamp in milliseconds since epoch"
+    },
+    "storeId": {
+      "type": "string",
+      "description": "Store identifier where event occurred"
+    },
+    "productId": {
+      "type": "string",
+      "description": "Base product identifier"
+    },
+    "sku": {
+      "type": "string",
+      "description": "Full SKU including size and color variant"
+    },
+    "size": {
+      "type": "string",
+      "description": "Product size (XS, S, M, L, XL, etc.)"
+    },
+    "color": {
+      "type": "string",
+      "description": "Product color"
+    },
+    "category": {
+      "type": "string",
+      "description": "Product category (Outerwear, Dresses, Shoes, etc.)"
+    },
+    "brand": {
+      "type": "string",
+      "description": "Brand name"
+    },
+    "style": {
+      "type": "string",
+      "description": "Style description"
+    },
+    "quantityBefore": {
+      "type": "integer",
+      "description": "Inventory quantity before this event"
+    },
+    "quantityAfter": {
+      "type": "integer",
+      "description": "Inventory quantity after this event"
+    },
+    "quantityChange": {
+      "type": "integer",
+      "description": "Change in quantity (negative for sales/damage, positive for receiving)"
+    },
+    "unitPrice": {
+      "type": "number",
+      "description": "Unit price in USD"
+    },
+    "transactionId": {
+      "type": "string",
+      "description": "Associated transaction ID if applicable"
+    },
+    "customerId": {
+      "type": "string",
+      "description": "Customer ID for sales/returns"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

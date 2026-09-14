@@ -1264,3 +1264,4 @@ orchestrate agents connect -n my_agent -a my_connection
 [Take the Quiz →](quiz.md){ .md-button .md-button--primary }
 [Exercises](exercises.md){ .md-button }
 [← Back to Advanced Workshop Home](../index.md){ .md-button }
+[Next: Part 2 — Event-Driven AI Agents →](../part2-confluent/README.md){ .md-button }

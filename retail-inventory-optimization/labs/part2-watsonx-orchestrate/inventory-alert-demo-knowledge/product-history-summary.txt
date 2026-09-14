@@ -1,0 +1,433 @@
+PRODUCT HISTORY SUMMARY
+=======================
+
+SUMMARY METADATA
+----------------
+Generated At: 2024-01-15T10:00:00Z
+Period: Last 30 Days
+Total Products: 25
+Total Sales Volume: 52,920 units
+Total Revenue: $3,847,468.80
+Stockout Incidents: 5
+
+================================================================================
+PRODUCT SUMMARIES
+================================================================================
+
+--------------------------------------------------------------------------------
+1. Winter Jacket Black Large
+--------------------------------------------------------------------------------
+SKU: WJ-2024-BLK-L
+Category: Outerwear
+Brand: NorthStyle
+Season: Winter
+
+Baseline Metrics:
+  Velocity per Hour: 2.1 units/hour
+  Daily Average: 50.4 units/day
+  Weekly Average: 352.8 units/week
+  Monthly Total: 1,512 units
+
+Inventory Metrics:
+  Typical Stock: 150 units
+  Current Stock: 75 units
+  Reorder Point: 100 units
+  Average Reorder Quantity: 500 units
+  Lead Time: 48 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 8.5 units/hour
+  Velocity Volatility: moderate
+  Demand Pattern: seasonal_winter
+
+Pricing:
+  Unit Price: $89.99
+  Monthly Revenue: $136,064.88
+  Margin Percent: 45%
+
+--------------------------------------------------------------------------------
+2. Summer Dress Blue Medium
+--------------------------------------------------------------------------------
+SKU: SD-2024-BLU-M
+Category: Dresses
+Brand: TrendyWear
+Season: Summer
+
+Baseline Metrics:
+  Velocity per Hour: 3.2 units/hour
+  Daily Average: 76.8 units/day
+  Weekly Average: 537.6 units/week
+  Monthly Total: 2,304 units
+
+Inventory Metrics:
+  Typical Stock: 200 units
+  Current Stock: 180 units
+  Reorder Point: 150 units
+  Average Reorder Quantity: 600 units
+  Lead Time: 72 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 12.5 units/hour
+  Velocity Volatility: high
+  Demand Pattern: seasonal_summer
+
+Pricing:
+  Unit Price: $59.99
+  Monthly Revenue: $138,217.96
+  Margin Percent: 52%
+
+--------------------------------------------------------------------------------
+3. Regular Jeans Denim 32
+--------------------------------------------------------------------------------
+SKU: RJ-2024-DEN-32
+Category: Bottoms
+Brand: UrbanFit
+Season: All-Season
+
+Baseline Metrics:
+  Velocity per Hour: 4.5 units/hour
+  Daily Average: 108.0 units/day
+  Weekly Average: 756.0 units/week
+  Monthly Total: 3,240 units
+
+Inventory Metrics:
+  Typical Stock: 300 units
+  Current Stock: 285 units
+  Reorder Point: 200 units
+  Average Reorder Quantity: 800 units
+  Lead Time: 96 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 8.9 units/hour
+  Velocity Volatility: low
+  Demand Pattern: steady_year_round
+
+Pricing:
+  Unit Price: $79.99
+  Monthly Revenue: $259,167.60
+  Margin Percent: 48%
+
+--------------------------------------------------------------------------------
+4. T-Shirt White Large
+--------------------------------------------------------------------------------
+SKU: TS-2024-WHT-L
+Category: Tops
+Brand: BasicWear
+Season: All-Season
+
+Baseline Metrics:
+  Velocity per Hour: 6.2 units/hour
+  Daily Average: 148.8 units/day
+  Weekly Average: 1,041.6 units/week
+  Monthly Total: 4,464 units
+
+Inventory Metrics:
+  Typical Stock: 400 units
+  Current Stock: 390 units
+  Reorder Point: 300 units
+  Average Reorder Quantity: 1,000 units
+  Lead Time: 24 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 15.8 units/hour
+  Velocity Volatility: moderate
+  Demand Pattern: steady_high_volume
+
+Pricing:
+  Unit Price: $19.99
+  Monthly Revenue: $89,235.36
+  Margin Percent: 60%
+
+--------------------------------------------------------------------------------
+5. Sneakers White Size 9
+--------------------------------------------------------------------------------
+SKU: SN-2024-WHT-9
+Category: Footwear
+Brand: SportPro
+Season: All-Season
+
+Baseline Metrics:
+  Velocity per Hour: 2.3 units/hour
+  Daily Average: 55.2 units/day
+  Weekly Average: 386.4 units/week
+  Monthly Total: 1,656 units
+
+Inventory Metrics:
+  Typical Stock: 150 units
+  Current Stock: 145 units
+  Reorder Point: 100 units
+  Average Reorder Quantity: 400 units
+  Lead Time: 120 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 7.5 units/hour
+  Velocity Volatility: moderate
+  Demand Pattern: steady_with_spikes
+
+Pricing:
+  Unit Price: $129.99
+  Monthly Revenue: $215,263.44
+  Margin Percent: 42%
+
+--------------------------------------------------------------------------------
+6. Hoodie Charcoal One Size
+--------------------------------------------------------------------------------
+SKU: HC-2024-BLK-OS
+Category: Outerwear
+Brand: ComfortZone
+Season: Fall
+
+Baseline Metrics:
+  Velocity per Hour: 3.5 units/hour
+  Daily Average: 84.0 units/day
+  Weekly Average: 588.0 units/week
+  Monthly Total: 2,520 units
+
+Inventory Metrics:
+  Typical Stock: 220 units
+  Current Stock: 200 units
+  Reorder Point: 150 units
+  Average Reorder Quantity: 600 units
+  Lead Time: 48 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 11.2 units/hour
+  Velocity Volatility: moderate
+  Demand Pattern: seasonal_fall
+
+Pricing:
+  Unit Price: $69.99
+  Monthly Revenue: $176,374.80
+  Margin Percent: 50%
+
+--------------------------------------------------------------------------------
+7. Blazer Navy Size 40
+--------------------------------------------------------------------------------
+SKU: BZ-2024-NAV-40
+Category: Outerwear
+Brand: ExecutiveWear
+Season: All-Season
+
+Baseline Metrics:
+  Velocity per Hour: 1.2 units/hour
+  Daily Average: 28.8 units/day
+  Weekly Average: 201.6 units/week
+  Monthly Total: 864 units
+
+Inventory Metrics:
+  Typical Stock: 80 units
+  Current Stock: 75 units
+  Reorder Point: 50 units
+  Average Reorder Quantity: 250 units
+  Lead Time: 96 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 4.5 units/hour
+  Velocity Volatility: low
+  Demand Pattern: steady_professional
+
+Pricing:
+  Unit Price: $159.99
+  Monthly Revenue: $138,231.36
+  Margin Percent: 55%
+
+--------------------------------------------------------------------------------
+8. Sweater Gray Large
+--------------------------------------------------------------------------------
+SKU: SW-2024-GRY-L
+Category: Tops
+Brand: WarmKnits
+Season: Winter
+
+Baseline Metrics:
+  Velocity per Hour: 2.8 units/hour
+  Daily Average: 67.2 units/day
+  Weekly Average: 470.4 units/week
+  Monthly Total: 2,016 units
+
+Inventory Metrics:
+  Typical Stock: 180 units
+  Current Stock: 165 units
+  Reorder Point: 120 units
+  Average Reorder Quantity: 500 units
+  Lead Time: 72 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 9.5 units/hour
+  Velocity Volatility: moderate
+  Demand Pattern: seasonal_winter
+
+Pricing:
+  Unit Price: $79.99
+  Monthly Revenue: $161,259.84
+  Margin Percent: 48%
+
+--------------------------------------------------------------------------------
+9. Accessory Belt Brown One Size
+--------------------------------------------------------------------------------
+SKU: AC-2024-BRN-OS
+Category: Accessories
+Brand: StylePlus
+Season: All-Season
+
+Baseline Metrics:
+  Velocity per Hour: 4.1 units/hour
+  Daily Average: 98.4 units/day
+  Weekly Average: 688.8 units/week
+  Monthly Total: 2,952 units
+
+Inventory Metrics:
+  Typical Stock: 250 units
+  Current Stock: 240 units
+  Reorder Point: 180 units
+  Average Reorder Quantity: 700 units
+  Lead Time: 48 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 10.5 units/hour
+  Velocity Volatility: moderate
+  Demand Pattern: steady_accessory
+
+Pricing:
+  Unit Price: $29.99
+  Monthly Revenue: $88,530.48
+  Margin Percent: 65%
+
+--------------------------------------------------------------------------------
+10. Chino Pants Khaki 32
+--------------------------------------------------------------------------------
+SKU: CT-2024-KHA-32
+Category: Bottoms
+Brand: SmartCasual
+Season: Spring
+
+Baseline Metrics:
+  Velocity per Hour: 3.3 units/hour
+  Daily Average: 79.2 units/day
+  Weekly Average: 554.4 units/week
+  Monthly Total: 2,376 units
+
+Inventory Metrics:
+  Typical Stock: 210 units
+  Current Stock: 195 units
+  Reorder Point: 150 units
+  Average Reorder Quantity: 550 units
+  Lead Time: 72 hours
+
+Performance:
+  Stockout Count: 0
+  Peak Velocity: 10.1 units/hour
+  Velocity Volatility: moderate
+  Demand Pattern: seasonal_spring
+
+Pricing:
+  Unit Price: $69.99
+  Monthly Revenue: $166,296.24
+  Margin Percent: 50%
+
+================================================================================
+CATEGORY INSIGHTS
+================================================================================
+
+Outerwear
+---------
+Total Products: 6
+Average Velocity: 2.45 units/hour
+Stockout Rate: 0.0%
+Revenue Contribution: 28.5%
+
+Tops
+----
+Total Products: 5
+Average Velocity: 4.08 units/hour
+Stockout Rate: 0.0%
+Revenue Contribution: 22.3%
+
+Bottoms
+-------
+Total Products: 6
+Average Velocity: 3.43 units/hour
+Stockout Rate: 8.3%
+Revenue Contribution: 25.1%
+
+Footwear
+--------
+Total Products: 4
+Average Velocity: 1.8 units/hour
+Stockout Rate: 12.5%
+Revenue Contribution: 15.8%
+
+Dresses
+-------
+Total Products: 2
+Average Velocity: 3.0 units/hour
+Stockout Rate: 0.0%
+Revenue Contribution: 5.2%
+
+Accessories
+-----------
+Total Products: 2
+Average Velocity: 4.0 units/hour
+Stockout Rate: 0.0%
+Revenue Contribution: 3.1%
+
+================================================================================
+SEASONAL PATTERNS
+================================================================================
+
+Winter
+------
+Peak Months: December, January, February
+Average Velocity Increase: 2.5x
+Top Categories: Outerwear, Tops
+
+Spring
+------
+Peak Months: March, April, May
+Average Velocity Increase: 1.8x
+Top Categories: Bottoms, Dresses
+
+Summer
+------
+Peak Months: June, July, August
+Average Velocity Increase: 2.2x
+Top Categories: Dresses, Tops
+
+Fall
+----
+Peak Months: September, October, November
+Average Velocity Increase: 1.9x
+Top Categories: Outerwear, Bottoms
+
+================================================================================
+ALERT CONTEXT
+================================================================================
+
+TYPICAL SPIKE TRIGGERS
+----------------------
+- Weather events (cold snaps, heat waves)
+- Social media trends
+- Competitor stockouts
+- Holiday shopping periods
+- Clearance sales
+
+NORMAL VELOCITY RANGES
+----------------------
+Low Volume: < 2 units/hour
+Medium Volume: 2-5 units/hour
+High Volume: > 5 units/hour
+
+URGENCY THRESHOLDS
+------------------
+CRITICAL: velocity_ratio >= 10x OR hours_to_stockout <= 4
+HIGH: velocity_ratio >= 5x OR hours_to_stockout <= 12
+MEDIUM: velocity_ratio >= 3x OR hours_to_stockout <= 24
