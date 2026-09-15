@@ -14,46 +14,16 @@
 
 Before starting, ensure you have:
 
-- [ ] Python 3.11–3.13 installed
 - [ ] `uv` installed
 - [ ] IBM Bob IDE installed
 - [ ] watsonx Orchestrate SaaS access (your instructor will provide environment/access information)
 - [ ] Confluent Cloud access (your instructor will provide environment/access information)
 
-### Step 1: Verify Python Installation
+> **No Python installation required.** The workspace zip ships with a fully pre-configured virtual environment — Python 3.12, all dependencies, and the watsonx Orchestrate ADK are already installed inside it.
 
-Open a terminal and run:
+### Step 1: Verify uv Installation
 
-```bash
-python --version
-# or
-python3 --version
-```
-
-You need Python **3.11, 3.12, or 3.13**. If Python is not installed:
-
-=== "Mac"
-    ```bash
-    # Using Homebrew (recommended)
-    brew install python@3.11
-
-    # Or download the installer from:
-    # https://www.python.org/downloads/
-    ```
-
-=== "Windows"
-    ```powershell
-    # Using winget
-    winget install Python.Python.3.11
-
-    # Or download the installer from:
-    # https://www.python.org/downloads/
-    # ⚠️ Check "Add Python to PATH" during installation
-    ```
-
----
-
-### Step 2: Verify uv Installation
+`uv` is required because the Bob IDE MCP server for the watsonx Orchestrate ADK is launched via `uvx`. You do **not** need it to install Python packages — the workspace zip ships with everything pre-installed.
 
 ```bash
 uv --version
@@ -85,7 +55,38 @@ After installing, open a new terminal and run `uv --version` again to confirm.
 
 ## Before You Start — Workspace Setup
 
-This lab uses a **pre-configured workspace zip** that gives you the Bob IDE configuration and all the pre-built Python code in one download. You do not need to clone any repository.
+This lab uses a **battery-included workspace zip**: it contains the Bob IDE configuration, all pre-built Python scripts, **and a fully pre-configured virtual environment** with Python 3.12, `confluent-kafka`, `python-dotenv`, `jsonschema`, and the complete watsonx Orchestrate ADK (including the `orchestrate` CLI) already installed. **You do not need to run `uv sync`, install packages, or install the ADK manually.**
+
+### What's inside the zip
+
+```
+bobchestrate-confluent/
+├── .bob/                               # Bob IDE configuration (auto-loaded)
+│   ├── custom_modes.yaml               # WXO Agent Architect mode
+│   ├── mcp.json                        # ADK + docs MCP servers (uses uvx)
+│   ├── rules/
+│   │   └── wxo-dev-rule-enhanced.md    # wxO best-practice rule
+│   └── skills/
+│       └── wxo-langgraph/              # LangGraph skill
+├── .venv/                              # Pre-built virtual environment (Python 3.12)
+│   └── lib/python3.12/site-packages/   # All dependencies pre-installed:
+│       ├── ibm_watsonx_orchestrate/    #   watsonx Orchestrate ADK + orchestrate CLI
+│       ├── confluent_kafka/            #   Confluent Kafka client (Avro/JSON/Protobuf)
+│       ├── jsonschema/                 #   JSON Schema validation
+│       └── python_dotenv/              #   dotenv support
+├── .vscode/
+│   └── settings.json                   # Bob IDE workspace settings
+├── workspace_config.yaml               # wxO ADK workspace configuration
+└── retail-inventory-optimization/      # Pre-built lab code and data
+    ├── fashion-inventory-consumer/     # Python scripts + .env.example
+    ├── fashion-inventory-setup/        # Schemas, Flink SQL, test data
+    └── labs/
+        ├── part1-confluent-cep/        # Part 1 lab guides and screenshots
+        └── part2-watsonx-orchestrate/
+            └── inventory-alert-demo-knowledge/   # Knowledge base documents
+```
+
+> **Note:** The `.bob` and `.venv` folders may appear hidden in your file explorer — that's expected. Bob IDE and the Python tools find them automatically.
 
 ### Step 1: Download the workspace zip
 
@@ -109,28 +110,6 @@ Expand-Archive -Path "$env:USERPROFILE\Downloads\bobchestrate-confluent.zip" -De
 # This creates: Desktop\bobchestrate-confluent\
 ```
 
-After extracting you will have:
-
-```
-bobchestrate-confluent/
-├── .bob/                               # Bob IDE configuration (auto-loaded)
-│   ├── custom_modes.yaml               # WXO Agent Architect mode
-│   ├── mcp.json                        # ADK + docs MCP servers
-│   ├── rules/
-│   │   └── wxo-dev-rule-enhanced.md    # wxO best-practice rule
-│   └── skills/
-│       └── wxo-langgraph/              # LangGraph skill (also useful here)
-└── retail-inventory-optimization/      # Pre-built lab code and data
-    ├── pyproject.toml
-    ├── uv.lock
-    ├── fashion-inventory-consumer/     # Python scripts
-    ├── fashion-inventory-setup/        # Schemas, Flink SQL, test data
-    └── labs/part2-watsonx-orchestrate/
-        └── inventory-alert-demo-knowledge/   # Knowledge base documents
-```
-
-> **Note:** The `.bob` folder may appear hidden in your file explorer — that's expected. Bob IDE finds it automatically.
-
 ### Step 3: Open the folder in Bob IDE
 
 1. Open Bob IDE
@@ -138,47 +117,11 @@ bobchestrate-confluent/
 3. Navigate to the extracted `bobchestrate-confluent` folder and click **Open**
 4. Click **Yes, I trust the author** when prompted
 
-Bob IDE will detect `.bob/` automatically. You should see **WXO Agent Architect** available in the mode selector.
+Bob IDE will detect `.bob/` automatically and pick up the pre-built `.venv`. You should see **WXO Agent Architect** available in the mode selector and a green ✅ in the status bar confirming the ADK is ready — no further installation required. **NOTE:** You'll see the ADK status bar ***ONLY*** if you have the watsonx Orchestrate ADK extension installed and available in your workspace - it is not needed for the lab.
 
-### Step 4: Install dependencies
+> ⚠️ **If the ADK status bar shows a red ❌**, the extension may have selected the wrong Python interpreter. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux), type **"Python: Select Interpreter"**, and choose the one that points to `.venv/bin/python` inside your workspace folder. Then reload the window (**"Developer: Reload Window"**).
 
-Open a terminal in Bob IDE (**Terminal** → **New Terminal**) and run:
-
-```bash
-cd retail-inventory-optimization
-uv sync --locked
-```
-
-This installs `confluent-kafka`, `ibm-watsonx-orchestrate`, `python-dotenv`, and all other dependencies from the locked versions in `uv.lock`.
-
-### Step 5: Install the watsonx Orchestrate ADK VS Code Extension
-
-> ⚠️ **If you already have the extension installed**, please reload the Bob IDE window first! This ensures the extension properly detects your new virtual environment. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows/Linux), type **"Developer: Reload Window"** and select it. The Bob IDE window reloads and the extension will restart. You can then proceed directly to Step 6. Do **NOT** use the extension to initialise the workspace!
-
-1. Open the Extensions view in Bob IDE (`Cmd+Shift+X` on Mac / `Ctrl+Shift+X` on Windows/Linux)
-2. Search for **"watsonx Orchestrate"**
-3. Click **Install** on the **"watsonx Orchestrate ADK"** extension
-4. Wait for the installation to complete
-5. Reload Bob IDE if prompted
-6. You should now see the extension icon appear in the Activity Bar — you do **NOT** need to open it. Do **NOT** initialize the workspace using the extension, as this can cause issues.
-
-### Step 6: Install the watsonx Orchestrate SDK
-
-1. Look at the status bar at the bottom of Bob IDE — you should see a red ❌ indicating the ADK is not installed in your new virtual environment
-2. Click the red ❌
-3. Select the option to install the ADK
-4. Wait for installation to complete — the status bar will show a green ✅ with the version number
-
-### Step 7: Create your `.env` file
-
-```bash
-cd fashion-inventory-consumer
-cp .env.example .env
-```
-
-Leave all values as placeholders for now — you'll fill them in during the lab (Confluent credentials in Section 2–3, wxO credentials in Section 5).
-
-### Step 8: Verify your wxO ADK connection
+### Step 4: Verify your wxO ADK connection
 
 If you haven't connected the ADK to your wxO environment yet, do it now (**NOTE**: your instructor will provide the needed instance URL and API Key):
 
@@ -193,10 +136,9 @@ Any output (even an empty list) without an error means you're connected.
 ### ✅ Ready to start when:
 
 - [ ] `bobchestrate-confluent/` is open in Bob IDE and **WXO Agent Architect** mode appears in the mode selector
-- [ ] `uv sync --locked` completed without errors
-- [ ] `.env` file exists in `fashion-inventory-consumer/`
+- [ ] ADK status bar shows a green ✅ (ONLY if you have the watsonx Orchestrate ADK extension installed)
 - [ ] `orchestrate agents list` returns without error
-- [ ] You have a Confluent Cloud account (free trial is fine)
+- [ ] You have a Confluent Cloud account (will be provided by your instructor)
 
 ---
 
@@ -264,7 +206,7 @@ This unlocks AI automation at scale. Inventory spikes, fraud signals, equipment 
 
 **AI agent (watsonx Orchestrate)** — Receives a structured alert, reasons about it using knowledge and tools, and returns a structured decision. Slow relative to Flink (seconds), but capable of nuanced judgment.
 
-**Bridge (Python consumer)** — Connects the two worlds. Reads Kafka alerts, calls the agent synchronously, validates the response against a JSON schema, and publishes the enriched result to a new Kafka topic.
+**Bridge (Python consumer)** — Connects the two worlds. Reads Kafka alerts, calls the agent synchronously, validates the response against a JSON schema, and publishes the enriched result to a new Kafka topic. **NOTE**: *watsonx Orchestrate will have more tighter integration with Confluent including an HTTP sink connector that you can configure as part of the overall pipeline so that in future you do not need to run seperate bridge services.*
 
 ### What you learned
 
@@ -356,50 +298,84 @@ retail-inventory-optimization/
 
 ## Section 2 — Confluent Cloud Setup (15 min)
 
-You need a Confluent Cloud environment with three topics, a Schema Registry, and a Flink compute pool.
+You need three Kafka topics, JSON schemas registered for each, and a Flink compute pool — all inside a shared Confluent Cloud cluster that has been pre-created for this workshop.
 
-> **Already done this?** If you completed the original Confluent setup lab, you can skip to Section 3 — just confirm your topics and Flink query are running.
+### 2.1 Log in to Confluent Cloud
 
-### 2.1 Create your environment and cluster
+Your instructor will guide you through logging in to [confluent.cloud](https://confluent.cloud). Once logged in:
 
-1. Log in to [confluent.cloud](https://confluent.cloud)
-2. Click **Add environment** → name it `retail-inventory-bootcamp`
-3. Inside the environment, click **Add cluster** → choose **Basic** → select a cloud/region → name it `retail-inventory-cluster`
-4. Note the **Bootstrap server URL** — you'll need it for `.env`
+1. Select the **`zurich-env`** environment by clicking the tile for it
+
+   <p align="center">
+        <img src="images/home-select-env.png" alt="Select Environment" width="600">
+      </p>
+2. Open the **`zurich-clu`** cluster by clicking the tile for it
+
+   <p align="center">
+        <img src="images/zurich-select-cluster.png" alt="Select CLuster" width="500">
+      </p>
+
+> **Do not create a new environment or cluster.** The shared infrastructure is already in place — you only need to create your own topics inside it.
+
+Make a note of the **Bootstrap server URL** from the cluster overview — you'll need it for `.env` later.
+
+<p align="center">
+        <img src="images/zurich-bootstrap.png" alt="Select Environment" width="500">
+   </p>
 
 ### 2.2 Create three Kafka topics
 
-In your cluster, navigate to **Topics** → **Add topic**. Create all three:
+Because the cluster is shared across all workshop participants, you must add your **initials** to each topic name to avoid collisions.
 
-| Topic name                     | Partitions |
-| ------------------------------ | ---------- |
-| `fashion.inventory.events`   | 3          |
-| `fashion.velocity.anomalies` | 3          |
-| `fashion.agent.responses`    | 3          |
+> **Example:** if your initials are `jkj`, your topics will be:
+> `jkj.fashion.inventory.events`, `jkj.fashion.velocity.anomalies`, `jkj.fashion.agent.responses`
+
+In the **`zurich-clu`** cluster, navigate to **Topics** → click **Create topic.**
+
+<p align="center">
+        <img src="images/zurich-topics.png" alt="Select CLuster" width="400">
+   </p>
+
+Create all three, substituting your initials for `<ini>`:
+
+| Topic name                           | Partitions |
+| ------------------------------------ | ---------- |
+| `<ini>.fashion.inventory.events`   | 1          |
+| `<ini>.fashion.velocity.anomalies` | 1          |
+| `<ini>.fashion.agent.responses`    | 1          |
+
+> **Skip the schema creation.** We will do that in the next step.
 
 ### 2.3 Register JSON Schemas
 
-For each topic, attach the corresponding schema from `retail-inventory-optimization/fashion-inventory-setup/schemas/`:
+For each of your three topics, attach the corresponding schema from `retail-inventory-optimization/fashion-inventory-setup/schemas/`:
 
-| Topic                          | Schema file                             |
-| ------------------------------ | --------------------------------------- |
-| `fashion.inventory.events`   | `fashion-inventory-event.schema.json` |
-| `fashion.velocity.anomalies` | `velocity-anomaly-alert.schema.json`  |
-| `fashion.agent.responses`    | `agent-response.schema.json`          |
+| Your topic                           | Schema file                             |
+| ------------------------------------ | --------------------------------------- |
+| `<ini>.fashion.inventory.events`   | `fashion-inventory-event.schema.json` |
+| `<ini>.fashion.velocity.anomalies` | `velocity-anomaly-alert.schema.json`  |
+| `<ini>.fashion.agent.responses`    | `agent-response.schema.json`          |
 
 **Steps for each topic:** click the topic → **Schema** tab → **Add schema** → paste the JSON content.
 
 ### 2.4 Create a Flink compute pool
 
-1. In your environment, click **Stream Processing** (left sidebar)
-2. Click **Create compute pool** → choose a region → name it `retail-inventory-flink` → **Continue**
+1. In the **`zurich-env`** environment, click **Stream Processing** (left sidebar)
+2. Click **Create compute pool** → choose a region → name it `<ini>-retail-inventory-flink` → **Continue**
 3. Once the pool is ready, click **Open SQL workspace**
 
 ### 2.5 Deploy the velocity spike detector
 
 In the Flink SQL workspace, paste and run the query from `retail-inventory-optimization/fashion-inventory-setup/sql/velocity_anomaly_detection.sql`.
 
-The query monitors `fashion.inventory.events` and writes to `fashion.velocity.anomalies` whenever a SALE event removes 5 or more units:
+Before running the SQL, open that file and **replace the two topic references** with your initials-prefixed names:
+
+- `fashion.inventory.events` → `<ini>.fashion.inventory.events`
+- `fashion.velocity.anomalies` → `<ini>.fashion.velocity.anomalies`
+
+Then paste the updated query into the Flink SQL workspace and run it.
+
+The query monitors `<ini>.fashion.inventory.events` and writes to `<ini>.fashion.velocity.anomalies` whenever a SALE event removes 5 or more units:
 
 ```sql
 INSERT INTO `fashion.velocity.anomalies` ( ... )
@@ -449,17 +425,12 @@ Also note your **Schema Registry URL** from the Schema Registry panel — this i
 
 Before adding the AI layer, verify that Flink SQL correctly detects velocity spikes.
 
-### 3.1 Install dependencies
+### 3.1 Configure credentials
+
+Open a terminal in Bob IDE (**Terminal** → **New Terminal**) and run:
 
 ```bash
-cd retail-inventory-optimization
-uv sync --locked
-```
-
-### 3.2 Configure credentials
-
-```bash
-cd fashion-inventory-consumer
+cd retail-inventory-optimization/fashion-inventory-consumer
 cp .env.example .env
 ```
 
@@ -475,19 +446,27 @@ SCHEMA_REGISTRY_API_KEY=your_schema_registry_api_key
 SCHEMA_REGISTRY_API_SECRET=your_schema_registry_api_secret
 ```
 
-### 3.3 Run the test producer
+Also update the three topic name variables to use your initials:
+
+```bash
+KAFKA_INVENTORY_TOPIC=<ini>.fashion.inventory.events
+KAFKA_ALERTS_TOPIC=<ini>.fashion.velocity.anomalies
+KAFKA_RESPONSES_TOPIC=<ini>.fashion.agent.responses
+```
+
+### 3.2 Run the test producer
 
 ```bash
 cd retail-inventory-optimization/fashion-inventory-consumer
-uv run produce_inventory_events.py --csv-file ../fashion-inventory-setup/data/test_winter_jacket_spike.csv
+python produce_inventory_events.py --csv-file ../fashion-inventory-setup/data/test_winter_jacket_spike.csv
 ```
 
 This produces a series of SALE events with large `quantityChange` values — designed to trigger the Flink velocity detector.
 
-### 3.4 Run the basic consumer to verify alerts
+### 3.3 Run the basic consumer to verify alerts
 
 ```bash
-uv run consume_velocity_alerts.py
+python consume_velocity_alerts.py
 ```
 
 You should see velocity alert messages printed to stdout. Verify that `severity` is `CRITICAL` or `HIGH` and that `velocityRatio` is well above 1.0.
@@ -837,14 +816,14 @@ AGENT_RESPONSE_TOPIC=fashion.agent.responses
 
 ```bash
 cd retail-inventory-optimization/fashion-inventory-consumer
-uv run consume_velocity_alerts_with_agent.py
+python consume_velocity_alerts_with_agent.py
 ```
 
 ### 6.2 In a second terminal, run the test producer
 
 ```bash
 cd retail-inventory-optimization/fashion-inventory-consumer
-uv run produce_inventory_events.py --csv-file ../fashion-inventory-setup/data/test_winter_jacket_spike.csv
+python produce_inventory_events.py --csv-file ../fashion-inventory-setup/data/test_winter_jacket_spike.csv
 ```
 
 ### 6.3 Expected log output
@@ -1012,18 +991,15 @@ bash import-all.sh
 ## Key Commands Reference
 
 ```bash
-# Install dependencies
-cd retail-inventory-optimization && uv sync --locked
-
 # Run test producer
-cd fashion-inventory-consumer
-uv run produce_inventory_events.py --csv-file ../fashion-inventory-setup/data/test_winter_jacket_spike.csv
+cd retail-inventory-optimization/fashion-inventory-consumer
+python produce_inventory_events.py --csv-file ../fashion-inventory-setup/data/test_winter_jacket_spike.csv
 
 # Run basic consumer (verify Flink detection, no agent)
-uv run consume_velocity_alerts.py
+python consume_velocity_alerts.py
 
 # Run agent-enabled consumer (full pipeline)
-uv run consume_velocity_alerts_with_agent.py
+python consume_velocity_alerts_with_agent.py
 
 # Verify wxO agent exists
 orchestrate agents list
