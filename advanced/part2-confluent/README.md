@@ -177,10 +177,10 @@ Bob (in **WXO Agent Architect mode**) handles the watsonx Orchestrate side — c
 
 | When you're on…                               | Ask Bob…                                                                                    |
 | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| **Section 4.1 — Store Location Tool**   | Copy-paste the prompt block provided in the section                                          |
-| **Section 4.2 — Weather Forecast Tool** | Copy-paste the prompt block provided in the section                                          |
-| **Section 4.3 — Knowledge Base**        | Copy-paste the prompt block provided in the section                                          |
-| **Section 4.4 — Agent**                 | Copy-paste the prompt block provided in the section                                          |
+| **Section 4.2 — Store Location Tool**   | Copy-paste the prompt block provided in the section                                          |
+| **Section 4.3 — Weather Forecast Tool** | Copy-paste the prompt block provided in the section                                          |
+| **Section 4.5 — Knowledge Base**        | Copy-paste the prompt block provided in the section                                          |
+| **Section 4.6 — Agent**                 | Copy-paste the prompt block provided in the section                                          |
 | **Section 5 — Consumer config**         | `"Show me which environment variables the orchestrate_client.py needs"`                    |
 | **Debugging auth errors**                | `"My WXO_API_KEY is correct but I get 401 — what could cause this?"`                      |
 | **Debugging schema validation**          | `"The agent response is failing validation on reasoning — what does the schema require?"` |
@@ -747,17 +747,51 @@ Click **"Run"** to start the streaming query.
 
 ### 2.8 API keys
 
-Run and test the lab use case, you need **two sets** of API keys and schema registry URL. ⚠️ **NOTE ⚠️:** both key sets and the URL will be provided by your instructor - do **NOT** generate any of your own keys!
+Run and test the lab use case, you need **two sets** of your own (attched to your account) API keys, **schema registry URL** and **the bootstrap server URL** (you should already have the latter from section 2.1).
 
 **Kafka API key and secret** for the Cluster:
 
-	 `KAFKA_API_KEY` / `KAFKA_API_SECRET`
+1. Open the hamburger menu from the right-hand side top corner and select **API Keys**
+
+   <p align="center">
+    <img src="images/zurich-api-menu.png" alt="Open API Keys" width="200">
+
+</p>
+
+2. Click **+ Add API key** and name your API Key e.g. my-kafka-key. **IMPORTANT!** Make sure to select `My account` under Select account.
+
+   <p align="center">
+    <img src="images/zurich-api-my-account.png" alt="API key for My account" width="500">
+
+</p>
+
+3. Scroll down to select the scope for your API key. Select **Kafka cluster** for the scope and then **zurich-env** for the Environment and **zurich-clu** for the Cluster. Then hit **Create API key**.
+
+   <p align="center">
+    <img src="images/zurich-kafka-api-scope.png" alt="API key scope" width="500">
+
+</p>
+
+4. Download / store your API key and secret to safety, you need them soon.
+
+   <p align="center">
+    <img src="images/my-kafka-key.png" alt="API key scope" width="400">
+
+</p>
 
 **Schema Registry API key and secret** for the Environment:
 
-	`SCHEMA_REGISTRY_API_KEY` / `SCHEMA_REGISTRY_API_SECRET`
+Repeat the same process to create your API key for Schema Registry. **IMPORTANT!** Make sure to select **My account** under Select account.
 
-You also need the **Schema Registry URL** from the Schema Registry panel: `SCHEMA_REGISTRY_URL`.
+Scope: **Schema registry**
+Environment: **zurich-env**
+
+Finally, you also need the **Schema Registry URL** from the Schema Registry panel. Under `zurich-env` envitonment select **Schema Registy** and copy and store the **Public endpoint URL**.
+
+<p align="center">
+    <img src="images/registry-url.png" alt="API key scope" width="600">
+
+</p>
 
 ### What you learned
 
@@ -784,24 +818,26 @@ cp .env.example .env
 Edit `.env` and fill in the Confluent section (leave the `WXO_*` lines as-is for now):
 
 ```bash
-KAFKA_BOOTSTRAP_SERVERS=pkc-xxxxx.us-east-1.aws.confluent.cloud:9092
+KAFKA_BOOTSTRAP_SERVERS=kafka_bootstrap_server
 KAFKA_API_KEY=your_kafka_api_key
 KAFKA_API_SECRET=your_kafka_api_secret
 
-SCHEMA_REGISTRY_URL=https://psrc-xxxxx.us-east-1.aws.confluent.cloud
+SCHEMA_REGISTRY_URL=schema_registry_url
 SCHEMA_REGISTRY_API_KEY=your_schema_registry_api_key
 SCHEMA_REGISTRY_API_SECRET=your_schema_registry_api_secret
 ```
 
-Also update the three topic name variables to use your initials:
+**IMPORTANT!** Also update the three topic name variables to use your initials:
 
 ```bash
-KAFKA_INVENTORY_TOPIC=<ini>.fashion.inventory.events
-KAFKA_ALERTS_TOPIC=<ini>.fashion.velocity.anomalies
-KAFKA_RESPONSES_TOPIC=<ini>.fashion.agent.responses
+KAFKA_TOPIC=<ini>.fashion.inventory.events
+ALERT_TOPIC=<ini>.fashion.velocity.anomalies
+AGENT_RESPONSE_TOPIC=<ini>.fashion.agent.responses
 ```
 
 ### 3.2 Run the test producer
+
+Run the below command from your workspace root directory.
 
 ```bash
 cd retail-inventory-optimization/fashion-inventory-consumer
@@ -812,9 +848,13 @@ This produces a series of SALE events with large `quantityChange` values — des
 
 ### 3.3 Run the basic consumer to verify alerts
 
+You should be now in `fashion-inventory-consumer` directory. Run the command below.
+
 ```bash
 python consume_velocity_alerts.py
 ```
+
+> NOTE that it will take a bit time for the Flink SQL activate an process the events.
 
 You should see velocity alert messages printed to stdout. Verify that `severity` is `CRITICAL` or `HIGH` and that `velocityRatio` is well above 1.0.
 
@@ -830,23 +870,43 @@ If you see alerts flowing — **the Flink pipeline is working**. Stop the consum
 
 ## Section 4 — Create the AI Agent Using Bob (20 min)
 
-This is the Bob-driven section. You'll create two tools, a knowledge base, and the agent — all by pasting prompts into Bob.
+This is the Bob-driven section. You'll activate the target watsonx Orchestrate SaaS environment, then create two tools, a knowledge base, and the agent — all by pasting prompts into Bob.
 
 **Switch to WXO Agent Architect mode before starting:**
 
 1. In Bob's chat panel, click the mode selector
 2. Select **WXO Agent Architect**
 
-### 4.1 Create the Store Location Lookup Tool
+### 4.1 Activate the wxO SaaS Environment
 
-Paste this prompt into Bob:
+Before creating any tools or agents, ensure your watsonx Orchestrate ADK is connected and active for the SaaS environment used in this lab.
+
+Open a terminal in Bob IDE (**Terminal** → **New Terminal**) and run the following commands (your instructor will provide the `<instance-url>` and `<api-key>`):
+
+```bash
+orchestrate env add -n confluent-lab -u <instance-url>
+orchestrate env activate confluent-lab -a <api-key>
+orchestrate env list
+```
+
+Verify that `confluent-lab` is marked as the active environment. You can also run:
+
+```bash
+orchestrate agents list
+```
+
+Any output (even an empty list) without an error confirms your environment is activated and ready.
+
+### 4.2 Create the Store Location Lookup Tool
+
+Paste this prompt into Bob (**NOTE**: make sure to replace `<ini>` in the Tool Name your your initials):
 
 ```
 Search the watsonx Orchestrate ADK documentation to understand how to create a Python tool for watsonx Orchestrate.
 
 Then, create a Python tool with the following specifications:
 
-Tool Name: get_store_location
+Tool Name: <ini>_get_store_location
 
 Tool Description:
 Returns the geographic location (latitude, longitude) and details for a given store ID. This tool reads from a CSV file containing store location data.
@@ -885,20 +945,27 @@ After creating the tool:
 Important Naming Constraints:
 - The package-root directory name MUST NOT match the tool function name or any Python file names in the package
 - Use only alphanumeric characters and underscores (_) in directory and file names
-- Example: If the tool function is named "get_store_location", name the directory something like "store_location_tool" instead of "get_store_location"
+- Example: If the tool function is named "jkj_get_store_location", name the directory something like "store_location_tool" instead of "get_store_location"
 - The Python file containing the tool should be named something simple like "store_lookup_tool.py" to avoid naming conflicts
 ```
 
 > Bob will search the documentation, create the Python tool file, copy the CSV, and import it to watsonx Orchestrate. Wait for confirmation before proceeding.
+> **NOTE**: Bob will most probably ask for permission to execute several things. Approve them for the task.
 
-### 4.2 Create the Weather Forecast Tool
+To check of the tool was imported properly you can the below command (replace `<ini>` with your used initals). This will list the tools available that start with your initials.
 
-Paste this prompt into Bob:
+```bash
+orchestrate tools list | grep <ini>
+```
+
+### 4.3 Create the Weather Forecast Tool
+
+Paste this prompt into Bob (remember to replace `<ini>` in the Tool Name with your initials):
 
 ```
 Create another Python tool for watsonx Orchestrate with the following specifications:
 
-Tool Name: get_weather_forecast
+Tool Name: <ini>_get_weather_forecast
 
 Tool Description:
 Returns weather forecast for the next few days for a given location (latitude, longitude). Uses the free Open-Meteo API which doesn't require an API key.
@@ -952,24 +1019,24 @@ After creating the tool, import it to watsonx Orchestrate.
 
 > This tool uses a free public API — no credentials needed.
 
-### 4.3 Verify both tools are imported
+### 4.4 Verify both tools are imported
 
-Paste this prompt into Bob:
+Paste this prompt into Bob (replace `<ini>` in the tool names with your initials):
 
 ```
-List all the tools in watsonx Orchestrate to verify that both "get_store_location" and "get_weather_forecast" tools have been successfully created and imported.
+List all the tools in watsonx Orchestrate to verify that both "<ini>_get_store_location" and "<ini>_get_weather_forecast" tools have been successfully created and imported.
 ```
 
 You should see both tools listed. If either is missing, review the previous step and re-run the import.
 
-### 4.4 Create the Knowledge Base
+### 4.5 Create the Knowledge Base
 
-Paste this prompt into Bob:
+Paste this prompt into Bob (remember to replace `<ini>` in the Knowledge Base Name with your initials):
 
 ```
 Create a knowledge base with the following specifications:
 
-Knowledge Base Name: inventory-alert-knowledge
+Knowledge Base Name: <ini>_inventory-alert-knowledge
 
 Knowledge Base Description:
 These files give the agent the reference material it needs to:
@@ -990,24 +1057,24 @@ Upload the following files from the directory "retail-inventory-optimization/lab
 
 > Bob will create the knowledge base and upload all six documents. Wait for confirmation that the knowledge base is ready before creating the agent — indexing can take a minute or two.
 
-### 4.5 Create the Agent
+### 4.6 Create the Agent
 
-This is the longest prompt — it contains the complete agent instructions. Paste it entirely:
+This is the longest prompt — it contains the complete agent instructions. Paste it entirely and again **replace all the `<ini>` with your initials**:
 
 ```
 Create a watsonx Orchestrate agent with the following specifications:
 
-Agent Display Name: Fashion Inventory Alert Processor
-Agent Name: Fashion_Inventory_Alert_Processor
+Agent Display Name: <INI> Fashion Inventory Alert Processor
+Agent Name: <ini>_Fashion_Inventory_Alert_Processor
 Agent Description:
 The agent that receives a fashion inventory velocity spike alert, uses store location and weather data to enhance analysis, reviews compact inventory management knowledge and product history baselines, determines urgency level, recommends reorder actions and pricing adjustments in a JSON message as output
 
 Tools:
-- get_store_location
-- get_weather_forecast
+- <ini>_get_store_location
+- <ini>_get_weather_forecast
 
 Knowledge Base:
-- inventory-alert-knowledge
+- <ini>_inventory-alert-knowledge
 
 Model: groq/openai/gpt-oss-120b
 
@@ -1096,17 +1163,17 @@ Restrictions:
 - Keep reasoning concise, operational, and demo-friendly
 ```
 
-> Bob will create the agent with all tools and the knowledge base attached. Wait for confirmation before proceeding.
+> Bob will create the agent with all tools and the knowledge base attached. Wait for confirmation before proceeding. Note that Bob will run some checks before starting to construct the agent yaml.
 
-### 4.6 Get the Agent ID
+### 4.7 Get the Agent ID
 
-Paste this prompt into Bob:
+Paste this prompt into Bob (replace the `<INI>` with your credentials you used in the agent creation prompt):
 
 ```
-Get the agent ID for the "Fashion Inventory Alert Processor" agent. I need this ID to configure my Python consumer application.
+Get the agent ID for the "<INI> Fashion Inventory Alert Processor" agent. I need this ID to configure my Python consumer application.
 ```
 
-Copy the returned agent ID — this is your `WXO_AGENT_ID_OR_NAME` value for the next section.
+Copy and store the returned agent ID — this is your `WXO_AGENT_ID_OR_NAME` value for the next section.
 
 ### What you learned
 
@@ -1122,28 +1189,28 @@ Copy the returned agent ID — this is your `WXO_AGENT_ID_OR_NAME` value for the
 
 ### 5.1 Add the watsonx Orchestrate credentials to `.env`
 
-Edit `retail-inventory-optimization/fashion-inventory-consumer/.env` and add the wxO section:
+Edit `retail-inventory-optimization/fashion-inventory-consumer/.env` and add the wxO section. Also replace `<ini>` for the AGENT_RESPONSE_TOPIC with your initials:
 
 ```bash
 # Watsonx Orchestrate Configuration
-WXO_INSTANCE_URL=https://api.us-south.watson-orchestrate.cloud.ibm.com/instances/your-instance-id
-WXO_AGENT_ID_OR_NAME=your-agent-id-from-section-4.6
-WXO_INSTANCE_CLOUD=ibmcloud     # use "aws" if your instance is on AWS
+WXO_INSTANCE_URL=your-wxo-instance-url
+WXO_AGENT_ID_OR_NAME=your-agent-id-from-section-4.7
+WXO_INSTANCE_CLOUD=aws     # use "ibmcloud" if your instance is on IBM Cloud
 WXO_API_KEY=your_wxo_api_key
 WXO_TIMEOUT_SECONDS=60
 
 # Agent Response Topic
-AGENT_RESPONSE_TOPIC=fashion.agent.responses
+AGENT_RESPONSE_TOPIC=<ini>.fashion.agent.responses
 ```
 
-**Where to find these values:**
+**Your instructor will provide the needed values for you.**
 
-| Variable                 | Where to get it                                                                   |
-| ------------------------ | --------------------------------------------------------------------------------- |
-| `WXO_INSTANCE_URL`     | wxO console → profile icon → Settings → API details → Service Instance URL    |
-| `WXO_AGENT_ID_OR_NAME` | Returned by Bob in Section 4.6                                                    |
-| `WXO_INSTANCE_CLOUD`   | `ibmcloud` for TechZone/IBM Cloud instances; `aws` for AWS-deployed instances |
-| `WXO_API_KEY`          | wxO console → Settings → API details → Generate API key                        |
+| Variable                 | Where to get it                |
+| ------------------------ | ------------------------------ |
+| `WXO_INSTANCE_URL`     | Provided by your instructor    |
+| `WXO_AGENT_ID_OR_NAME` | Returned by Bob in Section 4.7 |
+| `WXO_INSTANCE_CLOUD`   | Provided by your instructor    |
+| `WXO_API_KEY`          | Provided by your instructor    |
 
 ### 5.2 How the consumer uses these credentials
 
@@ -1321,17 +1388,6 @@ The most common causes:
 ## Exercises
 
 See [`exercises.md`](exercises.md) for stretch challenges.
-
----
-
-## Import Everything
-
-Run the verification script after completing Section 4 to confirm your wxO setup:
-
-```bash
-cd advanced/part2-confluent
-bash import-all.sh
-```
 
 ---
 
