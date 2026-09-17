@@ -347,7 +347,13 @@ Verify:
 orchestrate agents list | grep echo_agent_<your_initials>
 ```
 
-Then open the wxO Chat UI and send any message to `echo_agent_<your_initials>`. You should see a timestamped echo.
+Test your agent using `orchestrate chat ask` (replace `<your_initials>` with your actual initials):
+
+```bash
+orchestrate chat ask --agent-name echo_agent_<your_initials> "Hello wxO!"
+```
+
+You should see a timestamped echo.
 
 ### What you learned
 
