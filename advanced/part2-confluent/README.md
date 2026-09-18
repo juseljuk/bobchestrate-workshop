@@ -332,7 +332,7 @@ Because the cluster is shared across all workshop participants, you must add you
 
 In the **`zurich-clu`** cluster, navigate to **Topics** → click **Create topic.**
 
-<p align="center">
+<p align="left">
         <img src="images/zurich-topics.png" alt="Select CLuster" width="400">
    </p>
 
@@ -526,12 +526,12 @@ For each of your three topics you need to attach a JSON schema. The steps are th
 
 1. Still in the **`zurich-clu`** cluster, click **Flink** (bottom left sidebar)
 
-   <p align="center">
+   <p align="left">
         <img src="images/zurich-select-flink.png" alt="Select Flink" width="500">
       </p>
 2. Select the **Compute pools** tab → click on **SQL Workspace** on the `zurich.fashion-velocity.eu-central-1` compute pool to open the Flink SQL workspace
 
-   <p align="center">
+   <p align="left">
         <img src="images/zurich-sql.png" alt="Select SQL Workspace" width="500">
       </p>
 3. **Verify Flink can see your inventory topic.** Run this query in the SQL workspace (replace `<ini>` with your initials):
@@ -739,7 +739,7 @@ Click **"Run"** to start the streaming query.
 
 ✅ **Checkpoint:** Query status shows **"Running"**.
 
-<p align="center">
+<p align="left">
         <img src="images/zurich-flink-running.png" alt="Select Flink" width="400">
       </p>
 
@@ -753,28 +753,28 @@ Run and test the lab use case, you need **two sets** of your own (attched to you
 
 1. Open the hamburger menu from the right-hand side top corner and select **API Keys**
 
-   <p align="center">
+   <p align="left">
     <img src="images/zurich-api-menu.png" alt="Open API Keys" width="200">
 
 </p>
 
 2. Click **+ Add API key** and name your API Key e.g. my-kafka-key. **IMPORTANT!** Make sure to select `My account` under Select account.
 
-   <p align="center">
+   <p align="left">
     <img src="images/zurich-api-my-account.png" alt="API key for My account" width="500">
 
 </p>
 
 3. Scroll down to select the scope for your API key. Select **Kafka cluster** for the scope and then **zurich-env** for the Environment and **zurich-clu** for the Cluster. Then hit **Create API key**.
 
-   <p align="center">
+   <p align="left">
     <img src="images/zurich-kafka-api-scope.png" alt="API key scope" width="500">
 
 </p>
 
 4. Download / store your API key and secret to safety, you need them soon.
 
-   <p align="center">
+   <p align="left">
     <img src="images/my-kafka-key.png" alt="API key scope" width="400">
 
 </p>
@@ -788,7 +788,7 @@ Environment: **zurich-env**
 
 Finally, you also need the **Schema Registry URL** from the Schema Registry panel. Under `zurich-env` envitonment select **Schema Registy** and copy and store the **Public endpoint URL**.
 
-<p align="center">
+<p align="left">
     <img src="images/registry-url.png" alt="API key scope" width="600">
 
 </p>
