@@ -306,12 +306,12 @@ Your instructor will guide you through logging in to [confluent.cloud](https://c
 
 1. Select the **`zurich-env`** environment by clicking the tile for it
 
-   <p align="center">
+   <p align="left">
         <img src="images/home-select-env.png" alt="Select Environment" width="600">
       </p>
 2. Open the **`zurich-clu`** cluster by clicking the tile for it
 
-   <p align="center">
+   <p align="left">
         <img src="images/zurich-select-cluster.png" alt="Select CLuster" width="500">
       </p>
 
@@ -319,7 +319,7 @@ Your instructor will guide you through logging in to [confluent.cloud](https://c
 
 Make a note of the **Bootstrap server URL** from the cluster overview — you'll need it for `.env` later.
 
-<p align="center">
+<p align="left">
         <img src="images/zurich-bootstrap.png" alt="Select Environment" width="500">
    </p>
 
