@@ -1,0 +1,256 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advanced Workshop Overview: Parts 0 &amp; 1</title>
+  <style>
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #1f2328;
+      background: #ffffff;
+      margin: 0;
+      padding: 32px 16px;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .banner-wrapper {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .lead-image {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 24px;
+      display: block;
+    }
+    .header {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #f7f8fa;
+      border: 1px solid #e5e7eb;
+      color: #57606a;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 6px 0;
+      color: #1f2328;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #57606a;
+      margin: 0;
+    }
+    .card {
+      background: #f7f8fa;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .card-meta {
+      font-size: 12px;
+      color: #57606a;
+      font-weight: normal;
+    }
+    h2 {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 22px 0 12px 0;
+      color: #1f2328;
+    }
+    ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+    .grid-item {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      padding: 12px;
+    }
+    .grid-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #1f2328;
+    }
+    .tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      background: #eef2f8;
+      color: #3b82d4;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+    .callout {
+      border-left: 3px solid #3b82d4;
+      padding: 8px 12px;
+      background: #ffffff;
+      border-radius: 0 4px 4px 0;
+      margin: 10px 0;
+      font-size: 13.5px;
+    }
+    .get-started-box {
+      background: #f7f8fa;
+      border: 2px solid #3b82d4;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0 20px 0;
+    }
+    .get-started-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2328;
+      margin-bottom: 10px;
+    }
+    .get-started-link {
+      display: inline-block;
+      font-size: 20px;
+      font-weight: 700;
+      color: #3b82d4;
+      text-decoration: underline;
+      word-break: break-all;
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #57606a;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 16px;
+      margin-top: 36px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="banner-wrapper">
+      <svg width="100%" height="120" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:6px;border:1px solid #e5e7eb;background:#0b132b;display:block">
+        <rect width="720" height="120" fill="#0b132b"></rect>
+        <path d="M0 0L240 120H0V0Z" fill="#1c2541" opacity="0.5"></path>
+        <path d="M720 120L480 0H720V120Z" fill="#1c2541" opacity="0.3"></path>
+        <circle cx="360" cy="60" r="100" fill="#3a506b" opacity="0.15"></circle>
+        <text x="360" y="55" text-anchor="middle" fill="#ffffff" font-family="-apple-system, Segoe UI, sans-serif" font-weight="700" font-size="22">BOBCHESTRATE ADVANCED</text>
+        <text x="360" y="82" text-anchor="middle" fill="#48cae4" font-family="-apple-system, Segoe UI, sans-serif" font-weight="600" font-size="11">WATSONX ORCHESTRATE • ADVANCED TRACK</text>
+      </svg>
+    </div>
+
+    
+    <img src="https://raw.githubusercontent.com/juseljuk/bobchestrate-workshop/main/advanced/BWS_Advanced.png" alt="Bobchestrate Advanced Workshop Logo" class="lead-image" />
+
+    <div class="header">
+      <span class="badge">Bobchestrate Workshop</span>
+      <h1>Advanced Track: Setup &amp; Custom LangGraph Agents</h1>
+      <p class="subtitle">Quick overview of what we are building, learning, and practicing in Parts 0 and 1.</p>
+    </div>
+
+    
+    <div class="card">
+      <div class="card-title">
+        <span>Part 0: Environment &amp; Setup</span>
+        <span class="card-meta">15–20 min • Foundations</span>
+      </div>
+      <p style="margin-top:0">Prepares your development environment to work seamlessly with watsonx Orchestrate and Bob IDE.</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <strong>Key Tools Configured</strong>
+          Python 3.11–3.13, <span class="tag">uv</span> package manager, IBM Bob with the custom <span class="tag">wxo-langgraph</span> skill, and Orchestrate CLI environment credentials.
+        </div>
+        <div class="grid-item">
+          <strong>External API Connections</strong>
+          Configuring platform connections for LLM backends (Groq) and external data providers (News API) used during the workshop.
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="card">
+      <div class="card-title">
+        <span>Part 1: Custom LangGraph Agents for wxO</span>
+        <span class="card-meta">75–90 min • Core Lab</span>
+      </div>
+      <p style="margin-top:0">Build, package, and deploy native Python LangGraph stateful agents inside the watsonx Orchestrate runtime.</p>
+      
+      <div class="callout">
+        <strong>The Contract:</strong> Any LangGraph agent runs inside wxO as long as it exposes the entry point: <span class="tag">create_agent(config: RunnableConfig) -&gt; StateGraph</span>.
+      </div>
+
+      <div class="grid">
+        <div class="grid-item">
+          <strong>1. Minimal Pipeline</strong>
+          <span class="tag">echo_agent</span><br />
+          Verification of the uncompiled graph entry point contract and agent packaging without SDK complexity.
+        </div>
+        <div class="grid-item">
+          <strong>2. Pure LangGraph with LLM</strong>
+          <span class="tag">simple_llm_agent</span><br />
+          Standard LangChain <span class="tag">ChatOpenAI</span> + Groq integration using secure wxO connection credentials.
+        </div>
+        <div class="grid-item">
+          <strong>3. wxO Native LLM Integration</strong>
+          <span class="tag">ChatWxO</span><br />
+          Switching to the platform-native managed gateway for direct LLM invocation and tool calling.
+        </div>
+        <div class="grid-item">
+          <strong>4. Production Features</strong>
+          <span class="tag">research_agent</span><br />
+          Dynamic ReAct tool-calling, API integrations, checkpointers for state, and cross-session user memory.
+        </div>
+      </div>
+    </div>
+
+    
+    <h2>Key Takeaways &amp; Best Practices</h2>
+    <ul>
+      <li><strong>When to use LangGraph vs Native Agents:</strong> Choose LangGraph when you need custom graph topology (loops, parallel execution, custom state reducers) or are bringing existing code.</li>
+      <li><strong>State &amp; Runtime Rules:</strong> Only the <span class="tag">messages</span> key persists across turns; package size must stay under 50 MB; external calls use wxO Connections.</li>
+      <li><strong>Accelerated with Bob:</strong> The pre-loaded <span class="tag">wxo-langgraph</span> skill assists in authoring platform-correct schemas, decorators, and configurations.</li>
+    </ul>
+
+    
+    <div class="get-started-box">
+      <div class="get-started-title">🚀 Ready to Begin?</div>
+      <a href="https://ibm.box.com/v/wxo-langgraph-lab" target="_blank" class="get-started-link">https://ibm.box.com/v/wxo-langgraph-lab</a>
+    </div>
+
+    <div class="footer">
+      Made with IBM Bob
+    </div>
+  </div>
+</body>
+</html>
